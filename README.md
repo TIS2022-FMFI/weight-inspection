@@ -1,2 +1,11 @@
-# weight-inspection
-Verifcation of packages based on weight and barcodes
+# Inštalácia:
+
+Požiadavky:
+- JAVA 1.8
+
+## Spustenie backendu
+
+Maven command - spustenie Spring:
+```
+./mvnw spring-boot:run
+```
