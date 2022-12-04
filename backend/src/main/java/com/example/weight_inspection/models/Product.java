@@ -16,7 +16,7 @@ public class Product {
     @NotNull
     private String refference;
     @NotNull
-    private Long weigth;
+    private Float weigth;
 
     public Product() {}
 
