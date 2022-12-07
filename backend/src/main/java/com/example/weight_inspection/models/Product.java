@@ -15,7 +15,7 @@ public class Product {
     private Long id;
     
     @NotNull
-    private String refference;
+    private String reference;
 
     @NotNull
     private float weigth;
@@ -24,7 +24,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", refference=" + refference + ", weigth=" + weigth + "]";
+        return "Product [id=" + id + ", reference=" + reference + ", weigth=" + weigth + "]";
     }
 
     public Long getId() {
@@ -35,12 +35,12 @@ public class Product {
         this.id = id;
     }
 
-    public String getRefference() {
-        return refference;
+    public String getReference() {
+        return reference;
     }
 
-    public void setRefference(String refference) {
-        this.refference = refference;
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public float getWeigth() {

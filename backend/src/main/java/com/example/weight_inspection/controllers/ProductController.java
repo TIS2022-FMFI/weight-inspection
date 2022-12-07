@@ -41,12 +41,12 @@ public class ProductController {
 
 	@GetMapping
 	public ResponseEntity<ListResponse<Product>> GetProducts(
-			@RequestParam(value = "ref", defaultValue = "") String refference,
+			@RequestParam(value = "reference", defaultValue = "") String reference,
 			@RequestParam(value = "page", defaultValue = "0") int currentPage,
 			@RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
-		if (!refference.isEmpty()) {
-			Product product = productRepository.findByRefference(refference);
+		if (!reference.isEmpty()) {
+			Product product = productRepository.findByReference(reference);
 			List<Product> list = new ArrayList<Product>();
 			if (product != null) {
 				list.add(product);

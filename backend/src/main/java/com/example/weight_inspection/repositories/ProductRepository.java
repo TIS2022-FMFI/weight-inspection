@@ -6,7 +6,7 @@ import com.example.weight_inspection.models.Product;
 
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
 
-  Product findByRefference(String refference);
+  Product findByReference(String reference);
 
   Product findById(long id);
 }
