@@ -13,10 +13,13 @@ public class Packaging {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @NotNull
     private String name;
+
     @NotNull
-    private Float weight;
+    private float weight;
+
     @NotNull
     private String picturePath;
 
@@ -43,11 +46,11 @@ public class Packaging {
         this.name = name;
     }
 
-    public Float getWeight() {
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(Float weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 

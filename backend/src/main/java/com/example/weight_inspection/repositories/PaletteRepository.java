@@ -1,9 +1,12 @@
-package com.example.weight_inspection.repositories;
+ package com.example.weight_inspection.repositories;
 
-import com.example.weight_inspection.models.Palette;
-import org.springframework.data.repository.PagingAndSortingRepository;
+ import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface PaletteRepository extends PagingAndSortingRepository<Palette, Long> {
-    Palette fyndById(long id);
-    Palette findByName(String name);
-}
+ import com.example.weight_inspection.models.Palette;
+
+ public interface PaletteRepository extends PagingAndSortingRepository<Palette, Long> {
+
+     Palette findById(long id);
+
+     Palette findByName(String name);
+ }
