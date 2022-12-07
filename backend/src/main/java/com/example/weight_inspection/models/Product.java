@@ -13,10 +13,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
     @NotNull
     private String refference;
+
     @NotNull
-    private Long weigth;
+    private float weigth;
 
     public Product() {}
 
@@ -41,11 +43,11 @@ public class Product {
         this.refference = refference;
     }
 
-    public Long getWeigth() {
+    public float getWeigth() {
         return weigth;
     }
 
-    public void setWeigth(Long weigth) {
+    public void setWeigth(float weigth) {
         this.weigth = weigth;
     }
 }
