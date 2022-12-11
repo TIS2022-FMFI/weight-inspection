@@ -10,22 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.example.weight_inspection.models.Palette;
 import com.example.weight_inspection.models.Product;
 import com.example.weight_inspection.payloads.ListResponse;
+import com.example.weight_inspection.repositories.PaletteRepository;
 import com.example.weight_inspection.repositories.ProductRepository;
 
 @RestController
@@ -33,10 +26,12 @@ import com.example.weight_inspection.repositories.ProductRepository;
 public class ProductController {
 
 	private final ProductRepository productRepository;
+    private final PaletteRepository paletteRepository;
 
 	@Autowired
-	public ProductController(ProductRepository productRepository) {
+	public ProductController(ProductRepository productRepository, PaletteRepository paletteRepository) {
 		this.productRepository = productRepository;
+		this.paletteRepository = paletteRepository;
 	}
 
 	@GetMapping
@@ -64,11 +59,12 @@ public class ProductController {
 		Pageable pageable = PageRequest.of(currentPage, pageSize);
 		Page<Product> page = productRepository.findAll(pageable);
 
-		ListResponse<Product> listResponse = new ListResponse<Product>();
+		ListResponse<Product> listResponse = new ListResponse<>();
 		listResponse.setPage(currentPage);
-		listResponse.setItems(page.getContent());
 		listResponse.setTotalItems(page.getTotalElements());
 		listResponse.setTotalPages(page.getTotalPages());
+		listResponse.setItems(page.getContent());
+		listResponse.setItems(page.getContent());
 
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
@@ -92,6 +88,7 @@ public class ProductController {
 		}
 
 		product.setId(null);
+		product.setPalette(null);
 		productRepository.save(product);
 		return new ResponseEntity<>(product, HttpStatus.CREATED);
 	}
@@ -105,13 +102,16 @@ public class ProductController {
 		}
 
 		Optional<Product> replacedProduct = productRepository.findById(productId);
+
 		if (!replacedProduct.isPresent()) {
 			product.setId(null);
+			product.setPalette(null);
 			productRepository.save(product);
 			return new ResponseEntity<>(product, HttpStatus.NO_CONTENT);
 		}
 
 		product.setId(productId);
+		product.setPalette(replacedProduct.get().getPalette());
 		productRepository.save(product);
 		return new ResponseEntity<>(product, HttpStatus.NO_CONTENT);
 	}
@@ -129,4 +129,39 @@ public class ProductController {
 		productRepository.delete(deletedProduct);
 		return new ResponseEntity<>(deletedProduct, HttpStatus.NO_CONTENT);
 	}
+
+	@PostMapping("{productId}/palette/{paletteId}")
+	public ResponseEntity<Product> addPaletteToProduct(@PathVariable Long productId, @PathVariable Long paletteId) {
+
+		Optional<Product> product = productRepository.findById(productId);
+		Optional<Palette> palette = paletteRepository.findById(paletteId);
+
+		if (!product.isPresent() || !palette.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Product newProduct = product.get();
+		newProduct.getPalette().add(palette.get());
+		productRepository.save(newProduct);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+	@DeleteMapping("{productId}/palette/{paletteId}")
+	public ResponseEntity<Product> deletePaletteFromProduct(@PathVariable Long productId, @PathVariable Long paletteId) {
+
+		Optional<Product> product = productRepository.findById(productId);
+		Optional<Palette> palette = paletteRepository.findById(paletteId);
+
+		if (!product.isPresent() || !palette.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Product delProduct = product.get();
+		delProduct.getPalette().remove(palette.get());
+		productRepository.save(delProduct);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+
 }
