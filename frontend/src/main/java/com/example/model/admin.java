@@ -1,7 +1,8 @@
+package com.example.model;
+
 import java.sql.Timestamp;
 
-public class admin
-{
+public class Admin {
     private int admin_id;
     private int email_id;
     private String first_name;

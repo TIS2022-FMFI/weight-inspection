@@ -1,7 +1,8 @@
+package com.example.model;
+
 import java.sql.Timestamp;
 
-public class weighing
-{
+public class Weighing {
     private int weighing_id;
     private String IDP;
     private Float weight;
@@ -83,6 +84,5 @@ public class weighing
     public void setReference(String reference) {
         this.reference = reference;
     }
-
 
 }
