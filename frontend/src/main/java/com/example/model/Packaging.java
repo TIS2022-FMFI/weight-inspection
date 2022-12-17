@@ -1,26 +1,26 @@
 package com.example.model;
 
 public class Packaging {
-    private int packaging_id;
-    private String packaging_type;
+    private Integer id;
+    private String type;
     private String name;
     private Float weight;
     private String picture_path;
 
-    public int getPackaging_id() {
-        return packaging_id;
+    public int getId() {
+        return id;
     }
 
-    public void setPackaging_id(int packaging_id) {
-        this.packaging_id = packaging_id;
+    public void setId(Integer packaging_id) {
+        this.id = packaging_id;
     }
 
-    public String getPackaging_type() {
-        return packaging_type;
+    public String getType() {
+        return type;
     }
 
-    public void setPackaging_type(String packaging_type) {
-        this.packaging_type = packaging_type;
+    public void setType(String packaging_type) {
+        this.type = packaging_type;
     }
 
     public String getName() {

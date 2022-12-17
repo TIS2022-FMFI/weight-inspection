@@ -1,16 +1,16 @@
 package com.example.model;
 
 public class Email {
-    private int email_id;
+    private Integer id;
     private String email;
     private Boolean send_exports;
 
-    public int getEmail_id() {
-        return email_id;
+    public int getId() {
+        return id;
     }
 
-    public void setEmail_id(int email_id) {
-        this.email_id = email_id;
+    public void setId(Integer email_id) {
+        this.id = email_id;
     }
 
     public String getEmail() {

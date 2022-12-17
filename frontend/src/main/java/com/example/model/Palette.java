@@ -1,26 +1,27 @@
 package com.example.model;
 
+import com.example.utils.AHClientHandler;
+
 public class Palette {
-    private int palette_id;
-    private String palette_type;
+    private Integer id;
+    private String type;
     private String name;
     private Float weight;
-    private String picture_path;
 
-    public int getPalette_id() {
-        return palette_id;
+    public int getId() {
+        return id;
     }
 
-    public void setPalette_id(int palette_id) {
-        this.palette_id = palette_id;
+    public void setId(Integer palette_id) {
+        this.id = palette_id;
     }
 
-    public String getPalette_type() {
-        return palette_type;
+    public String getType() {
+        return type;
     }
 
-    public void setPalette_type(String palette_type) {
-        this.palette_type = palette_type;
+    public void setType(String palette_type) {
+        this.type = palette_type;
     }
 
     public String getName() {
@@ -39,11 +40,23 @@ public class Palette {
         this.weight = weight;
     }
 
-    public String getPicture_path() {
-        return picture_path;
+    public String getPicturePath() {
+        return "/static/palette/" + String.valueOf(id);
     }
 
-    public void setPicture_path(String picture_path) {
-        this.picture_path = picture_path;
+    public void post() {
+        if (id == null) {
+            AHClientHandler.getAHClientHandler().postRequest("/palette", this);
+            return;
+        }
+        throw new IllegalStateException("Can't POST palette that has ID, probably ment to use PUT");
+    }
+
+    public void put() {
+        AHClientHandler.getAHClientHandler().putRequest("/palette/" + String.valueOf(id), this);
+    }
+
+    public void delete() {
+        AHClientHandler.getAHClientHandler().deleteRequest("/palette/" + String.valueOf(id));
     }
 }
