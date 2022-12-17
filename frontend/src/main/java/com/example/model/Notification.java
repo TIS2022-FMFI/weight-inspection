@@ -3,17 +3,17 @@ package com.example.model;
 import java.sql.Timestamp;
 
 public class Notification {
-    private int notification_id;
+    private Integer id;
     private Timestamp created_on;
     private String type;
     private String description;
 
-    public int getNotification_id() {
-        return notification_id;
+    public int getId() {
+        return id;
     }
 
-    public void setNotification_id(int notification_id) {
-        this.notification_id = notification_id;
+    public void setId(Integer notification_id) {
+        this.id = notification_id;
     }
 
     public Timestamp getCreated_on() {

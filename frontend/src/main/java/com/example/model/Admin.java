@@ -3,27 +3,27 @@ package com.example.model;
 import java.sql.Timestamp;
 
 public class Admin {
-    private int admin_id;
-    private int email_id;
+    private Integer id;
+    private Integer email_id;
     private String first_name;
     private String last_name;
     private String nickname;
     private String pass_hash;
     private Timestamp last_login;
 
-    public int getAdmin_id() {
-        return admin_id;
+    public int getId() {
+        return id;
     }
 
-    public void setAdmin_id(int admin_id) {
-        this.admin_id = admin_id;
+    public void setId(Integer admin_id) {
+        this.id = admin_id;
     }
 
     public int getEmail_id() {
         return email_id;
     }
 
-    public void setEmail_id(int email_id) {
+    public void setEmail_id(Integer email_id) {
         this.email_id = email_id;
     }
 

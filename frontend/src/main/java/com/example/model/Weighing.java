@@ -3,22 +3,22 @@ package com.example.model;
 import java.sql.Timestamp;
 
 public class Weighing {
-    private int weighing_id;
+    private Integer id;
     private String IDP;
     private Float weight;
-    private int quantity;
+    private Integer quantity;
     private Timestamp weighed_on;
     private Boolean is_correct;
     private String packaging_name;
     private String palette_name;
     private String reference;
 
-    public int getWeighing_id() {
-        return weighing_id;
+    public int getId() {
+        return id;
     }
 
-    public void setWeighing_id(int weighing_id) {
-        this.weighing_id = weighing_id;
+    public void setId(Integer weighing_id) {
+        this.id = weighing_id;
     }
 
     public String getIDP() {
@@ -41,7 +41,7 @@ public class Weighing {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
