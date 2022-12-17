@@ -1,5 +1,7 @@
 package com.example.utils;
 
+import com.example.utils.exeptions.IncorrectCodeExeption;
+import com.example.utils.exeptions.NoNetworkException;
 import com.google.gson.Gson;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -40,7 +42,7 @@ public class AHClientHandler {
                 .preparePost(baseUrl + url)
                 .setBody(jsonObject)
                 .execute();
-        CheckedFunction callback = () -> {
+        NetworkThrowingFunction callback = () -> {
             try {
                 Response response = whenResponse.get();
                 if (response.getStatusCode() != 200) {
@@ -60,7 +62,7 @@ public class AHClientHandler {
                 .preparePut(baseUrl + url)
                 .setBody(jsonObject)
                 .execute();
-        CheckedFunction callback = () -> {
+        NetworkThrowingFunction callback = () -> {
             try {
                 Response response = whenResponse.get();
                 if (response.getStatusCode() != 200) {
@@ -78,7 +80,7 @@ public class AHClientHandler {
         ListenableFuture<Response> whenResponse = AHClient
                 .prepareDelete(baseUrl + url)
                 .execute();
-        CheckedFunction callback = () -> {
+        NetworkThrowingFunction callback = () -> {
             try {
                 Response response = whenResponse.get();
                 if (response.getStatusCode() != 200) {
