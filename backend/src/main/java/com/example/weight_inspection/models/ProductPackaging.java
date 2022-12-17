@@ -17,24 +17,27 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Packaging {
+public class ProductPackaging {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    private String name;
+    private float tolerance;
 
     @NotNull
-    private float weight;
+    private int quantity;
 
-    @NotNull
-    private String picturePath;
-
-    @OneToMany
+    @ManyToOne
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    private Set<ProductPackaging> productPackaging = new HashSet<>();
+    private Packaging packaging;
+
+    @ManyToOne
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private Product product;
 }
