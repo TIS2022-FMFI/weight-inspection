@@ -44,6 +44,5 @@ public class Palette {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    Set<Product> product = new HashSet<>();
-
+    private Set<Product> product = new HashSet<>();
 }
