@@ -39,7 +39,7 @@ public class Product {
             property = "id")
     private Set<Palette> palette = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
