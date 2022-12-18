@@ -30,7 +30,7 @@ public class Packaging {
     private float weight;
 
     @NotNull
-    private String picturePath;
+    private String type;
 
     @OneToMany
     @JsonIdentityInfo(

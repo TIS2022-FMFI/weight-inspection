@@ -36,9 +36,10 @@ public class Palette {
     private String name;
 
     @NotNull
-    private float weigth;
+    private float weight;
 
-    private String picture_path;
+    @NotNull
+    private String type;
 
     @ManyToMany(mappedBy = "palette")
     @JsonIdentityInfo(
