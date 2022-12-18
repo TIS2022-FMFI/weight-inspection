@@ -1,30 +1,22 @@
 package com.example.controller;
 
-import com.example.scene.SceneNavigator;
-import com.example.scene.SceneName;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.HBox;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.IOException;
 
-public class AdminPanelController implements Initializable, Swappable {
-    @Override
-    public void onLoad(SceneName previousSceneName) {
-    }
+public class AdminPanelController extends HBox {
 
-    @Override
-    public void onUnload() {
+    public AdminPanelController() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminPanel.fxml"));
+        fxmlLoader.setController(this);
+        fxmlLoader.setRoot(this);
 
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-    }
-
-    @FXML
-    public void onBackClicked() {
-        SceneNavigator.setScene(SceneName.FIRST);
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
 }

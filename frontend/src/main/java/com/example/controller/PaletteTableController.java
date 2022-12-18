@@ -14,6 +14,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -22,6 +23,9 @@ import java.util.ResourceBundle;
 public class PaletteTableController implements Initializable, Swappable {
 
     ObservableList<Palette> palettes;
+
+    @FXML
+    private GridPane mainGrid;
     @FXML
     private TableView<Palette> tableView;
     @FXML
@@ -43,6 +47,9 @@ public class PaletteTableController implements Initializable, Swappable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        AdminPanelController adminPanel = new AdminPanelController();
+        mainGrid.getChildren().add(adminPanel);
+
         palettes = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
