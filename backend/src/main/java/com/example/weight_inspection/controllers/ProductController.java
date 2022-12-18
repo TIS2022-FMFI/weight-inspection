@@ -155,6 +155,7 @@ public class ProductController {
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+
 	@DeleteMapping("{productId}/palette/{paletteId}")
 	public ResponseEntity<Product> deletePaletteFromProduct(@PathVariable Long productId, @PathVariable Long paletteId) {
 
@@ -176,9 +177,11 @@ public class ProductController {
 														  BindingResult bindingResult,
 														  @PathVariable Long productId,
 														  @PathVariable Long packagingId) {
+
 		if (bindingResult.hasErrors() || productPackaging == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+
 		Optional<Product> product = productRepository.findById(productId);
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
 
@@ -187,10 +190,18 @@ public class ProductController {
 		}
 
 		Product newProduct = product.get();
+		Packaging newPackaging = packaging.get();
+
+		productPackaging.setPackaging(newPackaging);
 		productPackaging.setProduct(newProduct);
-		productPackaging.setPackaging(packaging.get());
+		productPackagingRepository.save(productPackaging);
+
 		newProduct.getProductPackaging().add(productPackaging);
 		productRepository.save(newProduct);
+
+		newPackaging.getProductPackaging().add(productPackaging);
+		packagingRepository.save(newPackaging);
+
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
@@ -215,10 +226,7 @@ public class ProductController {
 		delProduct.getProductPackaging().remove(productPackaging.get());
 		productPackaging.get().getPackaging().getProductPackaging().remove(productPackaging.get());
 		productRepository.save(delProduct);
+
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-
-
-
 }
