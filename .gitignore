@@ -21,6 +21,7 @@ replay_pid*
 # Gradle
 .gradle
 frontend/build/
+frontend/bin/
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache

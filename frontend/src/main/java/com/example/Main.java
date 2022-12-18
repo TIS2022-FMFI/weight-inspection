@@ -17,9 +17,10 @@ public class Main extends Application {
         HashMap<SceneName, String> scenes = new HashMap<>();
         scenes.put(SceneName.FIRST, "/firstPane.fxml");
         scenes.put(SceneName.LAST, "/lastPane.fxml");
+        scenes.put(SceneName.PALETTES, "/paletteTable.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.FIRST);
+        SceneNavigator.setScene(SceneName.PALETTES);
         SceneNavigator.show();
     }
 }
