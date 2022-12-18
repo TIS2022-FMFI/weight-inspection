@@ -1,11 +1,12 @@
 package com.example.model;
 
+import com.example.utils.AHClientHandler;
+
 public class Packaging {
     private Integer id;
     private String type;
     private String name;
     private Float weight;
-    private String picture_path;
 
     public int getId() {
         return id;
@@ -39,11 +40,23 @@ public class Packaging {
         this.weight = weight;
     }
 
-    public String getPicture_path() {
-        return picture_path;
+    public String getPicturePath() {
+        return "/static/packaging/" + String.valueOf(id);
     }
 
-    public void setPicture_path(String picture_path) {
-        this.picture_path = picture_path;
+    public void post() {
+        if (id == null) {
+            AHClientHandler.getAHClientHandler().postRequest("/packaging", this);
+            return;
+        }
+        throw new IllegalStateException("Can't POST packaging that has ID, probably ment to use PUT");
+    }
+
+    public void put() {
+        AHClientHandler.getAHClientHandler().putRequest("/packaging/" + String.valueOf(id), this);
+    }
+
+    public void delete() {
+        AHClientHandler.getAHClientHandler().deleteRequest("/packaging/" + String.valueOf(id));
     }
 }
