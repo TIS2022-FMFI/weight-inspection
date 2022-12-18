@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.weight_inspection.models.Palette;
 import com.example.weight_inspection.models.Product;
-import com.example.weight_inspection.payloads.ListResponse;
+import com.example.weight_inspection.transfer.ListResponse;
 import com.example.weight_inspection.repositories.PaletteRepository;
 import com.example.weight_inspection.repositories.ProductRepository;
 
