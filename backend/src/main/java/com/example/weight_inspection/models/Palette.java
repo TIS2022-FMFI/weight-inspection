@@ -36,14 +36,14 @@ public class Palette {
     private String name;
 
     @NotNull
-    private float weigth;
+    private float weight;
 
-    private String picture_path;
+    @NotNull
+    private String type;
 
     @ManyToMany(mappedBy = "palette")
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    Set<Product> product = new HashSet<>();
-
+    private Set<Product> product = new HashSet<>();
 }

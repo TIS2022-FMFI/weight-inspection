@@ -1,4 +1,4 @@
-package com.example.weight_inspection.payloads;
+package com.example.weight_inspection.transfer;
 
 import java.util.List;
 
