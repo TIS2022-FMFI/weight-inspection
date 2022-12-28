@@ -2,6 +2,8 @@
     -fx-font-family: "Times New Roman";
     -fx-background-color:#1c2545;
     -fx-text-background-color: #fdfdfd;
+    -fx-font-weight: bold;
+
 }
 .table-view .column-header-background {
     -fx-background-color: #1d4d7b;
@@ -35,7 +37,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0.0, 0.0);
     -fx-text-fill: #fdfdfd;
     -fx-font-family: "Times New Roman";
-    -fx-font-weight: bold;
 }
 /* Remove spacing */
 .pagination{
@@ -75,4 +76,31 @@
     -fx-alignment: center;
     -fx-background-color: linear-gradient(to bottom, #e30313, #730109);
     -fx-text-fill: #fdfdfd;
+}
+
+.whiteGridPane
+{
+    -fx-background-color: #fdfdfd;
+}
+
+.blueLabel
+{
+    -fx-background-color: #10345F;
+    -fx-text-fill: #fdfdfd;
+    -fx-alignment: center;
+
+    -fx-border-width: 2;
+    -fx-border-style: solid;
+    -fx-border-color: #000000;
+}
+
+.whiteLabel
+{
+    -fx-background-color: #fdfdfd;
+    -fx-text-fill: #000000;
+    -fx-alignment: center;
+
+    -fx-border-width: 2;
+    -fx-border-style: solid;
+    -fx-border-color: #000000;
 }
