@@ -50,7 +50,7 @@ public class AHClientHandler {
         return AHClient;
     }
 
-    public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList) {
+    public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page_size", String.valueOf(pageSize))
@@ -62,15 +62,19 @@ public class AHClientHandler {
                 })
                 .thenApply(
                         response -> {
-                            System.out.println(returnList);
                             System.out.println("Parsing");
-                            Type listType = new TypeToken<ArrayList<T>>() {
-                            }.getType();
-                            List<T> newItems = new Gson().fromJson(response.getResponseBody(),
-                                    listType);
-                            System.out.println(newItems);
-                            returnList.clear();
-                            returnList.addAll(newItems);
+                            try {
+                                Type pageType = TypeToken.getParameterized(Page.class, type).getType();
+                                System.out.println("type above");
+                                System.out.println(response.getResponseBody());
+                                Page<T> newItems = new Gson().fromJson(response.getResponseBody(),
+                                        pageType);
+                                System.out.println(newItems);
+                                returnList.clear();
+                                returnList.addAll(newItems.getItems());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             return null;
                         });
     }
