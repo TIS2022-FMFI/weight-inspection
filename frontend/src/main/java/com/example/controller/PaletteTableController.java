@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class PaletteTableController implements Initializable, Swappable {
+public class PaletteTableController extends TableController implements Swappable {
 
     ObservableList<Palette> palettes;
 
@@ -51,20 +52,12 @@ public class PaletteTableController implements Initializable, Swappable {
     @FXML
     private TableColumn<Palette, String> actionColumn3;
 
-    @FXML
-    private ComboBox<String> pageSizeBox;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        super.initialize(location, resources);
         // Initializing admin panel
         AdminPanelController adminPanel = new AdminPanelController();
         mainGrid.getChildren().add(adminPanel);
-
-        // Initializing combobox
-        ObservableList<String> observablePageSizes = FXCollections.observableArrayList();
-        ArrayList<String> pageSizes = new ArrayList<String>(Arrays.asList("10", "20", "30", "40", "50"));
-        observablePageSizes.addAll(pageSizes);
-        pageSizeBox.setItems(observablePageSizes);
 
         // Initializing cells for table view
         palettes = FXCollections.observableArrayList();
@@ -110,14 +103,25 @@ public class PaletteTableController implements Initializable, Swappable {
 
     }
 
+    @FXML
+    public void onPagingUpdate() {
+        updateTable();
+    }
+
+    @Override
     public void updateTable() {
         String strPageSize = pageSizeBox.getValue();
         if (strPageSize == null) {
             strPageSize = "10";
         }
         int pageSize = Integer.valueOf(strPageSize);
-        AHClientHandler.getAHClientHandler().getPage("/palette", 0, pageSize, palettes,
-                Palette.class);
+
+        int currentPage = 0;
+        if (pagination != null) {
+            currentPage = pagination.getCurrentPageIndex();
+        }
+        AHClientHandler.getAHClientHandler().getPage("/palette", currentPage, pageSize, palettes,
+                Palette.class, this);
     }
 
     @Override

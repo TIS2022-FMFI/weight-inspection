@@ -1,28 +1,21 @@
 package com.example.utils;
 
+import com.example.controller.TableController;
 import com.example.model.Page;
 import com.example.utils.exeptions.IncorrectCodeExeption;
 import com.google.gson.Gson;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Pagination;
 
 import java.util.concurrent.CompletableFuture;
 
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Response;
-import com.example.model.CommentModel;
-import com.example.repository.CommentRepository;
 import com.google.gson.reflect.TypeToken;
 
-import javafx.collections.FXCollections;
-
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-
-import org.asynchttpclient.ListenableFuture;
 
 import static org.asynchttpclient.Dsl.*;
 
@@ -50,9 +43,11 @@ public class AHClientHandler {
         return AHClient;
     }
 
-    public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type) {
+    public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type,
+            TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
+                .addQueryParam("page", String.valueOf(page))
                 .addQueryParam("page_size", String.valueOf(pageSize))
                 .execute()
                 .toCompletableFuture()
@@ -62,16 +57,16 @@ public class AHClientHandler {
                 })
                 .thenApply(
                         response -> {
-                            System.out.println("Parsing");
                             try {
                                 Type pageType = TypeToken.getParameterized(Page.class, type).getType();
-                                System.out.println("type above");
-                                System.out.println(response.getResponseBody());
-                                Page<T> newItems = new Gson().fromJson(response.getResponseBody(),
+                                Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
                                         pageType);
-                                System.out.println(newItems);
                                 returnList.clear();
-                                returnList.addAll(newItems.getItems());
+                                returnList.addAll(newPage.getItems());
+                                Platform.runLater(
+                                        () -> {
+                                            controller.setPaging(newPage.getTotalPages(), page);
+                                        });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

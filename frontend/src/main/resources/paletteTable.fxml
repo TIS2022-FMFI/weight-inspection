@@ -91,7 +91,7 @@
                 </GridPane>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <children>
-                        <Pagination centerShape="false" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="9" maxWidth="1.7976931348623157E308" style="-fx-page-information-visible: false;">
+                        <Pagination fx:id="pagination" centerShape="false" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="9" maxWidth="1.7976931348623157E308" onMouseClicked="#onPagingUpdate" style="-fx-page-information-visible: false;">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -108,7 +108,7 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <ComboBox fx:id="pageSizeBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" promptText="10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                        <ComboBox fx:id="pageSizeBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" onAction="#onPagingUpdate" promptText="10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets bottom="5.0" top="5.0" />
                             </GridPane.margin>
