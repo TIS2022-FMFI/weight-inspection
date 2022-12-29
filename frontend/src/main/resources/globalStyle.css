@@ -104,3 +104,8 @@
     -fx-border-style: solid;
     -fx-border-color: #000000;
 }
+
+.text
+{
+    -fx-font-weight: bold;
+}
