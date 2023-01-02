@@ -208,6 +208,12 @@ public class PaletteTableController extends TableController implements Swappable
 
     }
 
+    @FXML
+    public void createNew() {
+        Palette newPalette = new Palette();
+        newPalette.post(this);
+    }
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         updateTable();

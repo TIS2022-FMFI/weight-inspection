@@ -76,6 +76,8 @@ public class AHClientHandler {
 
     public <T> void postRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
+        System.out.println(url);
+        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -87,7 +89,7 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() != 200) {
+                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
@@ -101,8 +103,6 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
-        System.out.println(url);
-        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -114,7 +114,7 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() != 200) {
+                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
@@ -136,7 +136,7 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() != 200) {
+                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
