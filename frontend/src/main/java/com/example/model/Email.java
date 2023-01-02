@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.controller.TableController;
 import com.example.utils.AHClientHandler;
 
 public class Email {
@@ -31,23 +32,19 @@ public class Email {
         this.send_exports = send_exports;
     }
 
-    public void post()
-    {
-        if (id == null)
-        {
-            AHClientHandler.getAHClientHandler().postRequest("/email", this);
+    public void post(TableController controller) {
+        if (id == null) {
+            AHClientHandler.getAHClientHandler().postRequest("/email", this, controller);
             return;
         }
         throw new IllegalStateException("Can't POST email that has ID, probably ment to use PUT");
     }
 
-    public void put()
-    {
-        AHClientHandler.getAHClientHandler().putRequest("/email/" + String.valueOf(id), this);
+    public void put(TableController controller) {
+        AHClientHandler.getAHClientHandler().putRequest("/email/" + String.valueOf(id), this, controller);
     }
 
-    public void delete()
-    {
-        AHClientHandler.getAHClientHandler().deleteRequest("/email/" + String.valueOf(id));
+    public void delete(TableController controller) {
+        AHClientHandler.getAHClientHandler().deleteRequest("/email/" + String.valueOf(id), controller);
     }
 }

@@ -74,35 +74,6 @@ public class PaletteTableController extends TableController implements Swappable
 
         editableCols();
 
-        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> cellFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
-            @Override
-            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
-                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
-                    final Button btn = new Button("Just Do It");
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            btn.setOnAction(event -> {
-                                Palette palette = getTableView().getItems().get(getIndex());
-                                btn.setText(palette.getId()
-                                        + ".   " + palette.getName());
-                            });
-                            setGraphic(btn);
-                            setText(null);
-                        }
-                    }
-                };
-                return cell;
-            }
-        };
-
-        actionColumn.setCellFactory(cellFactory);
-
         tableView.setItems(palettes);
 
     }
@@ -130,6 +101,95 @@ public class PaletteTableController extends TableController implements Swappable
         updateTable();
     }
 
+    @Override
+    public void setButtons() {
+        PaletteTableController self = this;
+        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> connectedFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+            @Override
+            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
+                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+                    final Button btn = new Button("PRIPOJENÉ PRODUKTY");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Palette palette = getTableView().getItems().get(getIndex());
+                                btn.setText(palette.getId()
+                                        + ".   " + palette.getName());
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        actionColumn.setCellFactory(connectedFactory);
+
+        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> updateFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+            @Override
+            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
+                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+                    final Button btn = new Button("OBNOVIT");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Palette palette = getTableView().getItems().get(getIndex());
+                                palette.put(self);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        actionColumn2.setCellFactory(updateFactory);
+
+        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> deleteFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+            @Override
+            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
+                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+                    final Button btn = new Button("VYMAZAŤ");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Palette palette = getTableView().getItems().get(getIndex());
+                                palette.delete(self);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        actionColumn3.setCellFactory(deleteFactory);
+    }
+
     @FXML
     @Override
     public void updateTable() {
@@ -145,6 +205,7 @@ public class PaletteTableController extends TableController implements Swappable
         }
         AHClientHandler.getAHClientHandler().getPage("/palette", currentPage, pageSize, palettes,
                 Palette.class, this);
+
     }
 
     @Override

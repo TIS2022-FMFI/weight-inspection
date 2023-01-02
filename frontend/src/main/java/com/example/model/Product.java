@@ -1,20 +1,18 @@
 package com.example.model;
 
+import com.example.controller.TableController;
 import com.example.utils.AHClientHandler;
 
-public class Product
-{
+public class Product {
     private Integer id;
     private String reference;
     private Float weight;
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer product_id)
-    {
+    public void setId(Integer product_id) {
         this.id = product_id;
     }
 
@@ -34,23 +32,19 @@ public class Product
         this.weight = weight;
     }
 
-    public void post()
-    {
-        if (id == null)
-        {
-            AHClientHandler.getAHClientHandler().postRequest("/product", this);
+    public void post(TableController controller) {
+        if (id == null) {
+            AHClientHandler.getAHClientHandler().postRequest("/product", this, controller);
             return;
         }
         throw new IllegalStateException("Can't POST product that has ID, probably ment to use PUT");
     }
 
-    public void put()
-    {
-        AHClientHandler.getAHClientHandler().putRequest("/product/" + String.valueOf(id), this);
+    public void put(TableController controller) {
+        AHClientHandler.getAHClientHandler().putRequest("/product/" + String.valueOf(id), this, controller);
     }
 
-    public void delete()
-    {
-        AHClientHandler.getAHClientHandler().deleteRequest("/product/" + String.valueOf(id));
+    public void delete(TableController controller) {
+        AHClientHandler.getAHClientHandler().deleteRequest("/product/" + String.valueOf(id), controller);
     }
 }

@@ -37,6 +37,9 @@ public abstract class TableController implements Initializable {
     public void updateTable() {
     }
 
+    public void setButtons() {
+    }
+
     public void setPaging(int totalPages, int page) {
         if (pagination.getCurrentPageIndex() != page) {
             pagination.setCurrentPageIndex(page);

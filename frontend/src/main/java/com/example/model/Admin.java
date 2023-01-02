@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.controller.TableController;
 import com.example.utils.AHClientHandler;
 
 import java.sql.Timestamp;
@@ -69,19 +70,19 @@ public class Admin {
         this.last_login = last_login;
     }
 
-    public void post() {
+    public void post(TableController controller) {
         if (id == null) {
-            AHClientHandler.getAHClientHandler().postRequest("/admin", this);
+            AHClientHandler.getAHClientHandler().postRequest("/admin", this, controller);
             return;
         }
         throw new IllegalStateException("Can't POST admin that has ID, probably ment to use PUT");
     }
 
-    public void put() {
-        AHClientHandler.getAHClientHandler().putRequest("/admin/" + String.valueOf(id), this);
+    public void put(TableController controller) {
+        AHClientHandler.getAHClientHandler().putRequest("/admin/" + String.valueOf(id), this, controller);
     }
 
-    public void delete() {
-        AHClientHandler.getAHClientHandler().deleteRequest("/admin/" + String.valueOf(id));
+    public void delete(TableController controller) {
+        AHClientHandler.getAHClientHandler().deleteRequest("/admin/" + String.valueOf(id), controller);
     }
 }

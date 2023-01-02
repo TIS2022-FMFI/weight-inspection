@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Pagination;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -66,6 +65,7 @@ public class AHClientHandler {
                                 Platform.runLater(
                                         () -> {
                                             controller.setPaging(newPage.getTotalPages(), page);
+                                            controller.setButtons();
                                         });
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -74,10 +74,11 @@ public class AHClientHandler {
                         });
     }
 
-    public <T> void postRequest(String url, T object) {
+    public <T> void postRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
+                .setHeader("Content-Type", "application/json")
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -90,14 +91,21 @@ public class AHClientHandler {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
+                    Platform.runLater(
+                            () -> {
+                                controller.updateTable();
+                            });
                     return null;
                 });
     }
 
-    public <T> void putRequest(String url, T object) {
+    public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
+        System.out.println(url);
+        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
+                .setHeader("Content-Type", "application/json")
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -110,11 +118,15 @@ public class AHClientHandler {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
+                    Platform.runLater(
+                            () -> {
+                                controller.updateTable();
+                            });
                     return null;
                 });
     }
 
-    public <T> void deleteRequest(String url) {
+    public <T> void deleteRequest(String url, TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareDelete(baseUrl + url)
                 .execute()
@@ -128,6 +140,10 @@ public class AHClientHandler {
                         System.out.println(
                                 new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
                     }
+                    Platform.runLater(
+                            () -> {
+                                controller.updateTable();
+                            });
                     return null;
                 });
     }
