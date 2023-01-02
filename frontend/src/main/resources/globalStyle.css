@@ -1,11 +1,12 @@
 .root{
     -fx-font-family: "Times New Roman";
+    -fx-font-size:12pt;
     -fx-background-color:#1c2545;
     -fx-text-background-color: #fdfdfd;
 }
 .table-view .column-header-background {
     -fx-background-color: #1d4d7b;
-    -fx-font-size: 7pt;
+    -fx-font-size: 10pt;
 }
 .table-view .column-header-background .filler {
     -fx-background-color: transparent;

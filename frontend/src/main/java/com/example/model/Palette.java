@@ -32,8 +32,8 @@ public class Palette {
         this.name = name;
     }
 
-    public Float getWeight() {
-        return weight;
+    public String getWeight() {
+        return weight.toString();
     }
 
     public void setWeight(Float weight) {

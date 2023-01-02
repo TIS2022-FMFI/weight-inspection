@@ -5,6 +5,7 @@ import com.example.model.Page;
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
+import com.example.utils.NumericTextField;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -70,6 +72,8 @@ public class PaletteTableController extends TableController implements Swappable
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
+        editableCols();
+
         Callback<TableColumn<Palette, String>, TableCell<Palette, String>> cellFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
             @Override
             public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
@@ -84,9 +88,9 @@ public class PaletteTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Palette commentModel = getTableView().getItems().get(getIndex());
-                                btn.setText(commentModel.getId()
-                                        + ".   " + commentModel.getName());
+                                Palette palette = getTableView().getItems().get(getIndex());
+                                btn.setText(palette.getId()
+                                        + ".   " + palette.getName());
                             });
                             setGraphic(btn);
                             setText(null);
@@ -103,11 +107,30 @@ public class PaletteTableController extends TableController implements Swappable
 
     }
 
+    private void editableCols() {
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
+
+        typeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        typeColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
+
+        weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        weightColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
+                        .setWeight(Float.valueOf(NumericTextField.fortmatFloatText(e.getNewValue()))));
+
+        tableView.setEditable(true);
+    }
+
     @FXML
-    public void onPagingUpdate() {
+    public void onPagingSizeUpdate() {
+        pagination.setCurrentPageIndex(0);
         updateTable();
     }
 
+    @FXML
     @Override
     public void updateTable() {
         String strPageSize = pageSizeBox.getValue();
