@@ -212,6 +212,7 @@ public class PaletteTableController extends TableController implements Swappable
     public void createNew() {
         Palette newPalette = new Palette();
         newPalette.post(this);
+        pagination.setCurrentPageIndex(0);
     }
 
     @Override
