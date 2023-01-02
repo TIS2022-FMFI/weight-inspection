@@ -1,43 +1,53 @@
-.root{
+.root {
     -fx-font-family: "Times New Roman";
     -fx-background-color:#1c2545;
     -fx-text-background-color: #fdfdfd;
+    -fx-font-weight: bold;
+    -fx-font-size: 1.5em;
 }
+
 .table-view .column-header-background {
     -fx-background-color: #1d4d7b;
     -fx-font-size: 7pt;
 }
+
 .table-view .column-header-background .filler {
     -fx-background-color: transparent;
 }
+
 .table-view .corner {
     -fx-background-color: transparent;
 }
+
 .table-view .column-header {
     -fx-background-color: transparent;
 }
+
 .table-view .column-header .label {
     -fx-text-fill: #fdfdfd;
 }
+
 .table-view {
     -fx-background-color: transparent;
 }
+
 .table-view .label {
     -fx-text-fill: #fdfdfd;
 }
-.table-name{
+
+.table-name {
     -fx-background-color: #10345f;
 }
 
-
-.button{
+.button {
     -fx-background-color: linear-gradient(to bottom, #e30313, #730109);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0.0, 0.0);
     -fx-text-fill: #fdfdfd;
     -fx-font-family: "Times New Roman";
 }
+
 /* Remove spacing */
-.pagination{
+.pagination {
     -fx-page-information-visible: false;
     -fx-alignment: center;
 }
@@ -46,7 +56,6 @@
     -fx-spacing: 0;
     -fx-alignment: center;
 }
-
 
 .pagination>.pagination-control>.control-box>.number-button,
 .pagination>.pagination-control>.control-box>.bullet-button,
@@ -74,4 +83,32 @@
     -fx-alignment: center;
     -fx-background-color: linear-gradient(to bottom, #e30313, #730109);
     -fx-text-fill: #fdfdfd;
+}
+
+.whiteGridPane {
+    -fx-background-color: #fdfdfd;
+}
+
+.blueLabel {
+    -fx-background-color: #10345F;
+    -fx-text-fill: #fdfdfd;
+    -fx-alignment: center;
+
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-color: #000000;
+}
+
+.whiteLabel {
+    -fx-background-color: #fdfdfd;
+    -fx-text-fill: #000000;
+    -fx-alignment: center;
+
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-color: #000000;
+}
+
+.text {
+    -fx-font-weight: bold;
 }
