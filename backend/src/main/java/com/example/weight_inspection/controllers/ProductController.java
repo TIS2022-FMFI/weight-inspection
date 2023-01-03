@@ -2,10 +2,15 @@ package com.example.weight_inspection.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.example.weight_inspection.models.Packaging;
+import com.example.weight_inspection.models.ProductPackaging;
+import com.example.weight_inspection.repositories.PackagingRepository;
+import com.example.weight_inspection.repositories.ProductPackagingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.weight_inspection.models.Palette;
 import com.example.weight_inspection.models.Product;
-import com.example.weight_inspection.payloads.ListResponse;
+import com.example.weight_inspection.transfer.ListResponse;
 import com.example.weight_inspection.repositories.PaletteRepository;
 import com.example.weight_inspection.repositories.ProductRepository;
 
@@ -27,11 +32,15 @@ public class ProductController {
 
 	private final ProductRepository productRepository;
     private final PaletteRepository paletteRepository;
+	private final ProductPackagingRepository productPackagingRepository;
+	private final PackagingRepository packagingRepository;
 
 	@Autowired
-	public ProductController(ProductRepository productRepository, PaletteRepository paletteRepository) {
+	public ProductController(ProductRepository productRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository, PackagingRepository packagingRepository) {
 		this.productRepository = productRepository;
 		this.paletteRepository = paletteRepository;
+		this.productPackagingRepository = productPackagingRepository;
+		this.packagingRepository = packagingRepository;
 	}
 
 	@GetMapping
@@ -146,6 +155,7 @@ public class ProductController {
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+
 	@DeleteMapping("{productId}/palette/{paletteId}")
 	public ResponseEntity<Product> deletePaletteFromProduct(@PathVariable Long productId, @PathVariable Long paletteId) {
 
@@ -162,6 +172,61 @@ public class ProductController {
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	@PostMapping("{productId}/packaging/{packagingId}")
+	public ResponseEntity<Product> addPackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
+														  BindingResult bindingResult,
+														  @PathVariable Long productId,
+														  @PathVariable Long packagingId) {
 
+		if (bindingResult.hasErrors() || productPackaging == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 
+		Optional<Product> product = productRepository.findById(productId);
+		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
+
+		if(!product.isPresent() || !packaging.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Product newProduct = product.get();
+		Packaging newPackaging = packaging.get();
+
+		productPackaging.setPackaging(newPackaging);
+		productPackaging.setProduct(newProduct);
+		productPackagingRepository.save(productPackaging);
+
+		newProduct.getProductPackaging().add(productPackaging);
+		productRepository.save(newProduct);
+
+		newPackaging.getProductPackaging().add(productPackaging);
+		packagingRepository.save(newPackaging);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("{productId}/packaging/{packagingId}")
+	public ResponseEntity<Product> deletePackagingFromProduct(@PathVariable Long productId, @PathVariable Long packagingId) {
+
+		Optional<Product> product = productRepository.findById(productId);
+		if (!product.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Optional<ProductPackaging> productPackaging =  product.get().getProductPackaging()
+				.stream()
+				.filter(it -> Objects.equals(it.getPackaging().getId(), packagingId))
+				.findFirst();
+
+		if(!productPackaging.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Product delProduct = product.get();
+		delProduct.getProductPackaging().remove(productPackaging.get());
+		productPackaging.get().getPackaging().getProductPackaging().remove(productPackaging.get());
+		productRepository.save(delProduct);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
