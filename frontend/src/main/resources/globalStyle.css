@@ -1,5 +1,6 @@
 .root {
     -fx-font-family: "Times New Roman";
+    -fx-font-size:12pt;
     -fx-background-color:#1c2545;
     -fx-text-background-color: #fdfdfd;
     -fx-font-weight: bold;
@@ -8,7 +9,7 @@
 
 .table-view .column-header-background {
     -fx-background-color: #1d4d7b;
-    -fx-font-size: 7pt;
+    -fx-font-size: 10pt;
 }
 
 .table-view .column-header-background .filler {
@@ -37,6 +38,11 @@
 
 .table-name {
     -fx-background-color: #10345f;
+}
+.table-view .table-cell {
+    -fx-text-fill: black;
+    -fx-font-size: 1.3em;
+    -fx-alignment: center;
 }
 
 .button {
@@ -84,6 +90,12 @@
     -fx-background-color: linear-gradient(to bottom, #e30313, #730109);
     -fx-text-fill: #fdfdfd;
 }
+
+.combo-box .list-cell {
+    -fx-background: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-alignment: center;
 
 .whiteGridPane {
     -fx-background-color: #fdfdfd;
