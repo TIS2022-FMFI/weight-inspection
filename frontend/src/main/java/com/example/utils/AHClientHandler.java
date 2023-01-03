@@ -65,7 +65,7 @@ public class AHClientHandler {
                                 Platform.runLater(
                                         () -> {
                                             controller.setPaging(newPage.getTotalPages(), page);
-                                            controller.setButtons();
+                                            controller.updateButtons();
                                         });
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -90,7 +90,7 @@ public class PaletteTableController extends TableController implements Swappable
         weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         weightColumn.setOnEditCommit(
                 e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
-                        .setWeight(Float.valueOf(NumericTextField.fortmatFloatText(e.getNewValue()))));
+                        .setWeight(Float.valueOf(NumericTextField.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }
@@ -102,7 +102,7 @@ public class PaletteTableController extends TableController implements Swappable
     }
 
     @Override
-    public void setButtons() {
+    public void updateButtons() {
         PaletteTableController self = this;
         Callback<TableColumn<Palette, String>, TableCell<Palette, String>> connectedFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
             @Override
