@@ -81,6 +81,7 @@ public class ProductController {
 
 		product.setId(null);
 		product.setPalette(null);
+		product.setProductPackaging(null);
 		productRepository.save(product);
 		return new ResponseEntity<>(product, HttpStatus.CREATED);
 	}
@@ -98,12 +99,14 @@ public class ProductController {
 		if (!replacedProduct.isPresent()) {
 			product.setId(null);
 			product.setPalette(null);
+			product.setProductPackaging(null);
 			productRepository.save(product);
 			return new ResponseEntity<>(product, HttpStatus.NO_CONTENT);
 		}
 
 		product.setId(productId);
 		product.setPalette(replacedProduct.get().getPalette());
+		product.setProductPackaging(replacedProduct.get().getProductPackaging());
 		productRepository.save(product);
 		return new ResponseEntity<>(product, HttpStatus.NO_CONTENT);
 	}
@@ -176,6 +179,7 @@ public class ProductController {
 		Product newProduct = product.get();
 		Packaging newPackaging = packaging.get();
 
+		productPackaging.setId(null);
 		productPackaging.setPackaging(newPackaging);
 		productPackaging.setProduct(newProduct);
 		productPackagingRepository.save(productPackaging);
