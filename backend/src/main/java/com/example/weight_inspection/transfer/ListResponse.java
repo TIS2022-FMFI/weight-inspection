@@ -1,5 +1,9 @@
 package com.example.weight_inspection.transfer;
 
+import com.example.weight_inspection.models.Product;
+import org.springframework.data.domain.Page;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListResponse<T> {
@@ -9,6 +13,25 @@ public class ListResponse<T> {
     private List<T> items;
 
     public ListResponse() {}
+
+    public ListResponse(T item) {
+        List<T> list = new ArrayList<T>();
+        if (item != null) {
+            list.add(item);
+        }
+
+        page = 0;
+        items = list;
+        totalItems = list.size();
+        totalPages = 1;
+    }
+
+    public ListResponse(Page<T> pageRes) {
+        page = pageRes.getNumber();
+        totalPages = pageRes.getTotalPages();
+        totalItems = pageRes.getTotalElements();
+        items = pageRes.getContent();
+    }
 
     @Override
     public String toString() {
@@ -20,31 +43,15 @@ public class ListResponse<T> {
         return page;
     }
 
-    public void setPage(int currentPage) {
-        this.page = currentPage;
-    }
-
     public int getTotalPages() {
         return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
     }
 
     public long getTotalItems() {
         return totalItems;
     }
 
-    public void setTotalItems(long totalItems) {
-        this.totalItems = totalItems;
-    }
-
     public List<T> getItems() {
         return items;
-    }
-
-    public void setItems(List<T> items) {
-        this.items = items;
     }
 }
