@@ -46,29 +46,13 @@ public class PaletteController {
 
         if (!name.isEmpty()) {
             Palette palette = paletteRepository.findByName(name);
-            List<Palette> list = new ArrayList<Palette>();
-            if (palette != null) {
-                list.add(palette);
-            }
-
-            ListResponse<Palette> listResponse = new ListResponse<Palette>();
-            listResponse.setPage(0);
-            listResponse.setItems(list);
-            listResponse.setTotalItems(list.size());
-            listResponse.setTotalPages(1);
-
+            ListResponse<Palette> listResponse = new ListResponse<>(palette);
             return new ResponseEntity<>(listResponse, HttpStatus.OK);
         }
 
         Pageable pageable = PageRequest.of(currentPage, pageSize);
         Page<Palette> page = paletteRepository.findAll(pageable);
-
-        ListResponse<Palette> listResponse = new ListResponse<Palette>();
-        listResponse.setPage(currentPage);
-        listResponse.setItems(page.getContent());
-        listResponse.setTotalItems(page.getTotalElements());
-        listResponse.setTotalPages(page.getTotalPages());
-
+        ListResponse<Palette> listResponse = new ListResponse<>(page);
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
 

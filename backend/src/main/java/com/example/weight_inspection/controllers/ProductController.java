@@ -51,30 +51,13 @@ public class ProductController {
 
 		if (!reference.isEmpty()) {
 			Product product = productRepository.findByReference(reference);
-			List<Product> list = new ArrayList<Product>();
-			if (product != null) {
-				list.add(product);
-			}
-
-			ListResponse<Product> listResponse = new ListResponse<Product>();
-			listResponse.setPage(0);
-			listResponse.setItems(list);
-			listResponse.setTotalItems(list.size());
-			listResponse.setTotalPages(1);
-
+			ListResponse<Product> listResponse = new ListResponse<>(product);
 			return new ResponseEntity<>(listResponse, HttpStatus.OK);
 		}
 
 		Pageable pageable = PageRequest.of(currentPage, pageSize);
 		Page<Product> page = productRepository.findAll(pageable);
-
-		ListResponse<Product> listResponse = new ListResponse<>();
-		listResponse.setPage(currentPage);
-		listResponse.setTotalItems(page.getTotalElements());
-		listResponse.setTotalPages(page.getTotalPages());
-		listResponse.setItems(page.getContent());
-		listResponse.setItems(page.getContent());
-
+		ListResponse<Product> listResponse = new ListResponse<>(page);
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
 
@@ -172,6 +155,7 @@ public class ProductController {
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
 	@PostMapping("{productId}/packaging/{packagingId}")
 	public ResponseEntity<Product> addPackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
 														  BindingResult bindingResult,

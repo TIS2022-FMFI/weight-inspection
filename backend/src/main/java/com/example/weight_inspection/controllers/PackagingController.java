@@ -46,29 +46,13 @@ public class PackagingController {
 
 		if (!name.isEmpty()) {
 			Packaging packaging = packagingRepository.findByName(name);
-			List<Packaging> list = new ArrayList<Packaging>();
-			if (packaging != null) {
-				list.add(packaging);
-			}
-
-			ListResponse<Packaging> listResponse = new ListResponse<Packaging>();
-			listResponse.setPage(0);
-			listResponse.setItems(list);
-			listResponse.setTotalItems(list.size());
-			listResponse.setTotalPages(1);
-
+			ListResponse<Packaging> listResponse = new ListResponse<>(packaging);
 			return new ResponseEntity<>(listResponse, HttpStatus.OK);
 		}
 
 		Pageable pageable = PageRequest.of(currentPage, pageSize);
 		Page<Packaging> page = packagingRepository.findAll(pageable);
-
-		ListResponse<Packaging> listResponse = new ListResponse<Packaging>();
-		listResponse.setPage(currentPage);
-		listResponse.setItems(page.getContent());
-		listResponse.setTotalItems(page.getTotalElements());
-		listResponse.setTotalPages(page.getTotalPages());
-
+		ListResponse<Packaging> listResponse = new ListResponse<>(page);
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
 
