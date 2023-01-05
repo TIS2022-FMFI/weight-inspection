@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.example.weight_inspection.models.Product;
+import com.example.weight_inspection.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +34,12 @@ import com.example.weight_inspection.repositories.PaletteRepository;
 public class PaletteController {
 
     private final PaletteRepository paletteRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public PaletteController(PaletteRepository paletteRepository) {
+    public PaletteController(PaletteRepository paletteRepository, ProductRepository productRepository) {
         this.paletteRepository = paletteRepository;
+        this.productRepository = productRepository;
     }
 
     @GetMapping
@@ -112,4 +116,40 @@ public class PaletteController {
         paletteRepository.delete(deletedPalette);
         return new ResponseEntity<>(deletedPalette, HttpStatus.NO_CONTENT);
     }
+    @PostMapping("{paletteId}/product/{productId}")
+    public ResponseEntity<Palette> addProductToPalette(@PathVariable Long paletteId, @PathVariable Long productId) {
+        Optional<Palette> palette = paletteRepository.findById(paletteId);
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (!palette.isPresent() || !product.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Palette newPalette = palette.get();
+        newPalette.getProduct().add(product.get());
+        paletteRepository.save(newPalette);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
+    }
+
+    @DeleteMapping("{paletteId}/product/{productId}")
+    public ResponseEntity<Palette> deleteProductFromPalette(@PathVariable Long paletteId, @PathVariable Long productId) {
+        Optional<Palette> palette = paletteRepository.findById(paletteId);
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (!palette.isPresent() || !product.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Palette delPalette = palette.get();
+        delPalette.getProduct().remove(product.get());
+        paletteRepository.save(delPalette);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+
+    }
+
+
 }
