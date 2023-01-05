@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -50,12 +51,12 @@ public class ProductController {
 			@RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
 		if (!reference.isEmpty()) {
-			Product product = productRepository.findByReference(reference);
+			Product product = productRepository.findByReferenceOrderByIdDesc(reference);
 			ListResponse<Product> listResponse = new ListResponse<>(product);
 			return new ResponseEntity<>(listResponse, HttpStatus.OK);
 		}
 
-		Pageable pageable = PageRequest.of(currentPage, pageSize);
+		Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
 		Page<Product> page = productRepository.findAll(pageable);
 		ListResponse<Product> listResponse = new ListResponse<>(page);
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);

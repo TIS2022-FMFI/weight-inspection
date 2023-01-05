@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -49,7 +50,6 @@ public class PackagingController {
 		this.productPackagingRepository = productPackagingRepository;
 	}
 
-	//TODO: najnovsie najskor, pozri si sortovanie java spring na google
 
 	@GetMapping
 	public ResponseEntity<ListResponse<Packaging>> GetPackagings(
@@ -58,12 +58,12 @@ public class PackagingController {
 			@RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
 		if (!name.isEmpty()) {
-			Packaging packaging = packagingRepository.findByName(name);
+			Packaging packaging = packagingRepository.findByNameOrderByIdDesc(name);
 			ListResponse<Packaging> listResponse = new ListResponse<>(packaging);
 			return new ResponseEntity<>(listResponse, HttpStatus.OK);
 		}
 
-		Pageable pageable = PageRequest.of(currentPage, pageSize);
+		Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
 		Page<Packaging> page = packagingRepository.findAll(pageable);
 		ListResponse<Packaging> listResponse = new ListResponse<>(page);
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);

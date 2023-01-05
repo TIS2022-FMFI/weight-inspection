@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -49,12 +50,12 @@ public class PaletteController {
             @RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
         if (!name.isEmpty()) {
-            Palette palette = paletteRepository.findByName(name);
+            Palette palette = paletteRepository.findByNameOrderByIdDesc(name);
             ListResponse<Palette> listResponse = new ListResponse<>(palette);
             return new ResponseEntity<>(listResponse, HttpStatus.OK);
         }
 
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<Palette> page = paletteRepository.findAll(pageable);
         ListResponse<Palette> listResponse = new ListResponse<>(page);
         return new ResponseEntity<>(listResponse, HttpStatus.OK);

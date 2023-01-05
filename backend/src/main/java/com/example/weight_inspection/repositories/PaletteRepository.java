@@ -8,5 +8,5 @@
 
      Palette findById(long id);
 
-     Palette findByName(String name);
+     Palette findByNameOrderByIdDesc(String name);
  }
