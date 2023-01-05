@@ -1,6 +1,5 @@
 .root {
     -fx-font-family: "Times New Roman";
-    -fx-font-size:12pt;
     -fx-background-color:#1c2545;
     -fx-text-background-color: #fdfdfd;
     -fx-font-weight: bold;
@@ -96,6 +95,7 @@
     -fx-background-color: transparent;
     -fx-text-fill: black;
     -fx-alignment: center;
+}
 
 .whiteGridPane {
     -fx-background-color: #fdfdfd;
