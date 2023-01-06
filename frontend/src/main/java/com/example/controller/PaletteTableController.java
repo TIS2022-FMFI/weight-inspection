@@ -48,7 +48,7 @@ public class PaletteTableController extends TableController implements Swappable
     @FXML
     private TableColumn<Palette, String> photoColumn;
     @FXML
-    private TableColumn<Palette, String> actionColumn;
+    private TableColumn<Palette, String> actionColumn1;
     @FXML
     private TableColumn<Palette, String> actionColumn2;
     @FXML
@@ -70,7 +70,7 @@ public class PaletteTableController extends TableController implements Swappable
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         photoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-        actionColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
@@ -132,7 +132,7 @@ public class PaletteTableController extends TableController implements Swappable
             }
         };
 
-        actionColumn.setCellFactory(connectedFactory);
+        actionColumn1.setCellFactory(connectedFactory);
 
         Callback<TableColumn<Palette, String>, TableCell<Palette, String>> updateFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
             @Override

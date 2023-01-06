@@ -49,7 +49,7 @@ public class PackagingTableController extends TableController implements Swappab
     @FXML
     private TableColumn<Packaging, String> photoColumn;
     @FXML
-    private TableColumn<Packaging, String> actionColumn;
+    private TableColumn<Packaging, String> actionColumn1;
     @FXML
     private TableColumn<Packaging, String> actionColumn2;
     @FXML
@@ -71,7 +71,7 @@ public class PackagingTableController extends TableController implements Swappab
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         photoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-        actionColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
@@ -133,7 +133,7 @@ public class PackagingTableController extends TableController implements Swappab
             }
         };
 
-        actionColumn.setCellFactory(connectedFactory);
+        actionColumn1.setCellFactory(connectedFactory);
 
         Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> updateFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
             @Override

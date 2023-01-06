@@ -5,8 +5,8 @@ import com.example.utils.AHClientHandler;
 
 public class Product {
     private Integer id;
-    private String reference;
-    private Float weight;
+    private String reference = "";
+    private Float weight = 0f;
 
     public int getId() {
         return id;
@@ -24,9 +24,7 @@ public class Product {
         this.reference = reference;
     }
 
-    public Float getWeight() {
-        return weight;
-    }
+    public String getWeight() {return weight.toString();}
 
     public void setWeight(Float weight) {
         this.weight = weight;
