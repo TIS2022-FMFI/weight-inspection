@@ -1,9 +1,6 @@
 package com.example.weight_inspection.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import javax.validation.Valid;
 
@@ -126,67 +123,16 @@ public class PackagingController {
 		return new ResponseEntity<>(deletedPackaging, HttpStatus.NO_CONTENT);
 	}
 
-	//TODO: treba vytvorit GET response pre /{packagingId}/product, aby vratilo list response produktov
 
-	@PostMapping("{packagingId}/product/{productId}")
-	public  ResponseEntity<Packaging> addProductToPackaging (@RequestBody @Valid ProductPackaging productPackaging,
-															 BindingResult bindingResult,
-															 @PathVariable Long packagingId,
-															 @PathVariable Long productId) {
-		if (bindingResult.hasErrors() || productPackaging == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-
+	@GetMapping("{packagingId}/product")
+	public ResponseEntity<ListResponse<ProductPackaging>> getProductsOfPackaging(@PathVariable Long packagingId) {
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
-		Optional<Product> product = productRepository.findById(productId);
-
-		if (!packaging.isPresent() || !product.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-		Packaging newPackaging = packaging.get();
-		Product newProduct = product.get();
-
-		productPackaging.setPackaging(newPackaging);
-		productPackaging.setProduct(newProduct);
-		productPackagingRepository.save(productPackaging
-		);
-
-		newPackaging.getProductPackaging().add(productPackaging);
-		packagingRepository.save(newPackaging);
-
-		newProduct.getProductPackaging().add(productPackaging);
-		productRepository.save(newProduct);
-
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
-	@DeleteMapping("{packagingId}/product/{productId}")
-	public ResponseEntity<Packaging> deleteProductFromPackaging(@PathVariable Long packagingId,
-																@PathVariable Long productId) {
-		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
-		Optional<Product> product = productRepository.findById(productId);
-		if (!packaging.isPresent() || !product.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-		Optional<ProductPackaging> productPackaging = packaging.get().getProductPackaging()
-				.stream()
-				.filter(it -> Objects.equals(it.getId(), packagingId))
-				.findFirst();
-
-		if (!productPackaging.isPresent()) {
+		if (!packaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		}
-
-		Packaging delPackaging = packaging.get();
-		ProductPackaging newProductPackaging =  productPackaging.get();
-		delPackaging.getProductPackaging().remove(newProductPackaging);
-		newProductPackaging.getPackaging().getProductPackaging().remove(newProductPackaging);
-		packagingRepository.save(delPackaging);
-		 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+		ListResponse<ProductPackaging> products =  new ListResponse<>(packaging.get().getProductPackaging());
+		return new ResponseEntity<>(products, HttpStatus.OK);
 	}
 
 }

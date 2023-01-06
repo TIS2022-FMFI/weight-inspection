@@ -117,22 +117,7 @@ public class PaletteController {
         paletteRepository.delete(deletedPalette);
         return new ResponseEntity<>(deletedPalette, HttpStatus.NO_CONTENT);
     }
-    @PostMapping("{paletteId}/product/{productId}")
-    public ResponseEntity<Palette> addProductToPalette(@PathVariable Long paletteId, @PathVariable Long productId) {
-        Optional<Palette> palette = paletteRepository.findById(paletteId);
-        Optional<Product> product = productRepository.findById(productId);
 
-        if (!palette.isPresent() || !product.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Palette newPalette = palette.get();
-        newPalette.getProduct().add(product.get());
-        paletteRepository.save(newPalette);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-
-    }
 
     @DeleteMapping("{paletteId}/product/{productId}")
     public ResponseEntity<Palette> deleteProductFromPalette(@PathVariable Long paletteId, @PathVariable Long productId) {
@@ -148,7 +133,17 @@ public class PaletteController {
         paletteRepository.save(delPalette);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+    @GetMapping("{paletteId}/product")
+    public ResponseEntity<ListResponse<Product>> getProductsOfPalette(@PathVariable Long paletteId) {
+        Optional<Palette> palette = paletteRepository.findById(paletteId);
+        if (!palette.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        ListResponse<Product> products = new ListResponse<>(palette.get().getProduct());
+        return new ResponseEntity<>(products, HttpStatus.OK);
 
     }
 

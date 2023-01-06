@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -217,5 +218,26 @@ public class ProductController {
 		productRepository.save(delProduct);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	@GetMapping("{productId}/packaging")
+	public ResponseEntity<ListResponse<ProductPackaging>> getPackagingsOfProduct(@PathVariable Long productId) {
+		Optional<Product> product = productRepository.findById(productId);
+		if (!product.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		ListResponse<ProductPackaging> packages = new ListResponse<>(product.get().getProductPackaging());
+		return  new ResponseEntity<>(packages, HttpStatus.OK);
+
+	}
+
+	@GetMapping("{productId}/palette")
+	public ResponseEntity<ListResponse<Palette>> getPalettesOfProduct(@PathVariable Long productId) {
+		Optional<Product> product = productRepository.findById(productId);
+		if (!product.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		ListResponse<Palette> palletes = new ListResponse<>(product.get().getPalette());
+		return new ResponseEntity<>(palletes, HttpStatus.OK);
 	}
 }
