@@ -53,11 +53,9 @@ public class ProductTableController extends TableController implements Swappable
 
         super.initialize(location, resources);
 
-        // Initializing admin panel
         AdminPanelController adminPanel = new AdminPanelController();
         mainGrid.getChildren().add(adminPanel);
 
-        // Initializing cells for table view
         products = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
@@ -66,14 +64,12 @@ public class ProductTableController extends TableController implements Swappable
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
         editableCols();
-
         tableView.setItems(products);
     }
 
     private void editableCols() {
         referenceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        referenceColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setReference(e.getNewValue()));
+        referenceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setReference(e.getNewValue()));
 
         tableView.setEditable(true);
     }
@@ -86,7 +82,9 @@ public class ProductTableController extends TableController implements Swappable
 
     @Override
     public void updateButtons() {
+
         ProductTableController self = this;
+
         Callback<TableColumn<Product, String>, TableCell<Product, String>> updateFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
             @Override
             public TableCell<Product, String> call(final TableColumn<Product, String> param) {

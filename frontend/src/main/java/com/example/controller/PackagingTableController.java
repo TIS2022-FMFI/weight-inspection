@@ -25,7 +25,6 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -60,11 +59,9 @@ public class PackagingTableController extends TableController implements Swappab
 
         super.initialize(location, resources);
 
-        // Initializing admin panel
         AdminPanelController adminPanel = new AdminPanelController();
         mainGrid.getChildren().add(adminPanel);
 
-        // Initializing cells for table view
         packages = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -76,23 +73,18 @@ public class PackagingTableController extends TableController implements Swappab
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
         editableCols();
-
         tableView.setItems(packages);
     }
 
     private void editableCols() {
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        nameColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
+        nameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
 
         typeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        typeColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
+        typeColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
 
         weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        weightColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
-                        .setWeight(Float.valueOf(NumericTextField.formatTextToFloat(e.getNewValue()))));
+        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setWeight(Float.valueOf(NumericTextField.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }
@@ -105,7 +97,9 @@ public class PackagingTableController extends TableController implements Swappab
 
     @Override
     public void updateButtons() {
+
         PackagingTableController self = this;
+
         Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> connectedFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
             @Override
             public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
@@ -121,8 +115,7 @@ public class PackagingTableController extends TableController implements Swappab
                         } else {
                             btn.setOnAction(event -> {
                                 Packaging packaging = getTableView().getItems().get(getIndex());
-                                btn.setText(packaging.getId()
-                                        + ".   " + packaging.getName());
+                                btn.setText(packaging.getId() + ".   " + packaging.getName());
                             });
                             setGraphic(btn);
                             setText(null);
