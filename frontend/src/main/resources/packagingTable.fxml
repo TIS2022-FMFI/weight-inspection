@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.PaletteTableController">
+<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.PackagingTableController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
     </columnConstraints>
@@ -26,10 +26,10 @@
     <children>
         <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID PALETY" />
-                <TableColumn fx:id="nameColumn" prefWidth="75.0" text="NÁZOV PALETY" />
-                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="TYP PALETY" />
-                <TableColumn fx:id="weightColumn" prefWidth="75.0" text="HMOTNOSŤ PALETY" />
+                <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID OBALU" />
+                <TableColumn fx:id="nameColumn" prefWidth="75.0" text="NÁZOV OBALU" />
+                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="TYP OBALU" />
+                <TableColumn fx:id="weightColumn" prefWidth="75.0" text="HMOTNOSŤ OBALU" />
                 <TableColumn fx:id="photoColumn" prefWidth="75.0" text="FOTOGRAFIA" />
                 <TableColumn fx:id="actionColumn" prefWidth="75.0" text="ACTION1" />
                 <TableColumn fx:id="actionColumn2" prefWidth="75.0" text="ACTION2" />
@@ -48,7 +48,7 @@
                 <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Text fill="#fdfdfd" strokeType="OUTSIDE" strokeWidth="0.0" text="TABUĽKA PALIET" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                <Text fill="#fdfdfd" strokeType="OUTSIDE" strokeWidth="0.0" text="TABUĽKA OBALOV" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateTable" text="OBNOVIŤ" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

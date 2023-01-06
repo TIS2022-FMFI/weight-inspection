@@ -20,6 +20,7 @@ replay_pid*
 
 # Gradle
 .gradle
+frontend/.gradle/
 frontend/build/
 frontend/bin/
 gradle-app.setting

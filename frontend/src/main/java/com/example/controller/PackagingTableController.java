@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Palette;
+import com.example.model.Packaging;
 import com.example.model.Page;
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
@@ -25,34 +25,35 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class PaletteTableController extends TableController implements Swappable {
+public class PackagingTableController extends TableController implements Swappable {
 
-    ObservableList<Palette> palettes;
+    ObservableList<Packaging> packages;
 
     @FXML
     private GridPane mainGrid;
     @FXML
-    private TableView<Palette> tableView;
+    private TableView<Packaging> tableView;
     @FXML
-    private TableColumn<Palette, Integer> idColumn;
+    private TableColumn<Packaging, Integer> idColumn;
     @FXML
-    private TableColumn<Palette, String> nameColumn;
+    private TableColumn<Packaging, String> nameColumn;
     @FXML
-    private TableColumn<Palette, String> typeColumn;
+    private TableColumn<Packaging, String> typeColumn;
     @FXML
-    private TableColumn<Palette, String> weightColumn;
+    private TableColumn<Packaging, String> weightColumn;
     @FXML
-    private TableColumn<Palette, String> photoColumn;
+    private TableColumn<Packaging, String> photoColumn;
     @FXML
-    private TableColumn<Palette, String> actionColumn;
+    private TableColumn<Packaging, String> actionColumn;
     @FXML
-    private TableColumn<Palette, String> actionColumn2;
+    private TableColumn<Packaging, String> actionColumn2;
     @FXML
-    private TableColumn<Palette, String> actionColumn3;
+    private TableColumn<Packaging, String> actionColumn3;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,7 +65,7 @@ public class PaletteTableController extends TableController implements Swappable
         mainGrid.getChildren().add(adminPanel);
 
         // Initializing cells for table view
-        palettes = FXCollections.observableArrayList();
+        packages = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -76,7 +77,7 @@ public class PaletteTableController extends TableController implements Swappable
 
         editableCols();
 
-        tableView.setItems(palettes);
+        tableView.setItems(packages);
     }
 
     private void editableCols() {
@@ -104,11 +105,11 @@ public class PaletteTableController extends TableController implements Swappable
 
     @Override
     public void updateButtons() {
-        PaletteTableController self = this;
-        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> connectedFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+        PackagingTableController self = this;
+        Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> connectedFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
             @Override
-            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
-                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+            public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
+                final TableCell<Packaging, String> cell = new TableCell<Packaging, String>() {
                     final Button btn = new Button("PRIPOJENE PRODUKTY");
 
                     @Override
@@ -119,9 +120,9 @@ public class PaletteTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Palette palette = getTableView().getItems().get(getIndex());
-                                btn.setText(palette.getId()
-                                        + ".   " + palette.getName());
+                                Packaging packaging = getTableView().getItems().get(getIndex());
+                                btn.setText(packaging.getId()
+                                        + ".   " + packaging.getName());
                             });
                             setGraphic(btn);
                             setText(null);
@@ -134,10 +135,10 @@ public class PaletteTableController extends TableController implements Swappable
 
         actionColumn.setCellFactory(connectedFactory);
 
-        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> updateFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+        Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> updateFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
             @Override
-            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
-                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+            public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
+                final TableCell<Packaging, String> cell = new TableCell<Packaging, String>() {
                     final Button btn = new Button("ULOZIT");
 
                     @Override
@@ -148,8 +149,8 @@ public class PaletteTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Palette palette = getTableView().getItems().get(getIndex());
-                                palette.put(self);
+                                Packaging packaging = getTableView().getItems().get(getIndex());
+                                packaging.put(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -162,10 +163,10 @@ public class PaletteTableController extends TableController implements Swappable
 
         actionColumn2.setCellFactory(updateFactory);
 
-        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> deleteFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+        Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> deleteFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
             @Override
-            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
-                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+            public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
+                final TableCell<Packaging, String> cell = new TableCell<Packaging, String>() {
                     final Button btn = new Button("VYMAZAT");
 
                     @Override
@@ -176,8 +177,8 @@ public class PaletteTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Palette palette = getTableView().getItems().get(getIndex());
-                                palette.delete(self);
+                                Packaging packaging = getTableView().getItems().get(getIndex());
+                                packaging.delete(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -204,13 +205,13 @@ public class PaletteTableController extends TableController implements Swappable
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/palette", currentPage, pageSize, palettes, Palette.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/packaging", currentPage, pageSize, packages, Packaging.class, this);
     }
 
     @FXML
     public void createNew() {
-        Palette newPalette = new Palette();
-        newPalette.post(this);
+        Packaging newPackaging = new Packaging();
+        newPackaging.post(this);
         pagination.setCurrentPageIndex(0);
     }
 
