@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ListResponse<T> {
     private int page;
@@ -31,6 +33,13 @@ public class ListResponse<T> {
         totalPages = pageRes.getTotalPages();
         totalItems = pageRes.getTotalElements();
         items = pageRes.getContent();
+    }
+
+    public ListResponse(Set<T> set) {
+        page = 0;
+        totalPages = 1;
+        totalItems = set.size();
+        items = new ArrayList<>(set);
     }
 
     @Override

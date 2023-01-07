@@ -6,7 +6,7 @@ import com.example.weight_inspection.models.Packaging;
 
 public interface PackagingRepository extends PagingAndSortingRepository<Packaging, Long>{
 
-  Packaging findByName(String name);
+  Packaging findByNameOrderByIdDesc(String name);
 
   Packaging findById(long id);
 }

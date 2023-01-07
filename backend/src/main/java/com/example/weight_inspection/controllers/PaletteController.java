@@ -6,10 +6,13 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.example.weight_inspection.models.Product;
+import com.example.weight_inspection.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -32,10 +35,12 @@ import com.example.weight_inspection.repositories.PaletteRepository;
 public class PaletteController {
 
     private final PaletteRepository paletteRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public PaletteController(PaletteRepository paletteRepository) {
+    public PaletteController(PaletteRepository paletteRepository, ProductRepository productRepository) {
         this.paletteRepository = paletteRepository;
+        this.productRepository = productRepository;
     }
 
     @GetMapping
@@ -45,12 +50,12 @@ public class PaletteController {
             @RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
         if (!name.isEmpty()) {
-            Palette palette = paletteRepository.findByName(name);
+            Palette palette = paletteRepository.findByNameOrderByIdDesc(name);
             ListResponse<Palette> listResponse = new ListResponse<>(palette);
             return new ResponseEntity<>(listResponse, HttpStatus.OK);
         }
 
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<Palette> page = paletteRepository.findAll(pageable);
         ListResponse<Palette> listResponse = new ListResponse<>(page);
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
@@ -112,4 +117,35 @@ public class PaletteController {
         paletteRepository.delete(deletedPalette);
         return new ResponseEntity<>(deletedPalette, HttpStatus.NO_CONTENT);
     }
+
+
+    @DeleteMapping("{paletteId}/product/{productId}")
+    public ResponseEntity<Palette> deleteProductFromPalette(@PathVariable Long paletteId, @PathVariable Long productId) {
+        Optional<Palette> palette = paletteRepository.findById(paletteId);
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (!palette.isPresent() || !product.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Palette delPalette = palette.get();
+        delPalette.getProduct().remove(product.get());
+        paletteRepository.save(delPalette);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{paletteId}/product")
+    public ResponseEntity<ListResponse<Product>> getProductsOfPalette(@PathVariable Long paletteId) {
+        Optional<Palette> palette = paletteRepository.findById(paletteId);
+        if (!palette.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        ListResponse<Product> products = new ListResponse<>(palette.get().getProduct());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+
+    }
+
+
 }
