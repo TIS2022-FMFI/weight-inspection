@@ -61,6 +61,8 @@ public class AHClientHandler {
                                 Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
                                         pageType);
                                 returnList.clear();
+                                System.out.println(response.getStatusCode());
+                                System.out.println(response.getResponseBody());
                                 returnList.addAll(newPage.getItems());
                                 Platform.runLater(
                                         () -> {

@@ -5,9 +5,9 @@ import com.example.utils.AHClientHandler;
 
 public class Packaging {
     private Integer id;
-    private String type;
-    private String name;
-    private Float weight;
+    private String type = "";
+    private String name = "";
+    private Float weight = 0f;
 
     public int getId() {
         return id;
@@ -33,8 +33,8 @@ public class Packaging {
         this.name = name;
     }
 
-    public Float getWeight() {
-        return weight;
+    public String getWeight() {
+        return weight.toString();
     }
 
     public void setWeight(Float weight) {

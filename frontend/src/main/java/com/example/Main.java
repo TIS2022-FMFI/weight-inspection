@@ -18,9 +18,13 @@ public class Main extends Application {
         scenes.put(SceneName.FIRST, "/firstPane.fxml");
         scenes.put(SceneName.LAST, "/lastPane.fxml");
         scenes.put(SceneName.PALETTES, "/paletteTable.fxml");
+        scenes.put(SceneName.PACKAGES, "/packagingTable.fxml");
+        scenes.put(SceneName.PRODUCTS, "/productTable.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.PALETTES);
+        //SceneNavigator.setScene(SceneName.PALETTES);
+        //SceneNavigator.setScene(SceneName.PACKAGES);
+        SceneNavigator.setScene(SceneName.PRODUCTS);
         SceneNavigator.show();
     }
 }
