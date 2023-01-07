@@ -9,6 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +22,12 @@ import java.util.Optional;
 @RequestMapping("api/admin")
 public class AdminController {
     private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AdminController(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
+        this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @GetMapping
@@ -54,7 +59,9 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         admin.setId(null);
+
         adminRepository.save(admin);
         return new ResponseEntity<>(admin, HttpStatus.CREATED);
     }
@@ -69,6 +76,8 @@ public class AdminController {
         }
 
         Optional<Admin> replacedAdmin = adminRepository.findById(adminId);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
         if (!replacedAdmin.isPresent()) {
             admin.setId(null);
             adminRepository.save(admin);
@@ -92,5 +101,10 @@ public class AdminController {
         delAdmin.setId(adminId);
         adminRepository.delete(delAdmin);
         return new ResponseEntity<>(delAdmin, HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("login")
+    public ResponseEntity<Admin> login() {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
