@@ -28,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
             .authorizeRequests()
-            .anyRequest().authenticated()
-//            .anyRequest().permitAll()
+//            .anyRequest().authenticated()
+            .anyRequest().permitAll()
             .and()
             .httpBasic()
             .and()
