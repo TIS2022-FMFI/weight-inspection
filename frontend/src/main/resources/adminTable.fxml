@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.PaletteTableController">
+<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.AdminTableController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
     </columnConstraints>
@@ -27,11 +27,11 @@
         <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="75.0" sortable="false" text="ID ADMINISTRÁTORA" />
-                <TableColumn fx:id="nameColumn" prefWidth="75.0" sortable="false" text="ID EMAIL-U" />
-                <TableColumn fx:id="typeColumn" prefWidth="75.0" sortable="false" text="MENO" />
-                <TableColumn fx:id="weightColumn" prefWidth="75.0" sortable="false" text="PRIEZVISKO" />
-                <TableColumn fx:id="photoColumn" prefWidth="75.0" sortable="false" text="PRIHLASOVACIE MENO" />
-            <TableColumn fx:id="photoColumn1" prefWidth="75.0" sortable="false" text="PRIHLASOVACIE HESLO" />
+                <TableColumn fx:id="emailIdColumn" prefWidth="75.0" sortable="false" text="ID EMAIL-U" />
+                <TableColumn fx:id="firstNameColumn" prefWidth="75.0" sortable="false" text="MENO" />
+                <TableColumn fx:id="lastNameColumn" prefWidth="75.0" sortable="false" text="PRIEZVISKO" />
+                <TableColumn fx:id="userNameColumn" prefWidth="75.0" sortable="false" text="PRIHLASOVACIE MENO" />
+            <TableColumn fx:id="passWordColumn" prefWidth="75.0" sortable="false" text="PRIHLASOVACIE HESLO" />
                 <TableColumn fx:id="actionColumn1" prefWidth="75.0" sortable="false" text="ACTION1" />
                 <TableColumn fx:id="actionColumn2" prefWidth="75.0" sortable="false" text="ACTION2" />
             </columns>
