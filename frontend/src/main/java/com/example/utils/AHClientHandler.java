@@ -60,12 +60,10 @@ public class AHClientHandler {
                                 Type pageType = TypeToken.getParameterized(Page.class, type).getType();
                                 Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
                                         pageType);
-                                returnList.clear();
-                                System.out.println(response.getStatusCode());
-                                System.out.println(response.getResponseBody());
-                                returnList.addAll(newPage.getItems());
                                 Platform.runLater(
                                         () -> {
+                                            returnList.clear();
+                                            returnList.addAll(newPage.getItems());
                                             controller.setPaging(newPage.getTotalPages(), page);
                                             controller.updateButtons();
                                         });
@@ -105,6 +103,7 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
+        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
