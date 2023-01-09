@@ -16,6 +16,7 @@ public class App
 
     //TODO: execute only once global lock
     //max number of retries
+    //[32, 32, 32, 32, 49, 50, 53, 46, 53, 55]
 
     private static class WeighingException extends Exception {
         public WeighingException(String message) {
