@@ -1,6 +1,8 @@
 package com.example.weight_inspection.transfer;
 
 import com.example.weight_inspection.models.Product;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class ListResponse<T> {
     private int page;
     private int totalPages;
@@ -46,21 +50,5 @@ public class ListResponse<T> {
     public String toString() {
         return "ListResponse [currentPage=" + page + ", totalPages=" + totalPages + ", totalItems=" + totalItems
                 + ", items=" + items + "]";
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public long getTotalItems() {
-        return totalItems;
-    }
-
-    public List<T> getItems() {
-        return items;
     }
 }

@@ -5,6 +5,7 @@ import com.example.weight_inspection.models.Email;
 import com.example.weight_inspection.repositories.AdminRepository;
 import com.example.weight_inspection.repositories.EmailRepository;
 import com.example.weight_inspection.transfer.AddAdminDTO;
+import com.example.weight_inspection.transfer.GetAdminDTO;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/admin")
@@ -38,25 +41,36 @@ public class AdminController {
     }
 
     @GetMapping
-    public ResponseEntity<ListResponse<Admin>> GetAdmins(
+    public ResponseEntity<ListResponse<GetAdminDTO>> GetAdmins(
             @RequestParam(value = "page", defaultValue = "0") int currentPage,
             @RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
         Pageable pageable = PageRequest.of(currentPage, pageSize);
         Page<Admin> page = adminRepository.findAll(pageable);
-        ListResponse<Admin> listResponse = new ListResponse<>(page);
+
+        ListResponse<GetAdminDTO> listResponse = new ListResponse<>();
+        listResponse.setPage(page.getNumber());
+        listResponse.setTotalItems(page.getTotalElements());
+        listResponse.setTotalPages(page.getTotalPages());
+        listResponse.setItems(
+                page.getContent().stream()
+                        .map(item -> modelMapper.map(item, GetAdminDTO.class))
+                        .collect(Collectors.toList())
+        );
+
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
 
     @GetMapping("{adminId}")
-    public ResponseEntity<Admin> getAdminById(@PathVariable Long adminId) {
+    public ResponseEntity<GetAdminDTO> getAdminById(@PathVariable Long adminId) {
 
         Optional<Admin> admin = adminRepository.findById(adminId);
         if (!admin.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(admin.get(), HttpStatus.OK);
+        GetAdminDTO adminDTO = modelMapper.map(admin, GetAdminDTO.class);
+        return new ResponseEntity<>(adminDTO, HttpStatus.OK);
     }
 
     @PostMapping("")
