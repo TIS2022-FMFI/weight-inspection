@@ -3,8 +3,8 @@ package com.example.controller;
 import com.example.model.Admin;
 import com.example.scene.SceneName;
 import com.example.utils.AHClientHandler;
-
 import com.example.utils.TextFieldFilters;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +55,7 @@ public class AdminTableController extends TableController implements Swappable {
 
         admins = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        emailIdColumn.setCellValueFactory(new PropertyValueFactory<>("email_id"));
+        emailIdColumn.setCellValueFactory(new PropertyValueFactory<>("emailId"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         userNameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -69,7 +69,7 @@ public class AdminTableController extends TableController implements Swappable {
 
     private void editableCols() {
         emailIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        emailIdColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmail_id(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
+        emailIdColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
 
         firstNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         firstNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setFirstName(e.getNewValue()));

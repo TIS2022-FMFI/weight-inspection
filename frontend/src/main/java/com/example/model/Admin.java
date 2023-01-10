@@ -7,13 +7,12 @@ import java.sql.Timestamp;
 
 public class Admin {
     private Integer id;
-    private Integer email_id = 0; //Ak tu nie je číslo, tak umrie aplikácia...
-    //private Integer email_id; //Ak tu nie je číslo, tak umrie aplikácia...
+    private Integer emailId;
     private String firstName = "";
     private String lastName = "";
     private String username = "";
     private String password = "";
-    private Timestamp last_login;
+    private Timestamp lastLogin;
 
     public int getId() {
         return id;
@@ -23,12 +22,16 @@ public class Admin {
         this.id = admin_id;
     }
 
-    public String getEmail_id() {return email_id.toString();}
-    //public int getEmail_id() {return email_id;}
-
-    public void setEmail_id(Integer email_id) {
-        this.email_id = email_id;
+    public String getEmailId()
+    {
+        if (emailId == null)
+        {
+            return "";
+        }
+        return emailId.toString();
     }
+
+    public void setEmailId(Integer emailId) {this.emailId = emailId;}
 
     public String getFirstName() {return firstName;}
 
@@ -46,13 +49,9 @@ public class Admin {
 
     public void setPassword(String password) {this.password = password;}
 
-    public Timestamp getLast_login() {
-        return last_login;
-    }
+    public Timestamp getLastLogin() {return lastLogin;}
 
-    public void setLast_login(Timestamp last_login) {
-        this.last_login = last_login;
-    }
+    public void setLastLogin(Timestamp lastLogin) {this.lastLogin = lastLogin;}
 
     public void post(TableController controller) {
         if (id == null) {
