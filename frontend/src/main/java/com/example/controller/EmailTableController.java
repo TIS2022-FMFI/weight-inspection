@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Product;
+import com.example.model.Email;
 import com.example.scene.SceneName;
 import com.example.utils.AHClientHandler;
 
@@ -19,24 +19,24 @@ import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ProductTableController extends TableController implements Swappable {
+public class EmailTableController extends TableController implements Swappable {
 
-    ObservableList<Product> products;
+    ObservableList<Email> emails;
 
     @FXML
     private GridPane mainGrid;
     @FXML
-    private TableView<Product> tableView;
+    private TableView<Email> tableView;
     @FXML
-    private TableColumn<Product, Integer> idColumn;
+    private TableColumn<Email, Integer> idColumn;
     @FXML
-    private TableColumn<Product, String> referenceColumn;
+    private TableColumn<Email, String> emailColumn;
     @FXML
-    private TableColumn<Product, String> weightColumn;
+    private TableColumn<Email, String> sendExportsColumn;
     @FXML
-    private TableColumn<Product, String> actionColumn1;
+    private TableColumn<Email, String> actionColumn1;
     @FXML
-    private TableColumn<Product, String> actionColumn2;
+    private TableColumn<Email, String> actionColumn2;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,20 +46,20 @@ public class ProductTableController extends TableController implements Swappable
         AdminPanelController adminPanel = new AdminPanelController();
         mainGrid.getChildren().add(adminPanel);
 
-        products = FXCollections.observableArrayList();
+        emails = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
-        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        sendExportsColumn.setCellValueFactory(new PropertyValueFactory<>("send_exports"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
         editableCols();
-        tableView.setItems(products);
+        tableView.setItems(emails);
     }
 
     private void editableCols() {
-        referenceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        referenceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setReference(e.getNewValue()));
+        emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        emailColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmail(e.getNewValue()));
 
         tableView.setEditable(true);
     }
@@ -73,12 +73,12 @@ public class ProductTableController extends TableController implements Swappable
     @Override
     public void updateButtons() {
 
-        ProductTableController self = this;
+        EmailTableController self = this;
 
-        Callback<TableColumn<Product, String>, TableCell<Product, String>> updateFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
+        Callback<TableColumn<Email, String>, TableCell<Email, String>> updateFactory = new Callback<TableColumn<Email, String>, TableCell<Email, String>>() {
             @Override
-            public TableCell<Product, String> call(final TableColumn<Product, String> param) {
-                final TableCell<Product, String> cell = new TableCell<Product, String>() {
+            public TableCell<Email, String> call(final TableColumn<Email, String> param) {
+                final TableCell<Email, String> cell = new TableCell<Email, String>() {
                     final Button btn = new Button("ULOZIT");
 
                     @Override
@@ -89,8 +89,8 @@ public class ProductTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Product product = getTableView().getItems().get(getIndex());
-                                product.put(self);
+                                Email email = getTableView().getItems().get(getIndex());
+                                email.put(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -103,10 +103,10 @@ public class ProductTableController extends TableController implements Swappable
 
         actionColumn1.setCellFactory(updateFactory);
 
-        Callback<TableColumn<Product, String>, TableCell<Product, String>> deleteFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
+        Callback<TableColumn<Email, String>, TableCell<Email, String>> deleteFactory = new Callback<TableColumn<Email, String>, TableCell<Email, String>>() {
             @Override
-            public TableCell<Product, String> call(final TableColumn<Product, String> param) {
-                final TableCell<Product, String> cell = new TableCell<Product, String>() {
+            public TableCell<Email, String> call(final TableColumn<Email, String> param) {
+                final TableCell<Email, String> cell = new TableCell<Email, String>() {
                     final Button btn = new Button("VYMAZAT");
 
                     @Override
@@ -117,8 +117,8 @@ public class ProductTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Product product = getTableView().getItems().get(getIndex());
-                                product.delete(self);
+                                Email email = getTableView().getItems().get(getIndex());
+                                email.delete(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -145,13 +145,13 @@ public class ProductTableController extends TableController implements Swappable
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/product", currentPage, pageSize, products, Product.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/email", currentPage, pageSize, emails, Email.class, this);
     }
 
     @FXML
     public void createNew() {
-        Product newProduct = new Product();
-        newProduct.post(this);
+        Email newEmail = new Email();
+        newEmail.post(this);
         pagination.setCurrentPageIndex(0);
     }
 
