@@ -6,6 +6,8 @@ import com.example.weight_inspection.services.WeighingService;
 import com.example.weight_inspection.transfer.AddWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +47,7 @@ public class WeighingController {
         this.productRepository = productRepository;
         this.paletteRepository = paletteRepository;
         this.modelMapper = new ModelMapper();
+
     }
 
     @GetMapping
@@ -64,25 +67,26 @@ public class WeighingController {
         if (bindingResult.hasErrors() || weighingDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Weighing weighing  = modelMapper.map(weighingDTO, Weighing.class);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        Weighing weighing = modelMapper.map(weighingDTO, Weighing.class);
 
-       Product product = productRepository.findByReferenceOrderByIdDesc(weighingDTO.getReference());
-       Optional<Palette> optionalPalette = paletteRepository.findById(weighingDTO.getPaletteId());
-       Optional<Packaging> optionalPackaging = packagingRepository.findById(weighingDTO.getPackagingId());
+        Product product = productRepository.findByReferenceOrderByIdDesc(weighingDTO.getReference());
+        Optional<Palette> optionalPalette = paletteRepository.findById(weighingDTO.getPaletteId());
+        Optional<Packaging> optionalPackaging = packagingRepository.findById(weighingDTO.getPackagingId());
 
-       if (product == null || !optionalPalette.isPresent() || !optionalPackaging.isPresent() ||
-               optionalPalette.get().getWeight() == null || optionalPackaging.get().getWeight() == null)  {
-           // TODO send email and add notification
-           return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-       }
+        if (product == null || !optionalPalette.isPresent() || !optionalPackaging.isPresent() ||
+                optionalPalette.get().getWeight() == null || optionalPackaging.get().getWeight() == null) {
+            // TODO send email and add notification
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-       Palette palette = optionalPalette.get();
-       Packaging packaging = optionalPackaging.get();
-
+        Palette palette = optionalPalette.get();
+        Packaging packaging = optionalPackaging.get();
         ProductPackaging productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging,
                 product);
+
         if (productPackaging == null) {
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         Float paletteWeight = palette.getWeight();
@@ -93,15 +97,14 @@ public class WeighingController {
         int totalNumberOfProducts = weighing.getQuantity();
 
 
-
         if (productWeight == null) {
             productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(),
                     totalNumberOfProducts, numberOfProductsInPackaging, packagingWeight, paletteWeight);
             product.setWeight(productWeight);
             productRepository.save(product);
-
         }
-        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts,product.getWeight(),
+
+        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(),
                 packagingWeight, paletteWeight);
         float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
         boolean correctWeighing = differenceInWeight > productPackagingTolerance;
@@ -109,15 +112,17 @@ public class WeighingController {
             // TODO send email and add notification
 
         }
+
         weighing.setCalculatedWeight(calculatedWeight);
         weighing.setWeighedOn(new Timestamp(System.currentTimeMillis()));
         weighing.setCorrect(correctWeighing);
         weighing.setExported(false);
+
+        weighing.setPalette(palette);
+        weighing.setProduct(product);
+        weighing.setPackaging(productPackaging.getPackaging());
+
         weighingRepository.save(weighing);
-        return  new ResponseEntity<>(weighing, HttpStatus.CREATED);
-
-
-
-
+        return new ResponseEntity<>(weighing, HttpStatus.CREATED);
     }
 }
