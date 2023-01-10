@@ -24,8 +24,6 @@ public class App
 
     private static Lock lock = new ReentrantLock();
 
-    //TODO: execute only once global lock
-
     private static class WeighingException extends Exception {
         public WeighingException(String message) {
             super(message);
