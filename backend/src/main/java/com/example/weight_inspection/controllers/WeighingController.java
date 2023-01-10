@@ -3,7 +3,9 @@ package com.example.weight_inspection.controllers;
 import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
 import com.example.weight_inspection.services.WeighingService;
+import com.example.weight_inspection.transfer.AddWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +28,8 @@ public class WeighingController {
     private final PackagingRepository packagingRepository;
     private final ProductRepository productRepository;
     private final PaletteRepository paletteRepository;
+
+    private final ModelMapper modelMapper;
 
     @Autowired
     public WeighingController(WeighingRepository weighingRepository,
@@ -39,6 +44,7 @@ public class WeighingController {
         this.packagingRepository = packagingRepository;
         this.productRepository = productRepository;
         this.paletteRepository = paletteRepository;
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping
@@ -53,45 +59,64 @@ public class WeighingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Weighing> addWeighing(@RequestBody @Valid Weighing weighing, BindingResult bindingResult) {
-        if (bindingResult.hasErrors() || weighing == null) {
+    public ResponseEntity<Weighing> addWeighing(@RequestBody @Valid AddWeighingDTO weighingDTO,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || weighingDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Weighing weighing  = modelMapper.map(weighingDTO, Weighing.class);
 
-        Product product = weighing.getProduct();
-        Palette palette = weighing.getPalette();
-        Packaging packaging = weighing.getPackaging();
-        float paletteWeight = palette.getWeight();
-        float packagingWeight = packaging.getWeight();
-        Long paletteId = palette.getId();
-        Long packagingId = packaging.getId();
-        Product productDB = productRepository.findByReferenceOrderByIdDesc(product.getReference());
-        if (productDB == null) {
-            Optional<Packaging> packagingDB = packagingRepository.findById(packagingId);
-            Optional<Palette> paletteDB = paletteRepository.findById(paletteId);
-            if (!packagingDB.isPresent() || !paletteDB.isPresent()) {
-                // TODO send email and add notification
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+       Product product = productRepository.findByReferenceOrderByIdDesc(weighingDTO.getReference());
+       Optional<Palette> optionalPalette = paletteRepository.findById(weighingDTO.getPaletteId());
+       Optional<Packaging> optionalPackaging = packagingRepository.findById(weighingDTO.getPackagingId());
+
+       if (product == null || !optionalPalette.isPresent() || !optionalPackaging.isPresent() ||
+               optionalPalette.get().getWeight() == null || optionalPackaging.get().getWeight() == null)  {
+           // TODO send email and add notification
+           return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+       }
+
+       Palette palette = optionalPalette.get();
+       Packaging packaging = optionalPackaging.get();
+
+        ProductPackaging productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging,
+                product);
+        if (productPackaging == null) {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+
+        Float paletteWeight = palette.getWeight();
+        Float packagingWeight = packaging.getWeight();
+        Float productWeight = product.getWeight();
+        int numberOfProductsInPackaging = productPackaging.getQuantity();
+        float productPackagingTolerance = productPackaging.getTolerance();
+        int totalNumberOfProducts = weighing.getQuantity();
 
 
-            ProductPackaging productPackaging = productPackagingRepository.findByPackagingAndProduct(packagingDB.get()
-                    , product);
-            float weightOfOne = weighingService.calculateWeightOfOneProduct(weighing.getWeight(), weighing.getQuantity(),
-                    productPackaging.getQuantity(), packagingWeight, paletteWeight);
-            product.setWeigth(weightOfOne);
+
+        if (productWeight == null) {
+            productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(),
+                    totalNumberOfProducts, numberOfProductsInPackaging, packagingWeight, paletteWeight);
+            product.setWeight(productWeight);
             productRepository.save(product);
-            float expectedWeight = weighingService.calculateExpectedWeight(weighing.getQuantity(), weightOfOne,
-                    packagingWeight, paletteWeight);
-            if (expectedWeight > weighing.getCalculated_weight() + productPackaging.getTolerance()
-                    || expectedWeight < weighing.getCalculated_weight() - productPackaging.getTolerance()) {
-                // TODO send email and add notification
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
 
         }
-        return new ResponseEntity<>(weighing, HttpStatus.CREATED);
+        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts,product.getWeight(),
+                packagingWeight, paletteWeight);
+        float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
+        boolean correctWeighing = differenceInWeight > productPackagingTolerance;
+        if (!correctWeighing) {
+            // TODO send email and add notification
+
+        }
+        weighing.setCalculatedWeight(calculatedWeight);
+        weighing.setWeighedOn(new Timestamp(System.currentTimeMillis()));
+        weighing.setCorrect(correctWeighing);
+        weighing.setExported(false);
+        weighingRepository.save(weighing);
+        return  new ResponseEntity<>(weighing, HttpStatus.CREATED);
+
+
 
 
     }
