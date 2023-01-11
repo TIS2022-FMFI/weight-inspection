@@ -26,8 +26,8 @@ public class Packaging {
     @NotNull
     private String name;
 
-    @NotNull
-    private float weight;
+
+    private Float weight;
 
     @NotNull
     private String type;

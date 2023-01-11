@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -45,7 +46,7 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "0") int currentPage,
             @RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
 
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<Admin> page = adminRepository.findAll(pageable);
 
         ListResponse<GetAdminDTO> listResponse = new ListResponse<>();

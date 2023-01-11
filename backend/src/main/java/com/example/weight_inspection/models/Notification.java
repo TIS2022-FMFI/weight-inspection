@@ -24,7 +24,7 @@ public class Notification {
 
 
     @NotNull
-    private Timestamp created_on;
+    private Timestamp createdOn;
 
     @NotNull
     private String type;
