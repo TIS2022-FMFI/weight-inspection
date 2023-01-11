@@ -65,28 +65,28 @@ public class WeighingController {
     @PostMapping("")
     public ResponseEntity<Weighing> addWeighing(@RequestBody @Valid AddWeighingDTO weighingDTO,
                                                 BindingResult bindingResult) {
+
         if (bindingResult.hasErrors() || weighingDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Weighing weighing = modelMapper.map(weighingDTO, Weighing.class);
 
         Product product = productRepository.findByReferenceOrderByIdDesc(weighingDTO.getReference());
-        Optional<Palette> optionalPalette = paletteRepository.findById(weighingDTO.getPaletteId());
-        Optional<Packaging> optionalPackaging = packagingRepository.findById(weighingDTO.getPackagingId());
+        Palette palette = null;
+        Packaging packaging = null;
+        ProductPackaging productPackaging = null;
 
-        if (product == null || !optionalPalette.isPresent() || !optionalPackaging.isPresent() ||
-                optionalPalette.get().getWeight() == null || optionalPackaging.get().getWeight() == null) {
-            // TODO send email and add notification
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(weighingDTO.getPaletteId() != null && weighingDTO.getPackagingId() != null) {
+            palette = paletteRepository.findById((long) weighingDTO.getPaletteId());
+            packaging = packagingRepository.findById((long) weighingDTO.getPackagingId());
+            productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
         }
 
-        Palette palette = optionalPalette.get();
-        Packaging packaging = optionalPackaging.get();
-        ProductPackaging productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging,
-                product);
-
-        if (productPackaging == null) {
+        if (product == null || palette == null || packaging == null || productPackaging == null ||
+                palette.getWeight() == null || packaging.getWeight() == null) {
+            // TODO send email and add notification
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -97,21 +97,23 @@ public class WeighingController {
         float productPackagingTolerance = productPackaging.getTolerance();
         int totalNumberOfProducts = weighing.getQuantity();
 
-
         if (productWeight == null) {
-            productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(),
-                    totalNumberOfProducts, numberOfProductsInPackaging, packagingWeight, paletteWeight);
+            productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(), totalNumberOfProducts, numberOfProductsInPackaging, packagingWeight, paletteWeight);
+            if(productWeight < 0) {
+                // TODO send email negative weight
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
             product.setWeight(productWeight);
             productRepository.save(product);
         }
 
-        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(),
-                packagingWeight, paletteWeight);
+        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(), packagingWeight, paletteWeight);
         float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
-        boolean correctWeighing = differenceInWeight > productPackagingTolerance;
+        boolean correctWeighing = differenceInWeight < productWeight * productPackagingTolerance;
+
         if (!correctWeighing) {
             // TODO send email and add notification
-
         }
 
         weighing.setCalculatedWeight(calculatedWeight);
@@ -122,8 +124,8 @@ public class WeighingController {
         weighing.setPalette(palette);
         weighing.setProduct(product);
         weighing.setPackaging(productPackaging.getPackaging());
-
         weighingRepository.save(weighing);
+
         return new ResponseEntity<>(weighing, HttpStatus.CREATED);
     }
 }
