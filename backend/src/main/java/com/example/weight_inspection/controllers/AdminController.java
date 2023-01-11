@@ -1,15 +1,18 @@
 package com.example.weight_inspection.controllers;
 
 import com.example.weight_inspection.models.Admin;
+import com.example.weight_inspection.models.Email;
 import com.example.weight_inspection.repositories.AdminRepository;
+import com.example.weight_inspection.repositories.EmailRepository;
+import com.example.weight_inspection.transfer.AddAdminDTO;
 import com.example.weight_inspection.transfer.ListResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -22,12 +25,16 @@ import java.util.Optional;
 @RequestMapping("api/admin")
 public class AdminController {
     private final AdminRepository adminRepository;
+    private final EmailRepository emailRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public AdminController(AdminRepository adminRepository) {
+    public AdminController(AdminRepository adminRepository, EmailRepository emailRepository) {
         this.adminRepository = adminRepository;
+        this.emailRepository = emailRepository;
         this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping
@@ -53,33 +60,50 @@ public class AdminController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Admin> saveAdmin(@RequestBody @Valid Admin admin, BindingResult bindingResult) {
+    public ResponseEntity<Admin> saveAdmin(@RequestBody @Valid AddAdminDTO adminDTO, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors() || admin == null) {
+        if (bindingResult.hasErrors() || adminDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-        admin.setId(null);
+        Admin admin = modelMapper.map(adminDTO, Admin.class);
 
+        if(adminDTO.getEmailId() != null) {
+            Optional<Email> email = emailRepository.findById(adminDTO.getEmailId());
+            if (!email.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            admin.setEmail(email.get());
+        }
+
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         adminRepository.save(admin);
         return new ResponseEntity<>(admin, HttpStatus.CREATED);
     }
 
     @PutMapping("{adminId}")
-    public ResponseEntity<Admin> replaceAdmin(@RequestBody @Valid Admin admin,
+    public ResponseEntity<Admin> replaceAdmin(@RequestBody @Valid AddAdminDTO adminDTO,
                                                             BindingResult bindingResult,
                                                             @PathVariable Long adminId) {
 
-        if (bindingResult.hasErrors() || admin == null) {
+        if (bindingResult.hasErrors() || adminDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Admin> replacedAdmin = adminRepository.findById(adminId);
+        Admin admin = modelMapper.map(adminDTO, Admin.class);
+
+        if(adminDTO.getEmailId() != null) {
+            Optional<Email> email = emailRepository.findById(adminDTO.getEmailId());
+            if (!email.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            admin.setEmail(email.get());
+        }
+
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
+        Optional<Admin> replacedAdmin = adminRepository.findById(adminId);
         if (!replacedAdmin.isPresent()) {
-            admin.setId(null);
             adminRepository.save(admin);
             return new ResponseEntity<>(admin, HttpStatus.NO_CONTENT);
         }

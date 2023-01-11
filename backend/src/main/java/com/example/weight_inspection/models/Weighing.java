@@ -28,16 +28,18 @@ public class Weighing {
     private float weight;
 
     @NotNull
-    private float calculated_weight;
+    private float calculatedWeight;
 
     @NotNull
     private  int quantity;
 
     @NotNull
-    private Timestamp weighed_on;
+    private Timestamp weighedOn;
 
     @NotNull
-    private boolean is_exported;
+    private boolean isExported;
+    @NotNull
+    private boolean isCorrect;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIdentityInfo(
