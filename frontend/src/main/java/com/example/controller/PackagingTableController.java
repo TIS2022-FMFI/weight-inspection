@@ -1,32 +1,23 @@
 package com.example.controller;
 
 import com.example.model.Packaging;
-import com.example.model.Page;
 import com.example.scene.SceneName;
-import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
-import com.example.utils.NumericTextField;
+import com.example.utils.TextFieldFilters;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class PackagingTableController extends TableController implements Swappable {
@@ -84,7 +75,7 @@ public class PackagingTableController extends TableController implements Swappab
         typeColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
 
         weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setWeight(Float.valueOf(NumericTextField.formatTextToFloat(e.getNewValue()))));
+        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setWeight(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }

@@ -1,8 +1,9 @@
 package com.example.controller;
 
-import com.example.model.Product;
+import com.example.model.Admin;
 import com.example.scene.SceneName;
 import com.example.utils.AHClientHandler;
+import com.example.utils.TextFieldFilters;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,24 +20,30 @@ import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ProductTableController extends TableController implements Swappable {
+public class AdminTableController extends TableController implements Swappable {
 
-    ObservableList<Product> products;
+    ObservableList<Admin> admins;
 
     @FXML
     private GridPane mainGrid;
     @FXML
-    private TableView<Product> tableView;
+    private TableView<Admin> tableView;
     @FXML
-    private TableColumn<Product, Integer> idColumn;
+    private TableColumn<Admin, Integer> idColumn;
     @FXML
-    private TableColumn<Product, String> referenceColumn;
+    private TableColumn<Admin, String> emailIdColumn;
     @FXML
-    private TableColumn<Product, String> weightColumn;
+    private TableColumn<Admin, String> firstNameColumn;
     @FXML
-    private TableColumn<Product, String> actionColumn1;
+    private TableColumn<Admin, String> lastNameColumn;
     @FXML
-    private TableColumn<Product, String> actionColumn2;
+    private TableColumn<Admin, String> userNameColumn;
+    @FXML
+    private TableColumn<Admin, String> passWordColumn;
+    @FXML
+    private TableColumn<Admin, String> actionColumn1;
+    @FXML
+    private TableColumn<Admin, String> actionColumn2;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,20 +53,35 @@ public class ProductTableController extends TableController implements Swappable
         AdminPanelController adminPanel = new AdminPanelController();
         mainGrid.getChildren().add(adminPanel);
 
-        products = FXCollections.observableArrayList();
+        admins = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
-        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        emailIdColumn.setCellValueFactory(new PropertyValueFactory<>("emailId"));
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        userNameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        passWordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
         editableCols();
-        tableView.setItems(products);
+        tableView.setItems(admins);
     }
 
     private void editableCols() {
-        referenceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        referenceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setReference(e.getNewValue()));
+        emailIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        emailIdColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
+
+        firstNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        firstNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setFirstName(e.getNewValue()));
+
+        lastNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        lastNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setLastName(e.getNewValue()));
+
+        userNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        userNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setUsername(e.getNewValue()));
+
+        passWordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        passWordColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPassword(e.getNewValue()));
 
         tableView.setEditable(true);
     }
@@ -73,12 +95,12 @@ public class ProductTableController extends TableController implements Swappable
     @Override
     public void updateButtons() {
 
-        ProductTableController self = this;
+        AdminTableController self = this;
 
-        Callback<TableColumn<Product, String>, TableCell<Product, String>> updateFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
+        Callback<TableColumn<Admin, String>, TableCell<Admin, String>> updateFactory = new Callback<TableColumn<Admin, String>, TableCell<Admin, String>>() {
             @Override
-            public TableCell<Product, String> call(final TableColumn<Product, String> param) {
-                final TableCell<Product, String> cell = new TableCell<Product, String>() {
+            public TableCell<Admin, String> call(final TableColumn<Admin, String> param) {
+                final TableCell<Admin, String> cell = new TableCell<Admin, String>() {
                     final Button btn = new Button("ULOZIT");
 
                     @Override
@@ -89,8 +111,8 @@ public class ProductTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Product product = getTableView().getItems().get(getIndex());
-                                product.put(self);
+                                Admin admin = getTableView().getItems().get(getIndex());
+                                admin.put(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -103,10 +125,10 @@ public class ProductTableController extends TableController implements Swappable
 
         actionColumn1.setCellFactory(updateFactory);
 
-        Callback<TableColumn<Product, String>, TableCell<Product, String>> deleteFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
+        Callback<TableColumn<Admin, String>, TableCell<Admin, String>> deleteFactory = new Callback<TableColumn<Admin, String>, TableCell<Admin, String>>() {
             @Override
-            public TableCell<Product, String> call(final TableColumn<Product, String> param) {
-                final TableCell<Product, String> cell = new TableCell<Product, String>() {
+            public TableCell<Admin, String> call(final TableColumn<Admin, String> param) {
+                final TableCell<Admin, String> cell = new TableCell<Admin, String>() {
                     final Button btn = new Button("VYMAZAT");
 
                     @Override
@@ -117,8 +139,8 @@ public class ProductTableController extends TableController implements Swappable
                             setText(null);
                         } else {
                             btn.setOnAction(event -> {
-                                Product product = getTableView().getItems().get(getIndex());
-                                product.delete(self);
+                                Admin admin = getTableView().getItems().get(getIndex());
+                                admin.delete(self);
                             });
                             setGraphic(btn);
                             setText(null);
@@ -145,13 +167,13 @@ public class ProductTableController extends TableController implements Swappable
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/product", currentPage, pageSize, products, Product.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/admin", currentPage, pageSize, admins, Admin.class, this);
     }
 
     @FXML
     public void createNew() {
-        Product newProduct = new Product();
-        newProduct.post(this);
+        Admin newAdmin = new Admin();
+        newAdmin.post(this);
         pagination.setCurrentPageIndex(0);
     }
 

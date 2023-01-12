@@ -33,7 +33,6 @@ public class Palette {
         this.name = name;
     }
 
-    // Returns string because of realization of editable cells
     public String getWeight() {
         return weight.toString();
     }

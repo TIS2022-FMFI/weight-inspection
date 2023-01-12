@@ -5,8 +5,8 @@ import com.example.utils.AHClientHandler;
 
 public class Email {
     private Integer id;
-    private String email;
-    private Boolean send_exports;
+    private String email = "";
+    private Boolean send_exports = true;
 
     public int getId() {
         return id;
