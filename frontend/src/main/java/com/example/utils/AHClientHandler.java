@@ -14,6 +14,8 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
 
+import io.netty.channel.unix.Socket;
+
 import java.lang.reflect.Type;
 
 import static org.asynchttpclient.Dsl.*;

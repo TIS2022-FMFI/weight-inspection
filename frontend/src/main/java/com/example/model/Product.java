@@ -24,7 +24,12 @@ public class Product {
         this.reference = reference;
     }
 
-    public String getWeight() {return weight.toString();}
+    public String getWeight() {
+        if (weight == null) {
+            return "";
+        }
+        return weight.toString();
+    }
 
     public void setWeight(Float weight) {
         this.weight = weight;

@@ -1,23 +1,32 @@
 package com.example.utils;
 
 public class AdminState {
-    private String userName;
-    private int notificationCount = 0;
+    private static String userName;
+    private static int notificationCount = 0;
+    private static Integer connectedPaletteId;
 
-    public String getUserName() {
+    public static String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public static void setUserName(String userName) {
+        AdminState.userName = userName;
     }
 
-    public int getNotificationCount() {
+    public static int getNotificationCount() {
         return notificationCount;
     }
 
-    public void setNotificationCount(int notificationCount) {
-        this.notificationCount = notificationCount;
+    public static void setNotificationCount(int notificationCount) {
+        AdminState.notificationCount = notificationCount;
+    }
+
+    public static Integer getConnectedPaletteId() {
+        return connectedPaletteId;
+    }
+
+    public static void setConnectedPaletteId(Integer connectedPaletteId) {
+        AdminState.connectedPaletteId = connectedPaletteId;
     }
 
 }
