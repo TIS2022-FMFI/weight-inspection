@@ -7,38 +7,63 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class Product {
-
+public class Weighing {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    private String reference;
+    private  String IDP;
 
+    @NotNull
+    private float weight;
 
-    private Float weight;
+    @NotNull
+    private float calculatedWeight;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @NotNull
+    private  int quantity;
+
+    @NotNull
+    private Timestamp weighedOn;
+
+    @NotNull
+    private boolean isExported;
+    @NotNull
+    private boolean isCorrect;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    private Set<Palette> palette = new HashSet<>();
+    private Packaging packaging;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
-    private Set<ProductPackaging> productPackaging = new HashSet<>();
+    private Product product;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    private  Palette palette;
+
+
+
+
+
+
+
+
 }
