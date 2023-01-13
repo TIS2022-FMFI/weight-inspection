@@ -63,16 +63,7 @@ public class PaletteProductTableController extends TableController implements Sw
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
-        editableCols();
         tableView.setItems(products);
-    }
-
-    private void editableCols() {
-        referenceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        referenceColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setReference(e.getNewValue()));
-
-        tableView.setEditable(true);
     }
 
     @FXML
