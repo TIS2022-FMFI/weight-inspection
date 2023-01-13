@@ -219,6 +219,7 @@ public class PaletteTableController extends TableController implements Swappable
 
     @Override
     public void onLoad(SceneName previousSceneName) {
+        pagination.setCurrentPageIndex(0);
         updateTable();
     }
 

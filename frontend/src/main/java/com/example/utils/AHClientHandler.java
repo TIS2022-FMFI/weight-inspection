@@ -71,6 +71,9 @@ public class AHClientHandler {
                                         pageType);
                                 Platform.runLater(
                                         () -> {
+                                            System.out.println(page);
+                                            System.out.println(pageSize);
+                                            System.out.println(newPage.getTotalPages());
                                             returnList.clear();
                                             returnList.addAll(newPage.getItems());
                                             controller.setPaging(newPage.getTotalPages(), page);

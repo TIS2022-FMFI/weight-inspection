@@ -94,7 +94,7 @@
                 </GridPane>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <children>
-                        <Pagination fx:id="pagination" centerShape="false" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="9" maxWidth="1.7976931348623157E308" style="-fx-page-information-visible: false;">
+                        <Pagination fx:id="pagination" centerShape="false" disable="true" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="9" maxWidth="1.7976931348623157E308" opacity="0.0" style="-fx-page-information-visible: false;">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -111,12 +111,12 @@
                         <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <ComboBox fx:id="pageSizeBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onPagingSizeUpdate" promptText="10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <ComboBox fx:id="pageSizeBox" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onPagingSizeUpdate" opacity="0.0" promptText="10" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ComboBox>
-                        <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="POČET ZÁZNAMOV NA JEDNEJ STRANE:" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label contentDisplay="RIGHT" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" opacity="0.0" text="POČET ZÁZNAMOV NA JEDNEJ STRANE:" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <GridPane.margin>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>

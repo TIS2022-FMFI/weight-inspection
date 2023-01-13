@@ -20,7 +20,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
@@ -162,6 +161,7 @@ public class PaletteProductTableController extends TableController implements Sw
         }
         paletteId = AdminState.getConnectedPaletteId();
         idLabel.setText(paletteId.toString());
+        pagination.setCurrentPageIndex(0);
         updateTable();
     }
 
