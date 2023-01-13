@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.controller.PaletteProductTableController;
 import com.example.controller.TableController;
 import com.example.utils.AHClientHandler;
 
@@ -49,5 +50,16 @@ public class Product {
 
     public void delete(TableController controller) {
         AHClientHandler.getAHClientHandler().deleteRequest("/product/" + String.valueOf(id), controller);
+    }
+
+    public void deleteForPalette(PaletteProductTableController controller, int paletteId) {
+        AHClientHandler.getAHClientHandler()
+                .deleteRequest("/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), controller);
+    }
+
+    public void postForPalette(PaletteProductTableController controller, Integer paletteId) {
+        AHClientHandler.getAHClientHandler()
+                .postRequest("/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), null,
+                        controller);
     }
 }

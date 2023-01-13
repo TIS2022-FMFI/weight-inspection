@@ -15,8 +15,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         HashMap<SceneName, String> scenes = new HashMap<>();
-        scenes.put(SceneName.FIRST, "/firstPane.fxml");
-        scenes.put(SceneName.LAST, "/lastPane.fxml");
         scenes.put(SceneName.PALETTES, "/paletteTable.fxml");
         scenes.put(SceneName.PACKAGES, "/packagingTable.fxml");
         scenes.put(SceneName.PRODUCTS, "/productTable.fxml");

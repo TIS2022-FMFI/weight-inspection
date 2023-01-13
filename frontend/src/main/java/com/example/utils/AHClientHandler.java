@@ -101,7 +101,15 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                    if (response.getStatusCode() == 404) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Not found error while comunicating with server");
+                            errorAlert.setContentText(
+                                    "Possibly you've tried to change connection of two items and used id of an item that does not exist");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -135,7 +143,15 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                    if (response.getStatusCode() == 404) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Not found error while comunicating with server");
+                            errorAlert.setContentText(
+                                    "Possibly you've tried to change connection of two items and used id of an item that does not exist");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");

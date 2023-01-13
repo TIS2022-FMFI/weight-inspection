@@ -10,17 +10,22 @@ import com.example.utils.TextFieldFilters;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PaletteProductTableController extends TableController implements Swappable {
@@ -96,7 +101,14 @@ public class PaletteProductTableController extends TableController implements Sw
                         } else {
                             btn.setOnAction(event -> {
                                 Product product = getTableView().getItems().get(getIndex());
-                                // product.deleteForPalette(self);
+                                Alert alert = new Alert(AlertType.CONFIRMATION);
+                                alert.setTitle("Confirmation Dialog");
+                                alert.setHeaderText("Are you sure you want to delete this item?");
+
+                                Optional<ButtonType> result = alert.showAndWait();
+                                if (result.get() == ButtonType.OK) {
+                                    product.deleteForPalette(self, paletteId);
+                                }
                             });
                             setGraphic(btn);
                             setText(null);
@@ -129,9 +141,27 @@ public class PaletteProductTableController extends TableController implements Sw
 
     @FXML
     public void createNew() {
-        Product newProduct = new Product();
-        newProduct.post(this);
-        pagination.setCurrentPageIndex(0);
+        TextInputDialog dialog = new TextInputDialog("0");
+        dialog.setTitle("Text Input Dialog");
+        dialog.setHeaderText("Write an id of a product (product with that id has to exist).");
+        dialog.setContentText("Please enter id:");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            int conn_id = Integer.valueOf(TextFieldFilters.formatTextToInt(result.get()));
+            Product newProduct = new Product();
+            newProduct.setId(conn_id);
+            newProduct.postForPalette(this, paletteId);
+            pagination.setCurrentPageIndex(0);
+        }
+    }
+
+    @FXML
+    public void back() {
+        AdminState.setConnectedPaletteId(null);
+        idLabel.setText("");
+        products.clear();
+        SceneNavigator.setScene(SceneName.PALETTES);
     }
 
     @Override
