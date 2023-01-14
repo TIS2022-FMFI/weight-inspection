@@ -15,20 +15,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         HashMap<SceneName, String> scenes = new HashMap<>();
-        scenes.put(SceneName.FIRST, "/firstPane.fxml");
-        scenes.put(SceneName.LAST, "/lastPane.fxml");
         scenes.put(SceneName.PALETTES, "/paletteTable.fxml");
         scenes.put(SceneName.PACKAGES, "/packagingTable.fxml");
         scenes.put(SceneName.PRODUCTS, "/productTable.fxml");
         scenes.put(SceneName.EMAILS, "/emailTable.fxml");
         scenes.put(SceneName.ADMINS, "/adminTable.fxml");
+        scenes.put(SceneName.PALETTE_PRODUCT, "/paletteProductTable.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        //SceneNavigator.setScene(SceneName.PALETTES);
-        //SceneNavigator.setScene(SceneName.PACKAGES);
-        //SceneNavigator.setScene(SceneName.PRODUCTS);
-        //SceneNavigator.setScene(SceneName.EMAILS);
-        SceneNavigator.setScene(SceneName.ADMINS);
+        SceneNavigator.setScene(SceneName.PALETTES);
         SceneNavigator.show();
     }
 }

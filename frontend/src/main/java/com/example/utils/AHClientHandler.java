@@ -7,12 +7,16 @@ import com.google.gson.Gson;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.util.concurrent.CompletableFuture;
 
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
+
+import io.netty.channel.unix.Socket;
 
 import java.lang.reflect.Type;
 
@@ -51,7 +55,12 @@ public class AHClientHandler {
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
-                    t.printStackTrace();
+                    Platform.runLater(() -> {
+                        Alert errorAlert = new Alert(AlertType.ERROR);
+                        errorAlert.setHeaderText("Can't connect to the server");
+                        errorAlert.setContentText("Check your internet connection");
+                        errorAlert.showAndWait();
+                    });
                     return null;
                 })
                 .thenApply(
@@ -62,6 +71,9 @@ public class AHClientHandler {
                                         pageType);
                                 Platform.runLater(
                                         () -> {
+                                            System.out.println(page);
+                                            System.out.println(pageSize);
+                                            System.out.println(newPage.getTotalPages());
                                             returnList.clear();
                                             returnList.addAll(newPage.getItems());
                                             controller.setPaging(newPage.getTotalPages(), page);
@@ -76,8 +88,6 @@ public class AHClientHandler {
 
     public <T> void postRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
-        System.out.println(url);
-        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -85,13 +95,30 @@ public class AHClientHandler {
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
-                    System.out.println(new RuntimeException("Can't connect to the server"));
+                    Platform.runLater(() -> {
+                        Alert errorAlert = new Alert(AlertType.ERROR);
+                        errorAlert.setHeaderText("Can't connect to the server");
+                        errorAlert.setContentText("Check your internet connection");
+                        errorAlert.showAndWait();
+                    });
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
-                        System.out.println(
-                                new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
+                    if (response.getStatusCode() == 404) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Not found error while comunicating with server");
+                            errorAlert.setContentText(
+                                    "Possibly you've tried to change connection of two items and used id of an item that does not exist");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Error while comunicating with server");
+                            errorAlert.setContentText("Error code " + String.valueOf(response.getStatusCode()));
+                            errorAlert.showAndWait();
+                        });
                     }
                     Platform.runLater(
                             () -> {
@@ -103,7 +130,6 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
-        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -111,13 +137,30 @@ public class AHClientHandler {
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
-                    System.out.println(new RuntimeException("Can't connect to the server"));
+                    Platform.runLater(() -> {
+                        Alert errorAlert = new Alert(AlertType.ERROR);
+                        errorAlert.setHeaderText("Can't connect to the server");
+                        errorAlert.setContentText("Check your internet connection");
+                        errorAlert.showAndWait();
+                    });
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
-                        System.out.println(
-                                new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
+                    if (response.getStatusCode() == 404) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Not found error while comunicating with server");
+                            errorAlert.setContentText(
+                                    "Possibly you've tried to change connection of two items and used id of an item that does not exist");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Error while comunicating with server");
+                            errorAlert.setContentText("Error code " + String.valueOf(response.getStatusCode()));
+                            errorAlert.showAndWait();
+                        });
                     }
                     Platform.runLater(
                             () -> {
@@ -133,13 +176,22 @@ public class AHClientHandler {
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
-                    System.out.println(new RuntimeException("Can't connect to the server"));
+                    Platform.runLater(() -> {
+                        Alert errorAlert = new Alert(AlertType.ERROR);
+                        errorAlert.setHeaderText("Can't connect to the server");
+                        errorAlert.setContentText("Check your internet connection");
+                        errorAlert.showAndWait();
+                    });
                     return null;
                 })
                 .thenApply(response -> {
                     if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
-                        System.out.println(
-                                new IncorrectCodeExeption("Code was " + String.valueOf(response.getStatusCode())));
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Error while comunicating with server");
+                            errorAlert.setContentText("Error code " + String.valueOf(response.getStatusCode()));
+                            errorAlert.showAndWait();
+                        });
                     }
                     Platform.runLater(
                             () -> {
