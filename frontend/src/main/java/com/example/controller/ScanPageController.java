@@ -3,6 +3,7 @@ package com.example.controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.asynchttpclient.Param;
@@ -49,12 +50,13 @@ public class ScanPageController extends ScannerController implements Swappable {
         WorkerState.setIDP(idpLabel.getText());
         WorkerState.setRefference(refferenceLabel.getText());
         WorkerState.setQuantity(Integer.valueOf(quantityLabel.getText()));
-        System.out.println("got here");
-        Product product = AHClientHandler.getAHClientHandler().getRequestSync("/product",
-                Arrays.asList(new Param("reference", WorkerState.getRefference())), Product.class);
-        if (product == null) {
+        List<Product> products = AHClientHandler.getAHClientHandler().getPageSync("/product",
+                Arrays.asList(new Param("reference", WorkerState.getRefference())), 0, 0, Product.class);
+        if (products == null || products.size() != 1) {
             return;
         }
+        Product product = products.get(0);
+        WorkerState.setProductId(product.getId());
         SceneNavigator.setScene(SceneName.PALETTE_PICK);
     }
 

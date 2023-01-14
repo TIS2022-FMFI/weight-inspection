@@ -22,6 +22,7 @@ public class Main extends Application {
         scenes.put(SceneName.ADMINS, "/adminTable.fxml");
         scenes.put(SceneName.PALETTE_PRODUCT, "/paletteProductTable.fxml");
         scenes.put(SceneName.SCAN_PAGE, "/scanPage.fxml");
+        scenes.put(SceneName.PALETTE_PICK, "/palettePickPage.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
         SceneNavigator.setScene(SceneName.SCAN_PAGE);
