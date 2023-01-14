@@ -4,21 +4,21 @@ import java.sql.Timestamp;
 
 public class Weighing {
     private Integer id;
-    private String IDP;
-    private Float weight;
+    private String IDP = "";
+    private Float weight = 0f;
     private Integer quantity;
-    private Timestamp weighed_on;
-    private Boolean is_correct;
-    private String packaging_name;
-    private String palette_name;
-    private String reference;
+    private Timestamp weighedOn;
+    private Boolean isCorrect = true;
+    private String packagingName = "";
+    private String paletteName = "";
+    private String reference = "";
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer weighing_id) {
-        this.id = weighing_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getIDP() {
@@ -29,15 +29,15 @@ public class Weighing {
         this.IDP = IDP;
     }
 
-    public Float getWeight() {
-        return weight;
+    public String getWeight() {
+        return weight.toString();
     }
 
     public void setWeight(Float weight) {
         this.weight = weight;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -45,36 +45,36 @@ public class Weighing {
         this.quantity = quantity;
     }
 
-    public Timestamp getWeighed_on() {
-        return weighed_on;
+    public Timestamp getWeighedOn() {
+        return weighedOn;
     }
 
-    public void setWeighed_on(Timestamp weighed_on) {
-        this.weighed_on = weighed_on;
+    public void setWeighedOn(Timestamp weighedOn) {
+        this.weighedOn = weighedOn;
     }
 
-    public Boolean getIs_correct() {
-        return is_correct;
+    public Boolean getCorrect() {
+        return isCorrect;
     }
 
-    public void setIs_correct(Boolean is_correct) {
-        this.is_correct = is_correct;
+    public void setCorrect(Boolean correct) {
+        isCorrect = correct;
     }
 
-    public String getPackaging_name() {
-        return packaging_name;
+    public String getPackagingName() {
+        return packagingName;
     }
 
-    public void setPackaging_name(String packaging_name) {
-        this.packaging_name = packaging_name;
+    public void setPackagingName(String packagingName) {
+        this.packagingName = packagingName;
     }
 
-    public String getPalette_name() {
-        return palette_name;
+    public String getPaletteName() {
+        return paletteName;
     }
 
-    public void setPalette_name(String palette_name) {
-        this.palette_name = palette_name;
+    public void setPaletteName(String paletteName) {
+        this.paletteName = paletteName;
     }
 
     public String getReference() {
@@ -84,5 +84,4 @@ public class Weighing {
     public void setReference(String reference) {
         this.reference = reference;
     }
-
 }

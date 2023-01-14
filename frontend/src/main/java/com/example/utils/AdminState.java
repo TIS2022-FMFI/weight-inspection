@@ -5,6 +5,8 @@ public class AdminState {
     private static int notificationCount = 0;
     private static Integer connectedPaletteId;
 
+    private static Integer connectedPackagingId;
+
     public static String getUserName() {
         return userName;
     }
@@ -25,8 +27,9 @@ public class AdminState {
         return connectedPaletteId;
     }
 
-    public static void setConnectedPaletteId(Integer connectedPaletteId) {
-        AdminState.connectedPaletteId = connectedPaletteId;
-    }
+    public static void setConnectedPaletteId(Integer connectedPaletteId) {AdminState.connectedPaletteId = connectedPaletteId;}
 
+    public static Integer getConnectedPackagingId() {return connectedPackagingId;}
+
+    public static void setConnectedPackagingId(Integer connectedPackagingId) {AdminState.connectedPackagingId = connectedPackagingId;}
 }
