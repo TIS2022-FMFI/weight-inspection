@@ -1,13 +1,14 @@
 package com.example.weight_inspection.controllers;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.example.weight_inspection.models.Product;
 import com.example.weight_inspection.models.ProductPackaging;
 import com.example.weight_inspection.repositories.ProductPackagingRepository;
 import com.example.weight_inspection.repositories.ProductRepository;
+import com.example.weight_inspection.transfer.GetProductOfPackagingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,14 +125,32 @@ public class PackagingController {
 
 
 	@GetMapping("{packagingId}/product")
-	public ResponseEntity<ListResponse<ProductPackaging>> getProductsOfPackaging(@PathVariable Long packagingId) {
+	public ResponseEntity<ListResponse<GetProductOfPackagingDTO>> getProductsOfPackaging(@PathVariable Long packagingId) {
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
 		if (!packaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		}
-		ListResponse<ProductPackaging> products =  new ListResponse<>(packaging.get().getProductPackaging());
-		return new ResponseEntity<>(products, HttpStatus.OK);
+
+		Set<ProductPackaging> productPackagings = packaging.get().getProductPackaging();
+		ListResponse<GetProductOfPackagingDTO> listResponse = new ListResponse<>();
+		listResponse.setPage(0);
+		listResponse.setTotalItems(productPackagings.size());
+		listResponse.setTotalPages(1);
+		listResponse.setItems(
+				productPackagings.stream()
+						.map(productPackaging -> {
+							GetProductOfPackagingDTO getProductOfPackagingDTO = new GetProductOfPackagingDTO();
+							getProductOfPackagingDTO.setId(productPackaging.getProduct().getId());
+							getProductOfPackagingDTO.setReference(productPackaging.getProduct().getReference());
+							getProductOfPackagingDTO.setWeight(productPackaging.getProduct().getWeight());
+							getProductOfPackagingDTO.setQuantity(productPackaging.getQuantity());
+							getProductOfPackagingDTO.setTolerance(productPackaging.getTolerance());
+							return getProductOfPackagingDTO;
+						})
+						.collect(Collectors.toList())
+		);
+		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
 
 }
