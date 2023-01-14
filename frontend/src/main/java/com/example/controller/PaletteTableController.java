@@ -75,16 +75,13 @@ public class PaletteTableController extends TableController implements Swappable
 
     private void editableCols() {
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        nameColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
+        nameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
 
         typeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        typeColumn.setOnEditCommit(
-                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
+        typeColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
 
         weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
-                .setWeight(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
+        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setWeight(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }
@@ -224,6 +221,5 @@ public class PaletteTableController extends TableController implements Swappable
     }
 
     @Override
-    public void onUnload() {
-    }
+    public void onUnload() {}
 }

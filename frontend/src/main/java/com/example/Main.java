@@ -21,10 +21,11 @@ public class Main extends Application {
         scenes.put(SceneName.EMAILS, "/emailTable.fxml");
         scenes.put(SceneName.ADMINS, "/adminTable.fxml");
         scenes.put(SceneName.PALETTE_PRODUCT, "/paletteProductTable.fxml");
+        scenes.put(SceneName.PACKAGING_PRODUCT, "/packagingProductTable.fxml");
         scenes.put(SceneName.WEIGHINGS, "/weighingTable.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.WEIGHINGS);
+        SceneNavigator.setScene(SceneName.PACKAGES);
         SceneNavigator.show();
     }
 }
