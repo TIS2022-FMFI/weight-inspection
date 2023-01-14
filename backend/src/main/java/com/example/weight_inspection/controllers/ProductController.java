@@ -195,6 +195,51 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	@PutMapping("{productId}/packaging/{packagingId}")
+	public ResponseEntity<Product> replacePackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
+														 BindingResult bindingResult,
+														 @PathVariable Long productId,
+														 @PathVariable Long packagingId) {
+
+		if (bindingResult.hasErrors() || productPackaging == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<ProductPackaging> optionalReplacedProductPackaging = productPackagingRepository.findById(packagingId);
+
+		if(!optionalReplacedProductPackaging.isPresent()) {
+			Optional<Product> product = productRepository.findById(productId);
+			Optional<Packaging> packaging = packagingRepository.findById(packagingId);
+
+			if (!product.isPresent() || !packaging.isPresent()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+
+			Product newProduct = product.get();
+			Packaging newPackaging = packaging.get();
+
+			productPackaging.setId(null);
+			productPackaging.setPackaging(newPackaging);
+			productPackaging.setProduct(newProduct);
+			productPackagingRepository.save(productPackaging);
+
+			newProduct.getProductPackaging().add(productPackaging);
+			productRepository.save(newProduct);
+
+			newPackaging.getProductPackaging().add(productPackaging);
+			packagingRepository.save(newPackaging);
+
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		}
+
+		ProductPackaging replacedProductPackaging = optionalReplacedProductPackaging.get();
+		replacedProductPackaging.setTolerance(productPackaging.getTolerance());
+		replacedProductPackaging.setQuantity(productPackaging.getQuantity());
+		productPackagingRepository.save(replacedProductPackaging);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
 	@DeleteMapping("{productId}/packaging/{packagingId}")
 	public ResponseEntity<Product> deletePackagingFromProduct(@PathVariable Long productId, @PathVariable Long packagingId) {
 
