@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
@@ -27,11 +28,11 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class PaletteProductTableController extends TableController implements Swappable {
+public class PackagingProductTableController extends TableController implements Swappable {
 
     ObservableList<Product> products;
 
-    private Integer paletteId;
+    private Integer packagingId;
 
     @FXML
     private GridPane mainGrid;
@@ -44,7 +45,13 @@ public class PaletteProductTableController extends TableController implements Sw
     @FXML
     private TableColumn<Product, String> weightColumn;
     @FXML
+    private TableColumn<Product, String> numberOfPiecesColumn;
+    @FXML
+    private TableColumn<Product, String> toleranceColumn;
+    @FXML
     private TableColumn<Product, String> actionColumn1;
+    @FXML
+    private TableColumn<Product, String> actionColumn2;
     @FXML
     private Label idLabel;
 
@@ -60,9 +67,23 @@ public class PaletteProductTableController extends TableController implements Sw
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        numberOfPiecesColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        toleranceColumn.setCellValueFactory(new PropertyValueFactory<>("tolerance"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
+        editableCols();
         tableView.setItems(products);
+    }
+
+    private void editableCols() {
+        numberOfPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        numberOfPiecesColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setQuantity(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
+
+        toleranceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        toleranceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTolerance(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
+
+        tableView.setEditable(true);
     }
 
     @FXML
@@ -74,9 +95,37 @@ public class PaletteProductTableController extends TableController implements Sw
     @Override
     public void updateButtons() {
 
-        PaletteProductTableController self = this;
+        PackagingProductTableController self = this;
 
         Callback<TableColumn<Product, String>, TableCell<Product, String>> updateFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
+            @Override
+            public TableCell<Product, String> call(final TableColumn<Product, String> param) {
+                final TableCell<Product, String> cell = new TableCell<Product, String>() {
+                    final Button btn = new Button("ULOZIT");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Product product = getTableView().getItems().get(getIndex());
+                                product.putForPackaging(self, packagingId);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        actionColumn1.setCellFactory(updateFactory);
+
+        Callback<TableColumn<Product, String>, TableCell<Product, String>> deleteFactory = new Callback<TableColumn<Product, String>, TableCell<Product, String>>() {
             @Override
             public TableCell<Product, String> call(final TableColumn<Product, String> param) {
                 final TableCell<Product, String> cell = new TableCell<Product, String>() {
@@ -97,7 +146,7 @@ public class PaletteProductTableController extends TableController implements Sw
 
                                 Optional<ButtonType> result = alert.showAndWait();
                                 if (result.get() == ButtonType.OK) {
-                                    product.deleteForPalette(self, paletteId);
+                                    product.deleteForPackaging(self, packagingId);
                                 }
                             });
                             setGraphic(btn);
@@ -109,7 +158,7 @@ public class PaletteProductTableController extends TableController implements Sw
             }
         };
 
-        actionColumn1.setCellFactory(updateFactory);
+        actionColumn2.setCellFactory(deleteFactory);
     }
 
     @FXML
@@ -125,7 +174,7 @@ public class PaletteProductTableController extends TableController implements Sw
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/palette/" + paletteId + "/product", currentPage, pageSize, products, Product.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/packaging/" + packagingId + "/product", currentPage, pageSize, products, Product.class, this);
     }
 
     @FXML
@@ -140,26 +189,26 @@ public class PaletteProductTableController extends TableController implements Sw
             int conn_id = Integer.valueOf(TextFieldFilters.formatTextToInt(result.get()));
             Product newProduct = new Product();
             newProduct.setId(conn_id);
-            newProduct.postForPalette(this, paletteId);
+            newProduct.postForPackaging(this, packagingId);
             pagination.setCurrentPageIndex(0);
         }
     }
 
     @FXML
     public void back() {
-        AdminState.setConnectedPaletteId(null);
+        AdminState.setConnectedPackagingId(null);
         idLabel.setText("");
         products.clear();
-        SceneNavigator.setScene(SceneName.PALETTES);
+        SceneNavigator.setScene(SceneName.PACKAGES);
     }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
-        if (AdminState.getConnectedPaletteId() == null) {
+        if (AdminState.getConnectedPackagingId() == null) {
             SceneNavigator.setScene(previousSceneName);
         }
-        paletteId = AdminState.getConnectedPaletteId();
-        idLabel.setText(paletteId.toString());
+        packagingId = AdminState.getConnectedPackagingId();
+        idLabel.setText(packagingId.toString());
         pagination.setCurrentPageIndex(0);
         updateTable();
     }
