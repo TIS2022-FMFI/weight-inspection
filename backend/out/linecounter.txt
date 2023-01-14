@@ -1,0 +1,104 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2023-01-14 23:54:10
+count workspace : /Users/dimaherashchenko/Projects/0university/weight-inspection/backend
+total files : 82
+total code lines : 1828
+total comment lines : 11
+total blank lines : 432
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |          .java|           1452|              4|            389|     79|
+   |           .xml|             82|              0|             11|    4.5|
+   |               |            203|              2|             21|     11|
+   |           .cmd|             64|              1|             11|    3.5|
+   |    .properties|             14|              4|              0|   0.77|
+   |           .lst|             13|              0|              0|   0.71|
+   -------------------------------------------------------------------------
+.gitignore, code is 29, comment is 0, blank is 4.
+.mvn/wrapper/maven-wrapper.jar, it is a binary file.
+.mvn/wrapper/maven-wrapper.properties, code is 2, comment is 2, blank is 0.
+mvnw, code is 174, comment is 2, blank is 17.
+mvnw.cmd, code is 64, comment is 1, blank is 11.
+pom.xml, code is 82, comment is 0, blank is 11.
+src/main/java/com/example/weight_inspection/controllers/AdminController.java, code is 122, comment is 0, blank is 27.
+src/main/java/com/example/weight_inspection/controllers/EmailController.java, code is 78, comment is 0, blank is 19.
+src/main/java/com/example/weight_inspection/controllers/NotificationController.java, code is 80, comment is 0, blank is 19.
+src/main/java/com/example/weight_inspection/controllers/PackagingController.java, code is 129, comment is 0, blank is 28.
+src/main/java/com/example/weight_inspection/controllers/PaletteController.java, code is 118, comment is 0, blank is 33.
+src/main/java/com/example/weight_inspection/controllers/ProductController.java, code is 241, comment is 0, blank is 63.
+src/main/java/com/example/weight_inspection/controllers/WeighingController.java, code is 106, comment is 3, blank is 22.
+src/main/java/com/example/weight_inspection/models/Admin.java, code is 29, comment is 0, blank is 8.
+src/main/java/com/example/weight_inspection/models/Email.java, code is 25, comment is 0, blank is 6.
+src/main/java/com/example/weight_inspection/models/Notification.java, code is 27, comment is 0, blank is 7.
+src/main/java/com/example/weight_inspection/models/Packaging.java, code is 31, comment is 0, blank is 9.
+src/main/java/com/example/weight_inspection/models/Palette.java, code is 35, comment is 0, blank is 10.
+src/main/java/com/example/weight_inspection/models/Product.java, code is 34, comment is 0, blank is 10.
+src/main/java/com/example/weight_inspection/models/ProductPackaging.java, code is 35, comment is 0, blank is 8.
+src/main/java/com/example/weight_inspection/models/Weighing.java, code is 49, comment is 0, blank is 20.
+src/main/java/com/example/weight_inspection/repositories/AdminRepository.java, code is 7, comment is 0, blank is 4.
+src/main/java/com/example/weight_inspection/repositories/EmailRepository.java, code is 8, comment is 0, blank is 4.
+src/main/java/com/example/weight_inspection/repositories/NotificationRepository.java, code is 7, comment is 0, blank is 2.
+src/main/java/com/example/weight_inspection/repositories/PackagingRepository.java, code is 7, comment is 0, blank is 5.
+src/main/java/com/example/weight_inspection/repositories/PaletteRepository.java, code is 7, comment is 0, blank is 5.
+src/main/java/com/example/weight_inspection/repositories/ProductPackagingRepository.java, code is 9, comment is 0, blank is 3.
+src/main/java/com/example/weight_inspection/repositories/ProductRepository.java, code is 7, comment is 0, blank is 5.
+src/main/java/com/example/weight_inspection/repositories/WeighingRepository.java, code is 6, comment is 0, blank is 2.
+src/main/java/com/example/weight_inspection/security/AdminUserDetailsService.java, code is 27, comment is 0, blank is 4.
+src/main/java/com/example/weight_inspection/security/WebSecurityConfig.java, code is 36, comment is 1, blank is 6.
+src/main/java/com/example/weight_inspection/services/WeighingService.java, code is 19, comment is 0, blank is 6.
+src/main/java/com/example/weight_inspection/services/WeighingServiceInterface.java, code is 7, comment is 0, blank is 2.
+src/main/java/com/example/weight_inspection/transfer/AddAdminDTO.java, code is 24, comment is 0, blank is 7.
+src/main/java/com/example/weight_inspection/transfer/AddWeighingDTO.java, code is 23, comment is 0, blank is 8.
+src/main/java/com/example/weight_inspection/transfer/GetAdminDTO.java, code is 19, comment is 0, blank is 8.
+src/main/java/com/example/weight_inspection/transfer/GetPackagingOfProductDTO.java, code is 17, comment is 0, blank is 7.
+src/main/java/com/example/weight_inspection/transfer/GetProductOfPackagingDTO.java, code is 16, comment is 0, blank is 6.
+src/main/java/com/example/weight_inspection/transfer/ListResponse.java, code is 45, comment is 0, blank is 9.
+src/main/java/com/example/weight_inspection/WeightInspectionApplication.java, code is 13, comment is 0, blank is 3.
+src/main/resources/application.properties, code is 6, comment is 1, blank is 0.
+src/test/java/com/example/weight_inspection/WeightInspectionApplicationTests.java, code is 9, comment is 0, blank is 4.
+target/classes/application.properties, code is 6, comment is 1, blank is 0.
+target/classes/com/example/weight_inspection/controllers/AdminController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/EmailController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/NotificationController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/PackagingController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/PaletteController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/ProductController.class, it is a binary file.
+target/classes/com/example/weight_inspection/controllers/WeighingController.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Admin.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Email.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Notification.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Packaging.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Palette.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Product.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/ProductPackaging.class, it is a binary file.
+target/classes/com/example/weight_inspection/models/Weighing.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/AdminRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/EmailRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/NotificationRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/PackagingRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/PaletteRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/ProductPackagingRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/ProductRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/repositories/WeighingRepository.class, it is a binary file.
+target/classes/com/example/weight_inspection/security/AdminUserDetailsService.class, it is a binary file.
+target/classes/com/example/weight_inspection/security/WebSecurityConfig.class, it is a binary file.
+target/classes/com/example/weight_inspection/services/WeighingService.class, it is a binary file.
+target/classes/com/example/weight_inspection/services/WeighingServiceInterface.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/AddAdminDTO.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/AddWeighingDTO.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/GetAdminDTO.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/GetPackagingOfProductDTO.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/GetProductOfPackagingDTO.class, it is a binary file.
+target/classes/com/example/weight_inspection/transfer/ListResponse.class, it is a binary file.
+target/classes/com/example/weight_inspection/WeightInspectionApplication.class, it is a binary file.
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst, code is 0, comment is 0, blank is 0.
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst, code is 12, comment is 0, blank is 0.
+target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst, code is 0, comment is 0, blank is 0.
+target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst, code is 1, comment is 0, blank is 0.
+target/test-classes/com/example/weight_inspection/WeightInspectionApplicationTests.class, it is a binary file.
+===============================================================================

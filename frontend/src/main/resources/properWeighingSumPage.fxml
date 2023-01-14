@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#keyTyped" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.correctWeighingController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
     </columnConstraints>
@@ -37,9 +37,9 @@
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="NAVÁŽENÁ HMOTNOSŤ:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="OČAKÁVANÁ HMOTNOSŤ:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="CELKOVÝ ROZDIEL MEDZI HMOTNOSŤAMI:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="weight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label fx:id="expectedWeight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label fx:id="weightDifference" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4" />
          </children>
       </GridPane>
         <GridPane maxHeight="1.7976931348623157E308" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
@@ -62,11 +62,7 @@
                 <RowConstraints maxHeight="1.7976931348623157E308" percentHeight="25.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NASPÄŤ" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                    <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </GridPane.margin></Button>
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="HOTOVO" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#allDone" text="HOTOVO" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin></Button>

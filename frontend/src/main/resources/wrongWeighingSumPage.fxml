@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#keyTyped" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
     </columnConstraints>
@@ -34,13 +34,16 @@
             <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="blueLabel" text="KONTROLNÁ TABUĽKA NESPRÁVNEHO VÁŽENIA" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="blueLabel" text="KONTROLNÁ TABUĽKA NESPRÁVNEHO VÁŽENIA, AK NEJAKE DATA DOLE NIE SU SPRAVNE, UROBTE ESTE JEDNO VAZENIE" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+               <padding>
+                  <Insets left="100.0" right="100.0" />
+               </padding></Label>
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="NÁZOV ZVOLENÉHO OBALU:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="FOTOGRAFIA ZVOLENÉHO OBALU:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="NÁZOV ZVOLENEJ PALETY:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label fx:id="packLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="paletteLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" text="FOTOGRAFIA ZVOLENEJ PALETY:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="whiteLabel" GridPane.columnIndex="2" GridPane.rowIndex="5" />
          </children>
@@ -65,11 +68,7 @@
                 <RowConstraints maxHeight="1.7976931348623157E308" percentHeight="25.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NASPÄŤ" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                    <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </GridPane.margin></Button>
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="HOTOVO" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#allDone" text="HOTOVO" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin></Button>

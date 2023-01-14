@@ -1,13 +1,26 @@
 package com.example.utils;
 
+import com.example.model.Weighing;
+import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
+
 public class WorkerState {
     private static String IDP;
-    private static String refference;
+    private static String reference;
     private static Integer productId;
     private static Integer quantity;
     private static Integer packagingId;
     private static Integer paletteId;
-    private static Integer weight;
+    private static Float weight;
+    private static Weighing weighing;
+
+    public static Weighing getWeighing() {
+        return weighing;
+    }
+
+    public static void setWeighing(Weighing weighing) {
+        WorkerState.weighing = weighing;
+    }
 
     public static Integer getProductId() {
         return productId;
@@ -33,11 +46,11 @@ public class WorkerState {
         WorkerState.paletteId = paletteId;
     }
 
-    public static Integer getWeight() {
+    public static Float getWeight() {
         return weight;
     }
 
-    public static void setWeight(Integer weight) {
+    public static void setWeight(Float weight) {
         WorkerState.weight = weight;
     }
 
@@ -49,12 +62,12 @@ public class WorkerState {
         WorkerState.IDP = IDP;
     }
 
-    public static String getRefference() {
-        return refference;
+    public static String getReference() {
+        return reference;
     }
 
-    public static void setRefference(String refference) {
-        WorkerState.refference = refference;
+    public static void setReference(String refference) {
+        WorkerState.reference = refference;
     }
 
     public static Integer getQuantity() {
@@ -63,5 +76,19 @@ public class WorkerState {
 
     public static void setQuantity(Integer quantity) {
         WorkerState.quantity = quantity;
+    }
+
+    public static void sendWeighing() {
+        Integer pId = getProductId();
+        setProductId(null);
+        setWeight(ScalesConnector.getWeight());
+        Weighing weighing = AHClientHandler.getAHClientHandler().postRequestSync("weighing", new WorkerState(),
+                Weighing.class);
+        setWeighing(weighing);
+        if (!weighing.getCorrect()) {
+            setProductId(pId);
+            SceneNavigator.setScene(SceneName.WRONG_WEIGHING);
+        }
+        SceneNavigator.setScene(SceneName.CORRECT_WEIGHING);
     }
 }

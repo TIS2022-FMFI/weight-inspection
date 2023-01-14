@@ -48,10 +48,10 @@ public class ScanPageController extends ScannerController implements Swappable {
             return;
         }
         WorkerState.setIDP(idpLabel.getText());
-        WorkerState.setRefference(refferenceLabel.getText());
+        WorkerState.setReference(refferenceLabel.getText());
         WorkerState.setQuantity(Integer.valueOf(quantityLabel.getText()));
         List<Product> products = AHClientHandler.getAHClientHandler().getPageSync("/product",
-                Arrays.asList(new Param("reference", WorkerState.getRefference())), 0, 0, Product.class);
+                Arrays.asList(new Param("reference", WorkerState.getReference())), 0, 0, Product.class);
         if (products == null || products.size() != 1) {
             return;
         }
@@ -62,13 +62,13 @@ public class ScanPageController extends ScannerController implements Swappable {
 
     @Override
     public void onLoad(SceneName previousSceneName) {
-        if (WorkerState.getIDP() == null || WorkerState.getRefference() == null || WorkerState.getQuantity() == null) {
+        if (WorkerState.getIDP() == null || WorkerState.getReference() == null || WorkerState.getQuantity() == null) {
             refferenceLabel.setText("");
             idpLabel.setText("");
             quantityLabel.setText("");
             return;
         }
-        refferenceLabel.setText(WorkerState.getRefference());
+        refferenceLabel.setText(WorkerState.getReference());
         idpLabel.setText(WorkerState.getIDP());
         quantityLabel.setText(String.valueOf(WorkerState.getQuantity()));
 

@@ -64,7 +64,6 @@ public class AHClientHandler {
         ListenableFuture<Response> whenResponse = request.execute();
         try {
             Response response = whenResponse.get();
-            System.out.println(response.getResponseBody());
             if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
@@ -80,8 +79,46 @@ public class AHClientHandler {
             Type pageType = TypeToken.getParameterized(Page.class, type).getType();
             Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
                     pageType);
-            System.out.println(newPage.getItems());
             return newPage.getItems();
+
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return null;
+        }
+    }
+
+    public <T, T2> T2 postRequestSync(String url, T object, Class<T2> type) {
+        String jsonObject = gson.toJson(object);
+        BoundRequestBuilder request = AHClient
+                .prepareGet(baseUrl + url)
+                .setHeader("Content-Type", "application/json")
+                .setBody(jsonObject);
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            System.out.println(response.getResponseBody());
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            T2 item = new Gson().fromJson(response.getResponseBody(), type);
+            return item;
 
         } catch (Exception e) {
             Alert errorAlert = new Alert(AlertType.ERROR);
@@ -259,7 +296,6 @@ public class AHClientHandler {
     // .execute();
     // try {
     // Response response = whenResponse.get();
-    // System.out.println(response.getStatusCode());
     // if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
     // Alert errorAlert = new Alert(AlertType.ERROR);
     // errorAlert.setHeaderText("Nastala chyba");

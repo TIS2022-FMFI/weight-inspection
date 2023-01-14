@@ -12,6 +12,33 @@ public class Weighing {
     private String packagingName = "";
     private String paletteName = "";
     private String reference = "";
+    private Palette palette;
+    private Packaging packaging;
+    private float calculatedWeight;
+
+    public float getCalculatedWeight() {
+        return calculatedWeight;
+    }
+
+    public void setCalculatedWeight(float calculatedWeight) {
+        this.calculatedWeight = calculatedWeight;
+    }
+
+    public Palette getPalette() {
+        return palette;
+    }
+
+    public void setPalette(Palette palette) {
+        this.palette = palette;
+    }
+
+    public Packaging getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(Packaging packaging) {
+        this.packaging = packaging;
+    }
 
     public Integer getId() {
         return id;

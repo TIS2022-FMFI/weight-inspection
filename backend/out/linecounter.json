@@ -1,0 +1,577 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "/Users/dimaherashchenko/Projects/0university/weight-inspection/backend",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2023-01-14 23:54:10",
+            "filesum": 82,
+            "codesum": 1828,
+            "commentsum": 11,
+            "blanksum": 432,
+            "statistics": {
+                ".java": {
+                    "code": 1452,
+                    "comment": 4,
+                    "blank": 389
+                },
+                ".xml": {
+                    "code": 82,
+                    "comment": 0,
+                    "blank": 11
+                },
+                "": {
+                    "code": 203,
+                    "comment": 2,
+                    "blank": 21
+                },
+                ".cmd": {
+                    "code": 64,
+                    "comment": 1,
+                    "blank": 11
+                },
+                ".properties": {
+                    "code": 14,
+                    "comment": 4,
+                    "blank": 0
+                },
+                ".lst": {
+                    "code": 13,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 4,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "filename": ".mvn/wrapper/maven-wrapper.jar",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 2,
+                    "filename": ".mvn/wrapper/maven-wrapper.properties"
+                },
+                {
+                    "blank": 17,
+                    "code": 174,
+                    "comment": 2,
+                    "filename": "mvnw"
+                },
+                {
+                    "blank": 11,
+                    "code": 64,
+                    "comment": 1,
+                    "filename": "mvnw.cmd"
+                },
+                {
+                    "blank": 11,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "pom.xml"
+                },
+                {
+                    "blank": 27,
+                    "code": 122,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/AdminController.java"
+                },
+                {
+                    "blank": 19,
+                    "code": 78,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/EmailController.java"
+                },
+                {
+                    "blank": 19,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/NotificationController.java"
+                },
+                {
+                    "blank": 28,
+                    "code": 129,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/PackagingController.java"
+                },
+                {
+                    "blank": 33,
+                    "code": 118,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/PaletteController.java"
+                },
+                {
+                    "blank": 63,
+                    "code": 241,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/ProductController.java"
+                },
+                {
+                    "blank": 22,
+                    "code": 106,
+                    "comment": 3,
+                    "filename": "src/main/java/com/example/weight_inspection/controllers/WeighingController.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Admin.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Email.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Notification.java"
+                },
+                {
+                    "blank": 9,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Packaging.java"
+                },
+                {
+                    "blank": 10,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Palette.java"
+                },
+                {
+                    "blank": 10,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Product.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/ProductPackaging.java"
+                },
+                {
+                    "blank": 20,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/models/Weighing.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/AdminRepository.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/EmailRepository.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/NotificationRepository.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/PackagingRepository.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/PaletteRepository.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/ProductPackagingRepository.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/ProductRepository.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/repositories/WeighingRepository.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/security/AdminUserDetailsService.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 36,
+                    "comment": 1,
+                    "filename": "src/main/java/com/example/weight_inspection/security/WebSecurityConfig.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/services/WeighingService.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/services/WeighingServiceInterface.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/AddAdminDTO.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/AddWeighingDTO.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/GetAdminDTO.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/GetPackagingOfProductDTO.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/GetProductOfPackagingDTO.java"
+                },
+                {
+                    "blank": 9,
+                    "code": 45,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/transfer/ListResponse.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "src/main/java/com/example/weight_inspection/WeightInspectionApplication.java"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 1,
+                    "filename": "src/main/resources/application.properties"
+                },
+                {
+                    "blank": 4,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src/test/java/com/example/weight_inspection/WeightInspectionApplicationTests.java"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 1,
+                    "filename": "target/classes/application.properties"
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/AdminController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/EmailController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/NotificationController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/PackagingController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/PaletteController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/ProductController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/controllers/WeighingController.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Admin.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Email.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Notification.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Packaging.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Palette.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Product.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/ProductPackaging.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/models/Weighing.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/AdminRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/EmailRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/NotificationRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/PackagingRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/PaletteRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/ProductPackagingRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/ProductRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/repositories/WeighingRepository.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/security/AdminUserDetailsService.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/security/WebSecurityConfig.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/services/WeighingService.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/services/WeighingServiceInterface.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/AddAdminDTO.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/AddWeighingDTO.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/GetAdminDTO.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/GetPackagingOfProductDTO.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/GetProductOfPackagingDTO.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/transfer/ListResponse.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "target/classes/com/example/weight_inspection/WeightInspectionApplication.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst"
+                },
+                {
+                    "blank": 0,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst"
+                },
+                {
+                    "filename": "target/test-classes/com/example/weight_inspection/WeightInspectionApplicationTests.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                }
+            ]
+        }
+    ]
+}
