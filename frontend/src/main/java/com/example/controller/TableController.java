@@ -35,11 +35,9 @@ public abstract class TableController implements Initializable {
         });
     }
 
-    public void updateTable() {
-    }
+    public abstract void updateTable();
 
-    public void updateButtons() {
-    }
+    public abstract void updateButtons();
 
     public void setPaging(int totalPages, int page) {
         if (pagination.getCurrentPageIndex() != page) {
