@@ -8,11 +8,17 @@ import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.ListenableFuture;
+import org.asynchttpclient.Param;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
 
@@ -199,5 +205,45 @@ public class AHClientHandler {
                             });
                     return null;
                 });
+    }
+
+    public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
+        ListenableFuture<Response> whenResponse = AHClient
+                .prepareGet(baseUrl + url)
+                .addQueryParams(params)
+                .execute();
+        try {
+            Response response = whenResponse.get();
+            System.out.println(response.getStatusCode());
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
+                Button cancelButton = (Button) errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
+                errorAlert.show();
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (Exception e2) {
+                }
+                cancelButton.fire();
+                return null;
+            }
+            T newObject = new Gson().fromJson(response.getResponseBody(), type);
+            return newObject;
+
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to the server");
+            errorAlert.setContentText("Check your internet connection");
+            Button cancelButton = (Button) errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
+            errorAlert.show();
+
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (Exception e2) {
+            }
+            cancelButton.fire();
+            return null;
+        }
     }
 }

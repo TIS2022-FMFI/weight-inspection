@@ -13,7 +13,7 @@ public abstract class ScannerController implements Initializable {
     private final StringBuffer barcode = new StringBuffer();
     private long lastEventTimeStamp = 0L;
     private long threshold = 50L;
-    private int minBarcodeLength = 4;
+    private int minBarcodeLength = 2;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

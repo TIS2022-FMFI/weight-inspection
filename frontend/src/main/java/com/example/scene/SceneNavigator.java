@@ -66,7 +66,7 @@ public class SceneNavigator {
             return;
         }
 
-        double width = 1200;
+        double width = 1300;
         double height = 800;
 
         if (currentSceneName != null) {
