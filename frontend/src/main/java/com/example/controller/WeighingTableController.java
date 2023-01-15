@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Weighing;
 import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
 import com.example.utils.TextFieldFilters;
 
@@ -96,6 +97,12 @@ public class WeighingTableController extends TableController implements Swappabl
         }
         AHClientHandler.getAHClientHandler().getPage("/weighing", currentPage, pageSize, weighings, Weighing.class,
                 this);
+    }
+
+    @FXML
+    public void back() {
+        weighings.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
 
     @Override

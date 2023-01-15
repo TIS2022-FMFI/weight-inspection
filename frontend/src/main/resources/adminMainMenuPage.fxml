@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1300.0" stylesheets="@globalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.AdminMainMenuController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
     </columnConstraints>
@@ -38,32 +38,32 @@
           <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA ZÁZNAMOV" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable1" text="TABUĽKA ZÁZNAMOV" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin>
             </Button>
-                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA ADMINOV" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable5" text="TABUĽKA ADMINOV" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin>
             </Button>
-                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA E-MAILOV" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable6" text="TABUĽKA E-MAILOV" GridPane.columnIndex="11" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin>
             </Button>
-            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA OBALOV" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable3" text="TABUĽKA OBALOV" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA PALIET" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable4" text="TABUĽKA PALIET" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" text="TABUĽKA PRODUKTOV" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button maxHeight="125.0" maxWidth="500.0" mnemonicParsing="false" onAction="#openTable2" text="TABUĽKA PRODUKTOV" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

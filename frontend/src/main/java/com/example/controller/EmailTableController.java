@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Email;
 import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
 
 import javafx.collections.FXCollections;
@@ -184,6 +185,12 @@ public class EmailTableController extends TableController implements Swappable {
         Email newEmail = new Email();
         newEmail.post(this);
         pagination.setCurrentPageIndex(0);
+    }
+
+    @FXML
+    public void back() {
+        emails.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
 
     @Override

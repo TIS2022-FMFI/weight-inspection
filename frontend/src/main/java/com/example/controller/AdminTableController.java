@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Admin;
 import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
 import com.example.utils.TextFieldFilters;
 
@@ -175,6 +176,12 @@ public class AdminTableController extends TableController implements Swappable {
         Admin newAdmin = new Admin();
         newAdmin.post(this);
         pagination.setCurrentPageIndex(0);
+    }
+
+    @FXML
+    public void back() {
+        admins.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
 
     @Override

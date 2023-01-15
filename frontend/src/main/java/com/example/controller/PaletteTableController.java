@@ -214,6 +214,12 @@ public class PaletteTableController extends TableController implements Swappable
         pagination.setCurrentPageIndex(0);
     }
 
+    @FXML
+    public void back() {
+        palettes.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+    }
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         pagination.setCurrentPageIndex(0);
