@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -49,7 +50,7 @@ public class EmailTableController extends TableController implements Swappable {
         emails = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        sendExportsColumn.setCellValueFactory(new PropertyValueFactory<>("send_exports"));
+        sendExportsColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
@@ -59,7 +60,8 @@ public class EmailTableController extends TableController implements Swappable {
 
     private void editableCols() {
         emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        emailColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmail(e.getNewValue()));
+        emailColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmail(e.getNewValue()));
 
         tableView.setEditable(true);
     }
@@ -130,6 +132,35 @@ public class EmailTableController extends TableController implements Swappable {
         };
 
         actionColumn2.setCellFactory(deleteFactory);
+        Callback<TableColumn<Email, String>, TableCell<Email, String>> exportsFactory = new Callback<TableColumn<Email, String>, TableCell<Email, String>>() {
+            @Override
+            public TableCell<Email, String> call(final TableColumn<Email, String> param) {
+                final TableCell<Email, String> cell = new TableCell<Email, String>() {
+                    final CheckBox chkbx = new CheckBox();
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            chkbx.setOnAction(event -> {
+                                System.out.println("hi");
+                                Email email = getTableView().getItems().get(getIndex());
+                                email.setSendExports(chkbx.isSelected());
+                            });
+                            chkbx.setSelected(getTableView().getItems().get(getIndex()).getSendExports());
+                            setGraphic(chkbx);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        sendExportsColumn.setCellFactory(exportsFactory);
     }
 
     @FXML
@@ -161,5 +192,6 @@ public class EmailTableController extends TableController implements Swappable {
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

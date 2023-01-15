@@ -5,14 +5,23 @@ import com.example.model.Page;
 import com.example.utils.exeptions.IncorrectCodeExeption;
 import com.google.gson.Gson;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.util.Duration;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.ListenableFuture;
+import org.asynchttpclient.Param;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,6 +55,90 @@ public class AHClientHandler {
         return AHClient;
     }
 
+    public <T> List<T> getPageSync(String url, List<Param> params, int page, int pageSize, Class<T> type) {
+        BoundRequestBuilder request = AHClient
+                .prepareGet(baseUrl + url)
+                .addQueryParam("page", String.valueOf(page))
+                .addQueryParam("page_size", String.valueOf(pageSize))
+                .addQueryParams(params);
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            Type pageType = TypeToken.getParameterized(Page.class, type).getType();
+            Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
+                    pageType);
+            return newPage.getItems();
+
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return null;
+        }
+    }
+
+    public <T, T2> T2 postRequestSync(String url, T object, Class<T2> type) {
+        String jsonObject = gson.toJson(object);
+        System.out.println(jsonObject);
+        BoundRequestBuilder request = AHClient
+                .preparePost(baseUrl + url)
+                .setHeader("Content-Type", "application/json")
+                .setBody(jsonObject);
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getResponseBody());
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            System.out.println("I am fine");
+            T2 item = new Gson().fromJson(response.getResponseBody(), type);
+            System.out.println(item);
+            System.out.println("I am fine2");
+            return item;
+
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return null;
+        }
+    }
+
     public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type,
             TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
@@ -71,9 +164,6 @@ public class AHClientHandler {
                                         pageType);
                                 Platform.runLater(
                                         () -> {
-                                            System.out.println(page);
-                                            System.out.println(pageSize);
-                                            System.out.println(newPage.getTotalPages());
                                             returnList.clear();
                                             returnList.addAll(newPage.getItems());
                                             controller.setPaging(newPage.getTotalPages(), page);
@@ -200,4 +290,49 @@ public class AHClientHandler {
                     return null;
                 });
     }
+
+    // Might become usefull in the future, but will need some work(in the error
+    // handling) to get to a working state
+
+    // public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
+    // ListenableFuture<Response> whenResponse = AHClient
+    // .prepareGet(baseUrl + url)
+    // .addQueryParams(params)
+    // .execute();
+    // try {
+    // Response response = whenResponse.get();
+    // if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+    // Alert errorAlert = new Alert(AlertType.ERROR);
+    // errorAlert.setHeaderText("Nastala chyba");
+    // errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia
+    // zmyzne cez 3 sekundy.");
+    // Button cancelButton = (Button)
+    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
+    // errorAlert.show();
+    // try {
+    // TimeUnit.SECONDS.sleep(3);
+    // } catch (Exception e2) {
+    // }
+    // cancelButton.fire();
+    // return null;
+    // }
+    // T newObject = new Gson().fromJson(response.getResponseBody(), type);
+    // return newObject;
+
+    // } catch (Exception e) {
+    // Alert errorAlert = new Alert(AlertType.ERROR);
+    // errorAlert.setHeaderText("Can't connect to the server");
+    // errorAlert.setContentText("Check your internet connection");
+    // Button cancelButton = (Button)
+    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
+    // errorAlert.show();
+
+    // try {
+    // TimeUnit.SECONDS.sleep(3);
+    // } catch (Exception e2) {
+    // }
+    // cancelButton.fire();
+    // return null;
+    // }
+    // }
 }

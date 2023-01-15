@@ -41,12 +41,12 @@ public class PackagingController {
 	private final ProductPackagingRepository productPackagingRepository;
 
 	@Autowired
-	public PackagingController(PackagingRepository packagingRepository, ProductRepository productRepository, ProductPackagingRepository productPackagingRepository) {
+	public PackagingController(PackagingRepository packagingRepository, ProductRepository productRepository,
+			ProductPackagingRepository productPackagingRepository) {
 		this.packagingRepository = packagingRepository;
 		this.productRepository = productRepository;
 		this.productPackagingRepository = productPackagingRepository;
 	}
-
 
 	@GetMapping
 	public ResponseEntity<ListResponse<Packaging>> GetPackagings(
@@ -78,7 +78,8 @@ public class PackagingController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Packaging> savePackaging(@RequestBody @Valid Packaging packaging, BindingResult bindingResult) {
+	public ResponseEntity<Packaging> savePackaging(@RequestBody @Valid Packaging packaging,
+			BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors() || (packaging == null)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -90,7 +91,8 @@ public class PackagingController {
 	}
 
 	@PutMapping("{packagingId}")
-	public ResponseEntity<Packaging> replacePackaging(@RequestBody @Valid Packaging packaging, BindingResult bindingResult,
+	public ResponseEntity<Packaging> replacePackaging(@RequestBody @Valid Packaging packaging,
+			BindingResult bindingResult,
 			@PathVariable Long packagingId) {
 
 		if (bindingResult.hasErrors() || packaging == null) {
@@ -123,9 +125,9 @@ public class PackagingController {
 		return new ResponseEntity<>(deletedPackaging, HttpStatus.NO_CONTENT);
 	}
 
-
 	@GetMapping("{packagingId}/product")
-	public ResponseEntity<ListResponse<GetProductOfPackagingDTO>> getProductsOfPackaging(@PathVariable Long packagingId) {
+	public ResponseEntity<ListResponse<GetProductOfPackagingDTO>> getProductsOfPackaging(
+			@PathVariable Long packagingId) {
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
 		if (!packaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -148,8 +150,7 @@ public class PackagingController {
 							getProductOfPackagingDTO.setTolerance(productPackaging.getTolerance());
 							return getProductOfPackagingDTO;
 						})
-						.collect(Collectors.toList())
-		);
+						.collect(Collectors.toList()));
 		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
 

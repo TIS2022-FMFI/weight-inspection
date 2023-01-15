@@ -4,14 +4,41 @@ import java.sql.Timestamp;
 
 public class Weighing {
     private Integer id;
-    private String IDP = "";
+    private String idp = "";
     private Float weight = 0f;
     private Integer quantity;
     private Timestamp weighedOn;
-    private Boolean isCorrect = true;
+    private Boolean correct = true;
     private String packagingName = "";
     private String paletteName = "";
     private String reference = "";
+    private Integer palette;
+    private Packaging packaging;
+    private Float calculatedWeight;
+
+    public Float getCalculatedWeight() {
+        return calculatedWeight;
+    }
+
+    public void setCalculatedWeight(Float calculatedWeight) {
+        this.calculatedWeight = calculatedWeight;
+    }
+
+    public Integer getPalette() {
+        return palette;
+    }
+
+    public void setPalette(Integer palette) {
+        this.palette = palette;
+    }
+
+    public Packaging getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(Packaging packaging) {
+        this.packaging = packaging;
+    }
 
     public Integer getId() {
         return id;
@@ -21,12 +48,12 @@ public class Weighing {
         this.id = id;
     }
 
-    public String getIDP() {
-        return IDP;
+    public String getIdp() {
+        return idp;
     }
 
-    public void setIDP(String IDP) {
-        this.IDP = IDP;
+    public void setIdp(String IDP) {
+        this.idp = IDP;
     }
 
     public String getWeight() {
@@ -54,11 +81,11 @@ public class Weighing {
     }
 
     public Boolean getCorrect() {
-        return isCorrect;
+        return correct;
     }
 
     public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+        correct = correct;
     }
 
     public String getPackagingName() {
