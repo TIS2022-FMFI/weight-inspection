@@ -58,7 +58,7 @@ public class WeighingTableController extends TableController implements Swappabl
 
         weighings = FXCollections.observableArrayList();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        idpColumn.setCellValueFactory(new PropertyValueFactory<>("IDP"));
+        idpColumn.setCellValueFactory(new PropertyValueFactory<>("idp"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         weighedOnColumn.setCellValueFactory(new PropertyValueFactory<>("weighedOn"));
@@ -94,7 +94,8 @@ public class WeighingTableController extends TableController implements Swappabl
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/weighing", currentPage, pageSize, weighings, Weighing.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/weighing", currentPage, pageSize, weighings, Weighing.class,
+                this);
     }
 
     @Override
@@ -103,5 +104,6 @@ public class WeighingTableController extends TableController implements Swappabl
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

@@ -7,23 +7,19 @@ import com.example.utils.WorkerState;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class correctWeighingController extends ScannerController implements Swappable {
+public class wrongWeighingController extends ScannerController implements Swappable {
 
     @FXML
-    public Label weight;
+    public Label packLabel;
     @FXML
-    public Label weightDifference;
-    @FXML
-    public Label expectedWeight;
+    public Label paletteLabel;
 
     @Override
     public void onLoad(SceneName previousSceneName) {
-        weight.setText(WorkerState.getWorkerState().getWeight().toString());
-        expectedWeight.setText(WorkerState.getWorkerState().getWeighing().getCalculatedWeight().toString());
-        weightDifference
-                .setText(new Float(Math.abs(WorkerState.getWorkerState().getWeight()
-                        - WorkerState.getWorkerState().getWeighing().getCalculatedWeight()))
-                        .toString());
+        packLabel.setText(WorkerState.getWorkerState().getWeighing().getPackaging().getName());
+        paletteLabel.setText(WorkerState.getWorkerState().getWeighing().getPalette().toString());
+        // TODO:
+        // paletteLabel.setText(WorkerState.getWorkerState().getWeighing().getPalette().getName());
     }
 
     @Override

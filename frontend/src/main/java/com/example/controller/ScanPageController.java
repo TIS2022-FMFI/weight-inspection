@@ -47,30 +47,32 @@ public class ScanPageController extends ScannerController implements Swappable {
         if (idpLabel.getText() == "" || refferenceLabel.getText() == "" || quantityLabel.getText() == "") {
             return;
         }
-        WorkerState.setIDP(idpLabel.getText());
-        WorkerState.setReference(refferenceLabel.getText());
-        WorkerState.setQuantity(Integer.valueOf(quantityLabel.getText()));
+        WorkerState.getWorkerState().setIdp(idpLabel.getText());
+        WorkerState.getWorkerState().setReference(refferenceLabel.getText());
+        WorkerState.getWorkerState().setQuantity(Integer.valueOf(quantityLabel.getText()));
         List<Product> products = AHClientHandler.getAHClientHandler().getPageSync("/product",
-                Arrays.asList(new Param("reference", WorkerState.getReference())), 0, 0, Product.class);
+                Arrays.asList(new Param("reference", WorkerState.getWorkerState().getReference())), 0, 0,
+                Product.class);
         if (products == null || products.size() != 1) {
             return;
         }
         Product product = products.get(0);
-        WorkerState.setProductId(product.getId());
+        WorkerState.getWorkerState().setProductId(product.getId());
         SceneNavigator.setScene(SceneName.PALETTE_PICK);
     }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
-        if (WorkerState.getIDP() == null || WorkerState.getReference() == null || WorkerState.getQuantity() == null) {
+        if (WorkerState.getWorkerState().getIdp() == null || WorkerState.getWorkerState().getReference() == null
+                || WorkerState.getWorkerState().getQuantity() == null) {
             refferenceLabel.setText("");
             idpLabel.setText("");
             quantityLabel.setText("");
             return;
         }
-        refferenceLabel.setText(WorkerState.getReference());
-        idpLabel.setText(WorkerState.getIDP());
-        quantityLabel.setText(String.valueOf(WorkerState.getQuantity()));
+        refferenceLabel.setText(WorkerState.getWorkerState().getReference());
+        idpLabel.setText(WorkerState.getWorkerState().getIdp());
+        quantityLabel.setText(String.valueOf(WorkerState.getWorkerState().getQuantity()));
 
     }
 

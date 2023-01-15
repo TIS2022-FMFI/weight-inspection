@@ -97,13 +97,15 @@ public class AHClientHandler {
 
     public <T, T2> T2 postRequestSync(String url, T object, Class<T2> type) {
         String jsonObject = gson.toJson(object);
+        System.out.println(jsonObject);
         BoundRequestBuilder request = AHClient
-                .prepareGet(baseUrl + url)
+                .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
                 .setBody(jsonObject);
         ListenableFuture<Response> whenResponse = request.execute();
         try {
             Response response = whenResponse.get();
+            System.out.println(response.getStatusCode());
             System.out.println(response.getResponseBody());
             if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
@@ -117,7 +119,10 @@ public class AHClientHandler {
                 delay.play();
                 return null;
             }
+            System.out.println("I am fine");
             T2 item = new Gson().fromJson(response.getResponseBody(), type);
+            System.out.println(item);
+            System.out.println("I am fine2");
             return item;
 
         } catch (Exception e) {

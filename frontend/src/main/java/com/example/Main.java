@@ -30,7 +30,7 @@ public class Main extends Application {
         scenes.put(SceneName.WRONG_WEIGHING, "/wrongWeighingSumPage.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.SCAN_PAGE);
+        SceneNavigator.setScene(SceneName.EMAILS);
         SceneNavigator.show();
     }
 }

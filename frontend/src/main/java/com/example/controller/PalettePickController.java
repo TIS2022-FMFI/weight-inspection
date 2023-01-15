@@ -91,7 +91,7 @@ public class PalettePickController extends ScannerController implements Swappabl
     @FXML
     public void back() {
         palettes = null;
-        WorkerState.setPaletteId(null);
+        WorkerState.getWorkerState().setPaletteId(null);
         SceneNavigator.setScene(SceneName.SCAN_PAGE);
     }
 
@@ -113,14 +113,15 @@ public class PalettePickController extends ScannerController implements Swappabl
 
     @FXML
     public void newPalette() {
-
+        WorkerState.getWorkerState().sendWeighing(false);
     }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
         currentIndex = 0;
         palettes = AHClientHandler.getAHClientHandler().getPageSync(
-                "/product/" + WorkerState.getProductId() + "/palette/", new ArrayList<>(), 0, 0, Palette.class);
+                "/product/" + WorkerState.getWorkerState().getProductId() + "/palette/", new ArrayList<>(), 0, 0,
+                Palette.class);
         if (palettes == null) {
             SceneNavigator.setScene(previousSceneName);
             return;
@@ -150,19 +151,19 @@ public class PalettePickController extends ScannerController implements Swappabl
                     down();
                     return;
                 case "1OPTION":
-                    WorkerState.setPaletteId(palettes.get(currentIndex).getId());
+                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex).getId());
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "2OPTION":
-                    WorkerState.setPaletteId(palettes.get(currentIndex + 1).getId());
+                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 1).getId());
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "3OPTION":
-                    WorkerState.setPaletteId(palettes.get(currentIndex + 2).getId());
+                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 2).getId());
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "4OPTION":
-                    WorkerState.setPaletteId(palettes.get(currentIndex + 3).getId());
+                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 3).getId());
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
             }

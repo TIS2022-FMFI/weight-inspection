@@ -2,6 +2,6 @@ package com.example.utils;
 
 public class ScalesConnector {
     public static float getWeight() {
-        return 50;
+        return 35000;
     }
 }

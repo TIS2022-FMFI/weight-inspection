@@ -91,8 +91,8 @@ public class PackagingPickController extends ScannerController implements Swappa
     @FXML
     public void back() {
         packagings = null;
-        WorkerState.setPaletteId(null);
-        WorkerState.setPackagingId(null);
+        WorkerState.getWorkerState().setPaletteId(null);
+        WorkerState.getWorkerState().setPackagingId(null);
         SceneNavigator.setScene(SceneName.PALETTE_PICK);
     }
 
@@ -114,14 +114,15 @@ public class PackagingPickController extends ScannerController implements Swappa
 
     @FXML
     public void newPackaging() {
-
+        WorkerState.getWorkerState().sendWeighing(false);
     }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
         currentIndex = 0;
         packagings = AHClientHandler.getAHClientHandler().getPageSync(
-                "/product/" + WorkerState.getProductId() + "/packaging/", new ArrayList<>(), 0, 0, Packaging.class);
+                "/product/" + WorkerState.getWorkerState().getProductId() + "/packaging/", new ArrayList<>(), 0, 0,
+                Packaging.class);
         if (packagings == null) {
             SceneNavigator.setScene(previousSceneName);
             return;
@@ -151,24 +152,24 @@ public class PackagingPickController extends ScannerController implements Swappa
                     down();
                     return;
                 case "1OPTION":
-                    WorkerState.setPackagingId(packagings.get(currentIndex).getId());
+                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex).getId());
                     packagings = null;
-                    WorkerState.sendWeighing();
+                    WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "2OPTION":
-                    WorkerState.setPackagingId(packagings.get(currentIndex + 1).getId());
+                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 1).getId());
                     packagings = null;
-                    WorkerState.sendWeighing();
+                    WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "3OPTION":
-                    WorkerState.setPackagingId(packagings.get(currentIndex + 2).getId());
+                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 2).getId());
                     packagings = null;
-                    WorkerState.sendWeighing();
+                    WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "4OPTION":
-                    WorkerState.setPackagingId(packagings.get(currentIndex + 3).getId());
+                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 3).getId());
                     packagings = null;
-                    WorkerState.sendWeighing();
+                    WorkerState.getWorkerState().sendWeighing(true);
                     return;
             }
         } catch (IndexOutOfBoundsException e) {
