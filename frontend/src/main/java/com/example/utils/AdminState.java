@@ -2,13 +2,15 @@ package com.example.utils;
 
 public class AdminState {
     private static String userName;
-    public static void logOut(){}
 
     private static Integer connectedPaletteId;
     private static Integer connectedPackagingId;
 
     private static int notificationCount = 0;
     private static Integer connectedNotificationId;
+
+    public static void logOut() {}
+    public static void logIn() {}
 
     public static String getUserName() {
         return userName;

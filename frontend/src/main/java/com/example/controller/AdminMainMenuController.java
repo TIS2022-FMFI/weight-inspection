@@ -58,6 +58,11 @@ public class AdminMainMenuController extends TableController implements Swappabl
     }
 
     @FXML
+    public void back() {
+        SceneNavigator.setScene(SceneName.APP_MAIN_MENU);
+    }
+
+    @FXML
     public void logOut() {AdminState.logOut();}
 
     @Override
