@@ -220,6 +220,9 @@ public class PaletteTableController extends TableController implements Swappable
         SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
 
+    @FXML
+    public void logOut() {AdminState.logOut();}
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         pagination.setCurrentPageIndex(0);

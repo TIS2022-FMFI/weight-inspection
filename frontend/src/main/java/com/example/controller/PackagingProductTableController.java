@@ -202,6 +202,9 @@ public class PackagingProductTableController extends TableController implements 
         SceneNavigator.setScene(SceneName.PACKAGES);
     }
 
+    @FXML
+    public void logOut() {AdminState.logOut();}
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         if (AdminState.getConnectedPackagingId() == null) {

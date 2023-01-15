@@ -5,6 +5,7 @@ import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
 
+import com.example.utils.AdminState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -196,6 +197,9 @@ public class EmailTableController extends TableController implements Swappable {
         emails.clear();
         SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
+
+    @FXML
+    public void logOut() {AdminState.logOut();}
 
     @Override
     public void onLoad(SceneName previousSceneName) {

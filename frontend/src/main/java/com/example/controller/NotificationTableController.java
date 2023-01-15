@@ -114,6 +114,9 @@ public class NotificationTableController extends TableController implements Swap
         SceneNavigator.setScene(previousScene);
     }
 
+    @FXML
+    public void logOut() {AdminState.logOut();}
+
     @Override
     public void onLoad(SceneName previousSceneName) {
 

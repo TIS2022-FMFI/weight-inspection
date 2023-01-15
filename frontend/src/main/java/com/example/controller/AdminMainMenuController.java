@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
+import com.example.utils.AdminState;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
@@ -55,6 +56,9 @@ public class AdminMainMenuController extends TableController implements Swappabl
     public void openTable6() {
         SceneNavigator.setScene(SceneName.EMAILS);
     }
+
+    @FXML
+    public void logOut() {AdminState.logOut();}
 
     @Override
     public void onLoad(SceneName previousSceneName) {}

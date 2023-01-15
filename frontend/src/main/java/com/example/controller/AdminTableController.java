@@ -4,6 +4,7 @@ import com.example.model.Admin;
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
+import com.example.utils.AdminState;
 import com.example.utils.TextFieldFilters;
 
 import javafx.collections.FXCollections;
@@ -188,6 +189,9 @@ public class AdminTableController extends TableController implements Swappable {
         admins.clear();
         SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
     }
+
+    @FXML
+    public void logOut() {AdminState.logOut();}
 
     @Override
     public void onLoad(SceneName previousSceneName) {
