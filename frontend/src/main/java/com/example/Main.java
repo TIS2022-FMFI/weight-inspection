@@ -29,9 +29,12 @@ public class Main extends Application {
         scenes.put(SceneName.CORRECT_WEIGHING, "/properWeighingSumPage.fxml");
         scenes.put(SceneName.WRONG_WEIGHING, "/wrongWeighingSumPage.fxml");
         scenes.put(SceneName.ADMIN_MAIN_MENU, "/adminMainMenuPage.fxml");
+        scenes.put(SceneName.NOTIFICATIONS, "/notificationTable.fxml");
+        scenes.put(SceneName.NOTIFICATION, "/notificationPage.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+        //SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+        //SceneNavigator.setScene(SceneName.NOTIFICATIONS);
         SceneNavigator.show();
     }
 }
