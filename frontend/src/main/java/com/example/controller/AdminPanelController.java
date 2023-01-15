@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
 
@@ -17,6 +20,12 @@ public class AdminPanelController extends HBox {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    @FXML
+    public void notification()
+    {
+        SceneNavigator.setScene(SceneName.NOTIFICATIONS);
     }
 
 }

@@ -61,15 +61,12 @@ public class NotificationTableController extends TableController implements Swap
     @Override
     public void updateButtons() {
 
-        NotificationTableController self = this;
-
         Callback<TableColumn<Notification, String>, TableCell<Notification, String>> connectedFactory = new Callback<TableColumn<Notification, String>, TableCell<Notification, String>>() {
             @Override
             public TableCell<Notification, String> call(final TableColumn<Notification, String> param) {
                 final TableCell<Notification, String> cell = new TableCell<Notification, String>() {
                     final Button btn = new Button("OTVORIT");
 
-                    /*
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -79,7 +76,7 @@ public class NotificationTableController extends TableController implements Swap
                         } else {
                             btn.setOnAction(event -> {
                                 Notification notification = getTableView().getItems().get(getIndex());
-                                //AdminState.setConnectedPaletteId(notification.getId());
+                                AdminState.setConnectedNotificationId(notification.getId());
                                 notifications.clear();
                                 SceneNavigator.setScene(SceneName.NOTIFICATION);
                             });
@@ -87,7 +84,6 @@ public class NotificationTableController extends TableController implements Swap
                             setText(null);
                         }
                     }
-                    */
                 };
                 return cell;
             }
@@ -120,7 +116,11 @@ public class NotificationTableController extends TableController implements Swap
 
     @Override
     public void onLoad(SceneName previousSceneName) {
-        previousScene = previousSceneName;
+
+        if (previousSceneName != SceneName.NOTIFICATION && previousSceneName != SceneName.NOTIFICATIONS)
+        {
+            previousScene = previousSceneName;
+        }
         pagination.setCurrentPageIndex(0);
         updateTable();
     }

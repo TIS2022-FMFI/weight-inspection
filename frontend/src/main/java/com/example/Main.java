@@ -33,7 +33,7 @@ public class Main extends Application {
         scenes.put(SceneName.NOTIFICATION, "/notificationPage.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        //SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
         //SceneNavigator.setScene(SceneName.NOTIFICATIONS);
         SceneNavigator.show();
     }
