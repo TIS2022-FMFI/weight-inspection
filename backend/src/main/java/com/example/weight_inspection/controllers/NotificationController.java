@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class NotificationController {
         }
 
         notification.setId(null);
+        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         notificationRepository.save(notification);
         return new ResponseEntity<>(notification, HttpStatus.CREATED);
     }

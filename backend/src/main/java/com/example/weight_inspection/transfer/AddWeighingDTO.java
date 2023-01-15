@@ -24,7 +24,7 @@ public class AddWeighingDTO {
     private float weight;
 
     @NotNull
-    private  int quantity;
+    private int quantity;
     private Long paletteId;
 
     private Long packagingId;
