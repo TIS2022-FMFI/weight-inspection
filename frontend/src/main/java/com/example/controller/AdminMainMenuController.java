@@ -2,9 +2,7 @@ package com.example.controller;
 
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
