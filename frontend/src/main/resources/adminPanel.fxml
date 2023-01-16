@@ -43,7 +43,7 @@
                     </rowConstraints>
                     <children>
                         <Text fill="#fdfdfd" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="POUŽÍVATEĽ: " GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NOVÉ NOTIFIKÁCIE:" textFill="#fdfdfd" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#notification" text="NOTIFIKÁCIE" textFill="#fdfdfd" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin></Button>

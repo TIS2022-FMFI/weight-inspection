@@ -153,6 +153,9 @@ public class PaletteProductTableController extends TableController implements Sw
         SceneNavigator.setScene(SceneName.PALETTES);
     }
 
+    @FXML
+    public void logOut() {AdminState.logOut();}
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         if (AdminState.getConnectedPaletteId() == null) {

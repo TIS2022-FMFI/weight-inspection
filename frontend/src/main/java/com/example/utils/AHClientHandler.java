@@ -140,7 +140,7 @@ public class AHClientHandler {
     }
 
     public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type,
-            TableController controller) {
+                            TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
@@ -275,7 +275,14 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                    if (response.getStatusCode() == 500) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Error while comunicating with server");
+                            errorAlert.setContentText("Pravdepodobne sa snazite vymazat produkt, ktory je pripojeny k existujucemu obalu, alebo palete.");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -291,48 +298,39 @@ public class AHClientHandler {
                 });
     }
 
-    // Might become usefull in the future, but will need some work(in the error
-    // handling) to get to a working state
+    public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
+        ListenableFuture<Response> whenResponse = AHClient
+                .prepareGet(baseUrl + url)
+                .addQueryParams(params)
+                .execute();
+        try {
+            Response response = whenResponse.get();
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Tato notifikacia zmizne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            T newObject = new Gson().fromJson(response.getResponseBody(), type);
+            return newObject;
 
-    // public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
-    // ListenableFuture<Response> whenResponse = AHClient
-    // .prepareGet(baseUrl + url)
-    // .addQueryParams(params)
-    // .execute();
-    // try {
-    // Response response = whenResponse.get();
-    // if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
-    // Alert errorAlert = new Alert(AlertType.ERROR);
-    // errorAlert.setHeaderText("Nastala chyba");
-    // errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia
-    // zmyzne cez 3 sekundy.");
-    // Button cancelButton = (Button)
-    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
-    // errorAlert.show();
-    // try {
-    // TimeUnit.SECONDS.sleep(3);
-    // } catch (Exception e2) {
-    // }
-    // cancelButton.fire();
-    // return null;
-    // }
-    // T newObject = new Gson().fromJson(response.getResponseBody(), type);
-    // return newObject;
-
-    // } catch (Exception e) {
-    // Alert errorAlert = new Alert(AlertType.ERROR);
-    // errorAlert.setHeaderText("Can't connect to the server");
-    // errorAlert.setContentText("Check your internet connection");
-    // Button cancelButton = (Button)
-    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
-    // errorAlert.show();
-
-    // try {
-    // TimeUnit.SECONDS.sleep(3);
-    // } catch (Exception e2) {
-    // }
-    // cancelButton.fire();
-    // return null;
-    // }
-    // }
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Nastala chyba");
+            errorAlert.setContentText("Tato notifikacia zmizne cez 3 sekundy.");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(e2 -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return null;
+        }
+    }
 }

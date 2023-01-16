@@ -214,6 +214,15 @@ public class PackagingTableController extends TableController implements Swappab
         pagination.setCurrentPageIndex(0);
     }
 
+    @FXML
+    public void back() {
+        packages.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+    }
+
+    @FXML
+    public void logOut() {AdminState.logOut();}
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         pagination.setCurrentPageIndex(0);

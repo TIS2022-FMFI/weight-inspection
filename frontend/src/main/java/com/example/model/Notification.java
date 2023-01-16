@@ -4,9 +4,9 @@ import java.sql.Timestamp;
 
 public class Notification {
     private Integer id;
-    private Timestamp created_on;
-    private String type;
-    private String description;
+    private Timestamp createdOn;
+    private String type = "";
+    private String description = "";
 
     public int getId() {
         return id;
@@ -16,13 +16,9 @@ public class Notification {
         this.id = notification_id;
     }
 
-    public Timestamp getCreated_on() {
-        return created_on;
-    }
+    public Timestamp getCreatedOn() {return createdOn;}
 
-    public void setCreated_on(Timestamp created_on) {
-        this.created_on = created_on;
-    }
+    public void setCreatedOn(Timestamp createdOn) {this.createdOn = createdOn;}
 
     public String getType() {
         return type;
