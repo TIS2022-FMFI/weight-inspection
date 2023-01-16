@@ -7,7 +7,7 @@ import com.example.utils.WorkerState;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class wrongWeighingController extends ScannerController implements Swappable {
+public class WrongWeighingController extends ScannerController implements Swappable {
 
     @FXML
     public Label packLabel;
@@ -17,9 +17,7 @@ public class wrongWeighingController extends ScannerController implements Swappa
     @Override
     public void onLoad(SceneName previousSceneName) {
         packLabel.setText(WorkerState.getWorkerState().getWeighing().getPackaging().getName());
-        paletteLabel.setText(WorkerState.getWorkerState().getWeighing().getPalette().toString());
-        // TODO:
-        // paletteLabel.setText(WorkerState.getWorkerState().getWeighing().getPalette().getName());
+        paletteLabel.setText(WorkerState.getWorkerState().getWeighing().getPalette().getName());
     }
 
     @Override

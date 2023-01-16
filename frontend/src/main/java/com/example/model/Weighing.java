@@ -11,8 +11,8 @@ public class Weighing {
     private Boolean correct = true;
     private String packagingName = "";
     private String paletteName = "";
-    private String reference = "";
-    private Integer palette;
+    private String productReference = "";
+    private Palette palette;
     private Packaging packaging;
     private Float calculatedWeight;
 
@@ -24,11 +24,11 @@ public class Weighing {
         this.calculatedWeight = calculatedWeight;
     }
 
-    public Integer getPalette() {
+    public Palette getPalette() {
         return palette;
     }
 
-    public void setPalette(Integer palette) {
+    public void setPalette(Palette palette) {
         this.palette = palette;
     }
 
@@ -104,11 +104,11 @@ public class Weighing {
         this.paletteName = paletteName;
     }
 
-    public String getReference() {
-        return reference;
+    public String getProductReference() {
+        return productReference;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setProductReference(String reference) {
+        this.productReference = reference;
     }
 }

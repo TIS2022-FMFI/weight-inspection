@@ -140,7 +140,7 @@ public class AHClientHandler {
     }
 
     public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type,
-                            TableController controller) {
+            TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
@@ -279,7 +279,8 @@ public class AHClientHandler {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
-                            errorAlert.setContentText("Pravdepodobne sa snazite vymazat produkt, ktory je pripojeny k existujucemu obalu, alebo palete.");
+                            errorAlert.setContentText(
+                                    "Pravdepodobne sa snazite vymazat produkt, ktory je pripojeny k existujucemu obalu, alebo palete.");
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
