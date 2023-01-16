@@ -22,36 +22,56 @@ public class Admin {
         this.id = admin_id;
     }
 
-    public String getEmailId()
-    {
-        if (emailId == null)
-        {
+    public String getEmailId() {
+        if (emailId == null) {
             return "";
         }
         return emailId.toString();
     }
 
-    public void setEmailId(Integer emailId) {this.emailId = emailId;}
+    public void setEmailId(Integer emailId) {
+        this.emailId = emailId;
+    }
 
-    public String getFirstName() {return firstName;}
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public void setFirstName(String firstName) {this.firstName = firstName;}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    public String getLastName() {return lastName;}
+    public String getLastName() {
+        return lastName;
+    }
 
-    public void setLastName(String lastName) {this.lastName = lastName;}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-    public String getUsername() {return username;}
+    public String getUsername() {
+        return username;
+    }
 
-    public void setUsername(String username) {this.username = username;}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getPassword() {return password;}
+    public String getPassword() {
+        return password;
+    }
 
-    public void setPassword(String password) {this.password = password;}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public Timestamp getLastLogin() {return lastLogin;}
+    public Timestamp getLastLogin() {
+        return lastLogin;
+    }
 
-    public void setLastLogin(Timestamp lastLogin) {this.lastLogin = lastLogin;}
+    public void setLastLogin(Timestamp lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
     public void post(TableController controller) {
         if (id == null) {

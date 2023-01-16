@@ -8,7 +8,7 @@ public class Weighing {
     private Float weight = 0f;
     private Integer quantity;
     private Timestamp weighedOn;
-    private Boolean correct = true;
+    private Boolean correct;
     private String packagingName = "";
     private String paletteName = "";
     private String productReference = "";
@@ -81,11 +81,11 @@ public class Weighing {
     }
 
     public Boolean getCorrect() {
-        return correct;
+        return this.correct;
     }
 
     public void setCorrect(Boolean correct) {
-        correct = correct;
+        this.correct = correct;
     }
 
     public String getPackagingName() {

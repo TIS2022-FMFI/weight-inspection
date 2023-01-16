@@ -25,6 +25,7 @@ import org.asynchttpclient.Param;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
 
+import io.netty.buffer.search.AhoCorasicSearchProcessorFactory;
 import io.netty.channel.unix.Socket;
 
 import java.lang.reflect.Type;
@@ -44,6 +45,10 @@ public class AHClientHandler {
         this.gson = new Gson();
     }
 
+    public static void remake() {
+        AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+    }
+
     public static AHClientHandler getAHClientHandler() {
         if (AHClientHandler == null) {
             AHClientHandler = new AHClientHandler("http://localhost:8080/api");
@@ -60,6 +65,7 @@ public class AHClientHandler {
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
                 .addQueryParam("page_size", String.valueOf(pageSize))
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .addQueryParams(params);
         ListenableFuture<Response> whenResponse = request.execute();
         try {
@@ -101,6 +107,7 @@ public class AHClientHandler {
         BoundRequestBuilder request = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject);
         ListenableFuture<Response> whenResponse = request.execute();
         try {
@@ -145,6 +152,7 @@ public class AHClientHandler {
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
                 .addQueryParam("page_size", String.valueOf(pageSize))
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
@@ -181,6 +189,7 @@ public class AHClientHandler {
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -223,6 +232,7 @@ public class AHClientHandler {
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -263,6 +273,7 @@ public class AHClientHandler {
     public <T> void deleteRequest(String url, TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareDelete(baseUrl + url)
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
@@ -302,10 +313,25 @@ public class AHClientHandler {
     public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
         ListenableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .addQueryParams(params)
                 .execute();
         try {
             Response response = whenResponse.get();
+            if (response.getStatusCode() == 401) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Asi ste vyuzily nespravne meno alebo heslo");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                AdminState.setUserName("");
+                AdminState.setPassword("");
+                return null;
+            }
             if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");

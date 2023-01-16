@@ -32,9 +32,10 @@ public class Main extends Application {
         scenes.put(SceneName.NOTIFICATIONS, "/notificationTable.fxml");
         scenes.put(SceneName.NOTIFICATION, "/notificationPage.fxml");
         scenes.put(SceneName.APP_MAIN_MENU, "/appMainMenuPage.fxml");
+        scenes.put(SceneName.LOGIN, "/loginPage.fxml");
 
         SceneNavigator.initialize(primaryStage, scenes);
-        SceneNavigator.setScene(SceneName.APP_MAIN_MENU);
+        SceneNavigator.setScene(SceneName.LOGIN);
         SceneNavigator.show();
     }
 }
