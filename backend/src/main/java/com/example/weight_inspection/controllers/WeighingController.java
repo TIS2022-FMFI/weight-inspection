@@ -3,6 +3,7 @@ package com.example.weight_inspection.controllers;
 import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
 import com.example.weight_inspection.services.EmailSenderService;
+import com.example.weight_inspection.services.NotificationPreparationService;
 import com.example.weight_inspection.services.WeighingService;
 import com.example.weight_inspection.transfer.AddWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
@@ -35,6 +36,7 @@ public class WeighingController {
     private final ModelMapper modelMapper;
     private final EmailSenderService emailSenderService;
     private final EmailRepository emailRepository;
+    private final NotificationPreparationService notificationPreparationService;
 
     @Autowired
     public WeighingController(WeighingRepository weighingRepository,
@@ -42,7 +44,7 @@ public class WeighingController {
                               ProductPackagingRepository productPackagingRepository,
                               PackagingRepository packagingRepository,
                               ProductRepository productRepository,
-                              PaletteRepository paletteRepository, NotificationRepository notificationRepository, EmailSenderService emailSenderService, EmailRepository emailRepository) {
+                              PaletteRepository paletteRepository, NotificationRepository notificationRepository, EmailSenderService emailSenderService, EmailRepository emailRepository, NotificationPreparationService notificationPreparationService) {
         this.weighingRepository = weighingRepository;
         this.weighingService = weighingService;
         this.productPackagingRepository = productPackagingRepository;
@@ -52,6 +54,7 @@ public class WeighingController {
         this.notificationRepository = notificationRepository;
         this.emailSenderService = emailSenderService;
         this.emailRepository = emailRepository;
+        this.notificationPreparationService = notificationPreparationService;
         this.modelMapper = new ModelMapper();
 
     }
@@ -82,7 +85,7 @@ public class WeighingController {
 
         String[] emailRecipients = emailRepository.getEmailsBySendExportsIsTrue();
 
-        Notification notification = new Notification();
+
         String subjectHead = "Notifikácia z Aplikácie \"Váženie\" - ";
 
         Product product = productRepository.findByReferenceOrderByIdDesc(reference);
@@ -98,112 +101,100 @@ public class WeighingController {
         }
 
         if (product == null) {
-            String subject = "Prvotné váženie produktu";
+            Notification notification = notificationPreparationService.missingProductNotification();
 
-            notification.setType(subject);
-            String text = "Dobrý deň.\n\n" +
-                    "Zamestnanec na sklade sa pokúšal vážiť nový produkt, " +
-                    "ktorý sa nenachádza v databáze, pridaje prosím nový produkt do databázy.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n";
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+                    "IDP: " + weighingDTO.getIDP() + "\n");
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (palette == null) {
-            String subject = "Je potrebné pridať novú paletu";
-            notification.setType(subject);
-            String text = "Dobrý deň.\n\n" +
-                    "Zamestnanec na sklade žiada o pridanie novej palety.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+            Notification notification = notificationPreparationService.missingPaletteNotification();
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n";
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+                    "IDP: " + weighingDTO.getIDP() + "\n");
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         }
-        if (palette.getWeight() == null) {
-            String subject = "Daná paleta nebola ešte navážená";
-            notification.setType(subject);
-            String text = "Dobrý deň.\n\n" +
-                    "Je potrebné navážiť danú paletu.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+
+        if (!product.getPalette().contains(palette)) {
+            Notification notification = notificationPreparationService.missingProductPaletteRelationshipNotification();
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                     "IDP: " + weighingDTO.getIDP() + "\n\n" +
                     "Názov palety: " + palette.getName() + "\n" +
-                    "Typ palety: " + palette.getType() +"\n";
+                    "Typ palety: " + palette.getType() + "\n");
 
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+
+        }
+        if (palette.getWeight() == null) {
+            Notification notification = notificationPreparationService.missingPaletteWeightNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov palety: " + palette.getName() + "\n" +
+                    "Typ palety: " + palette.getType() + "\n");
+
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (packaging == null) {
-            String subject = "Je potrebné pridať nový obal";
-            notification.setType(subject);
-            String text = "Dobrý deň.\n\n" +
-                    "Zamestnanec na sklade žiada o pridanie nového obalu.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+            Notification notification = notificationPreparationService.missingPackagingNotification();
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n";
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+                    "IDP: " + weighingDTO.getIDP() + "\n");
+
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if (packaging.getWeight() == null) {
-            String subject = "Daný obal nebol ešte navážený";
-            notification.setType(subject);
-            String text = "Dobrý deň.\n\n" +
-                    "Je potrebné navážiť daný obalu.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+            Notification notification = notificationPreparationService.missingPackagingWeightNotification();
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                     "IDP: " + weighingDTO.getIDP() + "\n\n" +
                     "Názov obalu " + packaging.getName() + "\n" +
-                    "Typ obalu: " + packaging.getType() +"\n";
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+                    "Typ obalu: " + packaging.getType() + "\n");
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (productPackaging == null) {
-            String subject = "Chýba vzťah produkt-obal";
-            String text = "Dobrý deň.\n\n" +
-                    "Zamestnanec na sklade žiada o pridanie nového obalu k produktu.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
+            Notification notification = notificationPreparationService.missingProductPackagingRelationshipNotification();
+            notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
                     "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                     "IDP: " + weighingDTO.getIDP() + "\n\n" +
                     "Názov obalu: " + packaging.getName() + "\n" +
-                    "Typ obalu: " + packaging.getType() +"\n";
-            notification.setType(subject);
+                    "Typ obalu: " + packaging.getType() + "\n");
 
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -219,10 +210,8 @@ public class WeighingController {
             productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(), totalNumberOfProducts,
                     numberOfProductsInPackaging, packagingWeight, paletteWeight);
             if (productWeight < 0) {
-                String subject = "Chyba váženia";
-                String text = "Dobrý deň.\n\n" +
-                        "Váženie nebolo vyhodnotené správne.\n\n" +
-                        "Podrobné informácie z daného váženia:\n\n" +
+                Notification notification = notificationPreparationService.incorrectWeighingNotification();
+                notification.setDescription(notification.getDescription() +
                         "Referencia: " + reference + "\n" +
                         "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                         "IDP: " + weighingDTO.getIDP() + "\n\n" +
@@ -232,12 +221,11 @@ public class WeighingController {
                         "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
                         "Vypočítaná hmotnosť: " + productWeight + "\n" +
                         "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
-                        "Tolerancia: " + productPackagingTolerance + "\n";
-                notification.setType(subject);
-                notification.setDescription(text);
-                notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+                        "Tolerancia: " + productPackagingTolerance + "\n");
+
+
                 notificationRepository.save(notification);
-                emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+                emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                         notification.getDescription());
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
@@ -252,25 +240,22 @@ public class WeighingController {
         boolean correctWeighing = differenceInWeight < productWeight * productPackagingTolerance;
 
         if (!correctWeighing) {
-            String subject = "Chyba váženia";
-            String text = "Dobrý deň.\n\n" +
-                    "Váženie nebolo vyhodnotené správne.\n\n" +
-                    "Podrobné informácie z daného váženia:\n\n" +
-                    "Referencia: " + reference + "\n" +
-                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
-                    "Názov obalu: " + packaging.getName() + "\n" +
-                    "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
-                    "Názov palety: " + palette.getName() + "\n" +
-                    "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
-                    "Vypočítaná hmotnosť: " + calculatedWeight + "\n" +
-                    "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
-                    "Tolerancia: " + productPackagingTolerance + "\n";
-            notification.setType(subject);
-            notification.setDescription(text);
-            notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+            Notification notification = notificationPreparationService.incorrectWeighingNotification();
+            notification.setDescription(
+                    notification.getDescription() +
+                            "Referencia: " + reference + "\n" +
+                            "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                            "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                            "Názov obalu: " + packaging.getName() + "\n" +
+                            "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
+                            "Názov palety: " + palette.getName() + "\n" +
+                            "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
+                            "Vypočítaná hmotnosť: " + calculatedWeight + "\n" +
+                            "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
+                            "Tolerancia: " + productPackagingTolerance + "\n");
+
             notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + subject,
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
