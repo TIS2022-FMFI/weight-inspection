@@ -22,10 +22,12 @@ public class AdminMainMenuController extends TableController implements Swappabl
 
     @FXML
     @Override
-    public void updateTable() {}
+    public void updateTable() {
+    }
 
     @Override
-    public void updateButtons() {}
+    public void updateButtons() {
+    }
 
     @FXML
     public void openTable1() {
@@ -63,11 +65,15 @@ public class AdminMainMenuController extends TableController implements Swappabl
     }
 
     @FXML
-    public void logOut() {AdminState.logOut();}
+    public void logOut() {
+        AdminState.logOut();
+    }
 
     @Override
-    public void onLoad(SceneName previousSceneName) {}
+    public void onLoad(SceneName previousSceneName) {
+    }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

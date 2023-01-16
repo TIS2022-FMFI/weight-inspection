@@ -59,10 +59,10 @@ public class WeighingTableController extends TableController implements Swappabl
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         weighedOnColumn.setCellValueFactory(new PropertyValueFactory<>("weighedOn"));
-        isCorrectColumn.setCellValueFactory(new PropertyValueFactory<>("isCorrect"));
+        isCorrectColumn.setCellValueFactory(new PropertyValueFactory<>("correct"));
         packagingNameColumn.setCellValueFactory(new PropertyValueFactory<>("packagingName"));
         paletteNameColumn.setCellValueFactory(new PropertyValueFactory<>("paletteName"));
-        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
+        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("productReference"));
 
         tableView.setItems(weighings);
     }
@@ -102,7 +102,9 @@ public class WeighingTableController extends TableController implements Swappabl
     }
 
     @FXML
-    public void logOut() {AdminState.logOut();}
+    public void logOut() {
+        AdminState.logOut();
+    }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
