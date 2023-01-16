@@ -137,6 +137,10 @@ public class WeighingController {
         weighing.setPackaging(productPackaging.getPackaging());
         weighingRepository.save(weighing);
 
+        weighing.getProduct().setPalette(null);
+        weighing.getProduct().setProductPackaging(null);
+        weighing.getPackaging().setProductPackaging(null);
+        weighing.getPalette().setProduct(null);
         return new ResponseEntity<>(weighing, HttpStatus.CREATED);
     }
 }
