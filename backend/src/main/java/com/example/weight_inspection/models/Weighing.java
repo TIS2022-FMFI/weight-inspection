@@ -58,12 +58,4 @@ public class Weighing {
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     private  Palette palette;
-
-
-
-
-
-
-
-
 }

@@ -4,6 +4,8 @@ import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
 import com.example.weight_inspection.services.WeighingService;
 import com.example.weight_inspection.transfer.AddWeighingDTO;
+import com.example.weight_inspection.transfer.GetAdminDTO;
+import com.example.weight_inspection.transfer.GetWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/weighing")
@@ -52,14 +55,22 @@ public class WeighingController {
     }
 
     @GetMapping
-    public ResponseEntity<ListResponse<Weighing>> getWeighings(
+    public ResponseEntity<ListResponse<GetWeighingDTO>> getWeighings(
             @RequestParam(value = "page", defaultValue = "0") int currentPage,
             @RequestParam(value = "page_size", defaultValue = "100") int pageSize) {
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
         Page<Weighing> page = weighingRepository.findAll(pageable);
-        ListResponse<Weighing> listResponse = new ListResponse<>(page);
-        return new ResponseEntity<>(listResponse, HttpStatus.OK);
+        ListResponse<GetWeighingDTO> listResponse = new ListResponse<>();
 
+        listResponse.setPage(page.getNumber());
+        listResponse.setTotalItems(page.getTotalElements());
+        listResponse.setTotalPages(page.getTotalPages());
+        listResponse.setItems(
+                page.getContent().stream()
+                        .map(item -> modelMapper.map(item, GetWeighingDTO.class))
+                        .collect(Collectors.toList())
+        );
+        return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -126,6 +137,10 @@ public class WeighingController {
         weighing.setPackaging(productPackaging.getPackaging());
         weighingRepository.save(weighing);
 
+        weighing.getProduct().setPalette(null);
+        weighing.getProduct().setProductPackaging(null);
+        weighing.getPackaging().setProductPackaging(null);
+        weighing.getPalette().setProduct(null);
         return new ResponseEntity<>(weighing, HttpStatus.CREATED);
     }
 }
