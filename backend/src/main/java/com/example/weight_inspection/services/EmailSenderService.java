@@ -65,18 +65,17 @@ public class EmailSenderService {
                     Float.toString(weighing.getWeight()),
                     weighing.getWeighedOn().toString(),
                     Integer.toString(weighing.getQuantity()),
-                    weighing.getProduct().getReference(),
-                    weighing.getPalette().getName(),
-                    weighing.getPackaging().getName()
+                    (weighing.getProduct() != null) ? weighing.getProduct().getReference() : "",
+                    (weighing.getPalette() != null) ? weighing.getPalette().getName() : "",
+                    (weighing.getPackaging() != null) ? weighing.getPackaging().getName() : ""
             });
         }
         writer.close();
-        return new ByteArrayDataSource(outputStream.toByteArray(), "text");
+        return new ByteArrayDataSource(outputStream.toByteArray(), "text/csv");
     }
 
     @Async
-    public void  sendEmailWithExports(String[] recipients, String subject, String body,
-                                       String pathToAttachment) {
+    public void  sendEmailWithExports(String[] recipients, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -84,7 +83,6 @@ public class EmailSenderService {
             helper.setTo(recipients);
             helper.setSubject(subject);
             helper.setText(body);
-            FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
             Weighing[] weighings = weighingRepository.findNotExportedWeighings();
             helper.addAttachment("Exporty.csv", createExportCSVFile(weighings));
             mailSender.send(message);

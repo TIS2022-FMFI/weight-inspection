@@ -19,10 +19,8 @@ public class SchedulingService {
         String[] emails = emailRepository.getEmailsBySendExportsIsTrue();
         String subject = "Export z aplikácie \"Váženie\" za poslednú hodinu.";
         String text = "Dobrý deň.\n\n V prílohe nájdete "   + subject;
-        String filePath = "somePath";
-        //TODO replace value  of filePath with actual path to export
 
-        emailSenderService.sendEmailWithExports(emails, subject, text,
-               filePath);
+
+        emailSenderService.sendEmailWithExports(emails, subject, text);
     }
 }
