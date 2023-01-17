@@ -123,7 +123,7 @@ public class AdminController {
             admin.setPassword(password);
         }
         else {
-            admin.setPassword(passwordEncoder.encode(password);
+            admin.setPassword(passwordEncoder.encode(password));
         }
 
         if (!replacedAdmin.isPresent()) {
