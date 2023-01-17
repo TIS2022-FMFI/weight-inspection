@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAsync
 @EnableScheduling
 public class WeightInspectionApplication {
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(WeightInspectionApplication.class, args);
 	}

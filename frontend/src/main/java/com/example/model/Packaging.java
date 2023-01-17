@@ -8,6 +8,8 @@ public class Packaging {
     private String type = "";
     private String name = "";
     private Float weight = 0f;
+    private Integer quantity = 0;
+    private Float tolerance = 0f;
 
     public int getId() {
         return id;
@@ -40,6 +42,14 @@ public class Packaging {
     public void setWeight(Float weight) {
         this.weight = weight;
     }
+
+    public String getQuantity() {return quantity.toString();}
+
+    public void setQuantity(Integer quantity) {this.quantity = quantity;}
+
+    public String getTolerance() {return tolerance.toString();}
+
+    public void setTolerance(Float tolerance) {this.tolerance = tolerance;}
 
     public String getPicturePath() {
         return "/static/packaging/" + String.valueOf(id);

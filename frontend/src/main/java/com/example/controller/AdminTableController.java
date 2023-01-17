@@ -2,22 +2,22 @@ package com.example.controller;
 
 import com.example.model.Admin;
 import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
+import com.example.utils.AdminState;
 import com.example.utils.TextFieldFilters;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AdminTableController extends TableController implements Swappable {
@@ -140,7 +140,14 @@ public class AdminTableController extends TableController implements Swappable {
                         } else {
                             btn.setOnAction(event -> {
                                 Admin admin = getTableView().getItems().get(getIndex());
-                                admin.delete(self);
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("Confirmation Dialog");
+                                alert.setHeaderText("Are you sure you want to delete this item?");
+
+                                Optional<ButtonType> result = alert.showAndWait();
+                                if (result.get() == ButtonType.OK) {
+                                    admin.delete(self);
+                                }
                             });
                             setGraphic(btn);
                             setText(null);
@@ -176,6 +183,15 @@ public class AdminTableController extends TableController implements Swappable {
         newAdmin.post(this);
         pagination.setCurrentPageIndex(0);
     }
+
+    @FXML
+    public void back() {
+        admins.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+    }
+
+    @FXML
+    public void logOut() {AdminState.logOut();}
 
     @Override
     public void onLoad(SceneName previousSceneName) {

@@ -66,10 +66,23 @@ public class SceneNavigator {
             return;
         }
 
+        double width = 1300;
+        double height = 800;
+
+        if (currentSceneName != null) {
+            System.out.println(currentSceneName);
+            System.out.println(scenes.get(currentSceneName).getWindow().getWidth());
+            width = scenes.get(currentSceneName).getWindow().getWidth();
+            height = scenes.get(currentSceneName).getWindow().getHeight();
+
+        }
+
         primaryStage.setScene(scenes.get(nextSceneName));
 
         Swappable nextController = controllers.get(nextSceneName);
         nextController.onLoad((currentSceneName == null) ? nextSceneName : currentSceneName);
+        scenes.get(nextSceneName).getWindow().setWidth(width);
+        scenes.get(nextSceneName).getWindow().setHeight(height);
 
         currentSceneName = nextSceneName;
     }

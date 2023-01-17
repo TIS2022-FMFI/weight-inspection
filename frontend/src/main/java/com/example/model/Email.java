@@ -6,7 +6,7 @@ import com.example.utils.AHClientHandler;
 public class Email {
     private Integer id;
     private String email = "";
-    private Boolean send_exports = true;
+    private Boolean sendExports = true;
 
     public int getId() {
         return id;
@@ -24,12 +24,12 @@ public class Email {
         this.email = email;
     }
 
-    public Boolean getSend_exports() {
-        return send_exports;
+    public Boolean getSendExports() {
+        return sendExports;
     }
 
-    public void setSend_exports(Boolean send_exports) {
-        this.send_exports = send_exports;
+    public void setSendExports(Boolean send_exports) {
+        this.sendExports = send_exports;
     }
 
     public void post(TableController controller) {

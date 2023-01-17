@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -115,9 +116,16 @@ public class AdminController {
             admin.setEmail(email.get());
         }
 
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-
         Optional<Admin> replacedAdmin = adminRepository.findById(adminId);
+
+        String password = admin.getPassword();
+        if(replacedAdmin.isPresent() && Objects.equals(password, replacedAdmin.get().getPassword())) {
+            admin.setPassword(password);
+        }
+        else {
+            admin.setPassword(passwordEncoder.encode(password);
+        }
+
         if (!replacedAdmin.isPresent()) {
             adminRepository.save(admin);
             return new ResponseEntity<>(admin, HttpStatus.NO_CONTENT);

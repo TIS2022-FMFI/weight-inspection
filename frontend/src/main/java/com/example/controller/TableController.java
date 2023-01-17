@@ -19,11 +19,12 @@ public abstract class TableController implements Initializable {
     protected ComboBox<String> pageSizeBox;
     @FXML
     protected Pagination pagination;
+    protected ObservableList<String> observablePageSizes;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initializing combobox
-        ObservableList<String> observablePageSizes = FXCollections.observableArrayList();
+        observablePageSizes = FXCollections.observableArrayList();
         ArrayList<String> pageSizes = new ArrayList<String>(Arrays.asList("10", "20", "30", "40", "50"));
         observablePageSizes.addAll(pageSizes);
         pageSizeBox.setItems(observablePageSizes);
@@ -34,11 +35,9 @@ public abstract class TableController implements Initializable {
         });
     }
 
-    public void updateTable() {
-    }
+    public abstract void updateTable();
 
-    public void updateButtons() {
-    }
+    public abstract void updateButtons();
 
     public void setPaging(int totalPages, int page) {
         if (pagination.getCurrentPageIndex() != page) {

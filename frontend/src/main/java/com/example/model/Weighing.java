@@ -4,40 +4,67 @@ import java.sql.Timestamp;
 
 public class Weighing {
     private Integer id;
-    private String IDP;
-    private Float weight;
+    private String idp = "";
+    private Float weight = 0f;
     private Integer quantity;
-    private Timestamp weighed_on;
-    private Boolean is_correct;
-    private String packaging_name;
-    private String palette_name;
-    private String reference;
+    private Timestamp weighedOn;
+    private Boolean correct;
+    private String packagingName = "";
+    private String paletteName = "";
+    private String productReference = "";
+    private Palette palette;
+    private Packaging packaging;
+    private Float calculatedWeight;
 
-    public int getId() {
+    public Float getCalculatedWeight() {
+        return calculatedWeight;
+    }
+
+    public void setCalculatedWeight(Float calculatedWeight) {
+        this.calculatedWeight = calculatedWeight;
+    }
+
+    public Palette getPalette() {
+        return palette;
+    }
+
+    public void setPalette(Palette palette) {
+        this.palette = palette;
+    }
+
+    public Packaging getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(Packaging packaging) {
+        this.packaging = packaging;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer weighing_id) {
-        this.id = weighing_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getIDP() {
-        return IDP;
+    public String getIdp() {
+        return idp;
     }
 
-    public void setIDP(String IDP) {
-        this.IDP = IDP;
+    public void setIdp(String IDP) {
+        this.idp = IDP;
     }
 
-    public Float getWeight() {
-        return weight;
+    public String getWeight() {
+        return weight.toString();
     }
 
     public void setWeight(Float weight) {
         this.weight = weight;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -45,44 +72,43 @@ public class Weighing {
         this.quantity = quantity;
     }
 
-    public Timestamp getWeighed_on() {
-        return weighed_on;
+    public Timestamp getWeighedOn() {
+        return weighedOn;
     }
 
-    public void setWeighed_on(Timestamp weighed_on) {
-        this.weighed_on = weighed_on;
+    public void setWeighedOn(Timestamp weighedOn) {
+        this.weighedOn = weighedOn;
     }
 
-    public Boolean getIs_correct() {
-        return is_correct;
+    public Boolean getCorrect() {
+        return this.correct;
     }
 
-    public void setIs_correct(Boolean is_correct) {
-        this.is_correct = is_correct;
+    public void setCorrect(Boolean correct) {
+        this.correct = correct;
     }
 
-    public String getPackaging_name() {
-        return packaging_name;
+    public String getPackagingName() {
+        return packagingName;
     }
 
-    public void setPackaging_name(String packaging_name) {
-        this.packaging_name = packaging_name;
+    public void setPackagingName(String packagingName) {
+        this.packagingName = packagingName;
     }
 
-    public String getPalette_name() {
-        return palette_name;
+    public String getPaletteName() {
+        return paletteName;
     }
 
-    public void setPalette_name(String palette_name) {
-        this.palette_name = palette_name;
+    public void setPaletteName(String paletteName) {
+        this.paletteName = paletteName;
     }
 
-    public String getReference() {
-        return reference;
+    public String getProductReference() {
+        return productReference;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setProductReference(String reference) {
+        this.productReference = reference;
     }
-
 }

@@ -1,9 +1,7 @@
 package com.example.weight_inspection.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -11,6 +9,8 @@ import com.example.weight_inspection.models.Packaging;
 import com.example.weight_inspection.models.ProductPackaging;
 import com.example.weight_inspection.repositories.PackagingRepository;
 import com.example.weight_inspection.repositories.ProductPackagingRepository;
+import com.example.weight_inspection.transfer.GetPackagingOfProductDTO;
+import com.example.weight_inspection.transfer.GetProductOfPackagingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -195,6 +195,49 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	@PutMapping("{productId}/packaging/{packagingId}")
+	public ResponseEntity<Product> replacePackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
+														 BindingResult bindingResult,
+														 @PathVariable Long productId,
+														 @PathVariable Long packagingId) {
+
+		if (bindingResult.hasErrors() || productPackaging == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<Product> optionalProduct = productRepository.findById(productId);
+		Optional<Packaging> optionalPackaging = packagingRepository.findById(packagingId);
+
+		if (!optionalProduct.isPresent() || !optionalPackaging.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Product product = optionalProduct.get();
+		Packaging packaging = optionalPackaging.get();
+		ProductPackaging replacedProductPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
+
+		if(replacedProductPackaging == null) {
+			productPackaging.setId(null);
+			productPackaging.setPackaging(packaging);
+			productPackaging.setProduct(product);
+			productPackagingRepository.save(productPackaging);
+
+			product.getProductPackaging().add(productPackaging);
+			productRepository.save(product);
+
+			packaging.getProductPackaging().add(productPackaging);
+			packagingRepository.save(packaging);
+
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		}
+
+		replacedProductPackaging.setTolerance(productPackaging.getTolerance());
+		replacedProductPackaging.setQuantity(productPackaging.getQuantity());
+		productPackagingRepository.save(replacedProductPackaging);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
 	@DeleteMapping("{productId}/packaging/{packagingId}")
 	public ResponseEntity<Product> deletePackagingFromProduct(@PathVariable Long productId, @PathVariable Long packagingId) {
 
@@ -220,15 +263,31 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	@GetMapping("{productId}/packaging")
-	public ResponseEntity<ListResponse<ProductPackaging>> getPackagingsOfProduct(@PathVariable Long productId) {
+	public ResponseEntity<ListResponse<GetPackagingOfProductDTO>> getPackagingsOfProduct(@PathVariable Long productId) {
 		Optional<Product> product = productRepository.findById(productId);
 		if (!product.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		ListResponse<ProductPackaging> packages = new ListResponse<>(product.get().getProductPackaging());
-		return  new ResponseEntity<>(packages, HttpStatus.OK);
-
+		Set<ProductPackaging> productPackagings = product.get().getProductPackaging();
+		ListResponse<GetPackagingOfProductDTO> listResponse = new ListResponse<>();
+		listResponse.setPage(0);
+		listResponse.setTotalItems(productPackagings.size());
+		listResponse.setTotalPages(1);
+		listResponse.setItems(
+				productPackagings.stream()
+						.map(productPackaging -> {
+							GetPackagingOfProductDTO getPackagingOfProductDTO = new GetPackagingOfProductDTO();
+							getPackagingOfProductDTO.setId(productPackaging.getPackaging().getId());
+							getPackagingOfProductDTO.setName(productPackaging.getPackaging().getName());
+							getPackagingOfProductDTO.setType(productPackaging.getPackaging().getType());
+							getPackagingOfProductDTO.setQuantity(productPackaging.getQuantity());
+							getPackagingOfProductDTO.setTolerance(productPackaging.getTolerance());
+							return getPackagingOfProductDTO;
+						})
+						.collect(Collectors.toList())
+		);
+		return new ResponseEntity<>(listResponse, HttpStatus.OK);
 	}
 
 	@GetMapping("{productId}/palette")
