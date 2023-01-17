@@ -5,7 +5,5 @@ public class TextFieldFilters {
         return oldValue.replaceAll("[^\\.\\d]", "");
     }
 
-    public static String formatTextToInt(String oldValue) {
-        return oldValue.replaceAll("[^\\d]", "");
-    }
+    public static String formatTextToInt(String oldValue) {return oldValue.replaceAll("[^\\d]", "");}
 }

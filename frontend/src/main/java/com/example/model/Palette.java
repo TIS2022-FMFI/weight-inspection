@@ -34,6 +34,10 @@ public class Palette {
     }
 
     public String getWeight() {
+        if (weight == null)
+        {
+            return "";
+        }
         return weight.toString();
     }
 

@@ -229,6 +229,7 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
+        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -255,6 +256,7 @@ public class AHClientHandler {
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                        System.out.println(response.getResponseBody());
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");

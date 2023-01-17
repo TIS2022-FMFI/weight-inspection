@@ -69,7 +69,17 @@ public class AdminTableController extends TableController implements Swappable {
 
     private void editableCols() {
         emailIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        emailIdColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
+        emailIdColumn.setOnEditCommit(e -> {
+            String newId = TextFieldFilters.formatTextToInt(e.getNewValue());
+            if (newId.isEmpty())
+            {
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(null);
+            }
+            else
+            {
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(Integer.valueOf(newId));
+            }
+        });
 
         firstNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         firstNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setFirstName(e.getNewValue()));
