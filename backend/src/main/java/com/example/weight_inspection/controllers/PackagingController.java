@@ -107,6 +107,7 @@ public class PackagingController {
 		}
 
 		packaging.setId(packagingId);
+		packaging.setProductPackaging(replacedPackaging.get().getProductPackaging());
 		packagingRepository.save(packaging);
 		return new ResponseEntity<>(packaging, HttpStatus.NO_CONTENT);
 	}
@@ -117,6 +118,10 @@ public class PackagingController {
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
 		if (!packaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		if(0 < packaging.get().getProductPackaging().size()) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 
 		Packaging deletedPackaging = packaging.get();

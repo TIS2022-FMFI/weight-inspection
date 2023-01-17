@@ -2,6 +2,8 @@ package com.example.weight_inspection.controllers;
 
 import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
+import com.example.weight_inspection.services.EmailSenderService;
+import com.example.weight_inspection.services.NotificationPreparationService;
 import com.example.weight_inspection.services.WeighingService;
 import com.example.weight_inspection.transfer.AddWeighingDTO;
 import com.example.weight_inspection.transfer.GetAdminDTO;
@@ -9,7 +11,6 @@ import com.example.weight_inspection.transfer.GetWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,8 +36,12 @@ public class WeighingController {
     private final PackagingRepository packagingRepository;
     private final ProductRepository productRepository;
     private final PaletteRepository paletteRepository;
+    private final NotificationRepository notificationRepository;
 
     private final ModelMapper modelMapper;
+    private final EmailSenderService emailSenderService;
+    private final EmailRepository emailRepository;
+    private final NotificationPreparationService notificationPreparationService;
 
     @Autowired
     public WeighingController(WeighingRepository weighingRepository,
@@ -43,13 +49,17 @@ public class WeighingController {
                               ProductPackagingRepository productPackagingRepository,
                               PackagingRepository packagingRepository,
                               ProductRepository productRepository,
-                              PaletteRepository paletteRepository) {
+                              PaletteRepository paletteRepository, NotificationRepository notificationRepository, EmailSenderService emailSenderService, EmailRepository emailRepository, NotificationPreparationService notificationPreparationService) {
         this.weighingRepository = weighingRepository;
         this.weighingService = weighingService;
         this.productPackagingRepository = productPackagingRepository;
         this.packagingRepository = packagingRepository;
         this.productRepository = productRepository;
         this.paletteRepository = paletteRepository;
+        this.notificationRepository = notificationRepository;
+        this.emailSenderService = emailSenderService;
+        this.emailRepository = emailRepository;
+        this.notificationPreparationService = notificationPreparationService;
         this.modelMapper = new ModelMapper();
 
     }
@@ -83,21 +93,122 @@ public class WeighingController {
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Weighing weighing = modelMapper.map(weighingDTO, Weighing.class);
+        String reference = weighingDTO.getReference();
 
-        Product product = productRepository.findByReferenceOrderByIdDesc(weighingDTO.getReference());
+
+        String[] emailRecipients = emailRepository.getEmailsBySendExportsIsTrue();
+
+
+        String subjectHead = "Notifikácia z Aplikácie \"Váženie\" - ";
+
+        Product product = productRepository.findByReferenceOrderByIdDesc(reference);
         Palette palette = null;
         Packaging packaging = null;
         ProductPackaging productPackaging = null;
 
-        if(weighingDTO.getPaletteId() != null && weighingDTO.getPackagingId() != null) {
+        if (weighingDTO.getPaletteId() != null && weighingDTO.getPackagingId() != null) {
             palette = paletteRepository.findById((long) weighingDTO.getPaletteId());
             packaging = packagingRepository.findById((long) weighingDTO.getPackagingId());
             productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
+            //TODO skontroluj ci tolerancia nie je null a kvantitu ak nemam posli mail
         }
 
-        if (product == null || palette == null || packaging == null || productPackaging == null ||
-                palette.getWeight() == null || packaging.getWeight() == null) {
-            // TODO send email and add notification
+        if (product == null) {
+            Notification notification = notificationPreparationService.missingProductNotification();
+
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n");
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (palette == null) {
+            Notification notification = notificationPreparationService.missingPaletteNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n");
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+
+        if (!product.getPalette().contains(palette)) {
+            Notification notification = notificationPreparationService.missingProductPaletteRelationshipNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov palety: " + palette.getName() + "\n" +
+                    "Typ palety: " + palette.getType() + "\n");
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+
+        }
+        if (palette.getWeight() == null) {
+            Notification notification = notificationPreparationService.missingPaletteWeightNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov palety: " + palette.getName() + "\n" +
+                    "Typ palety: " + palette.getType() + "\n");
+
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (packaging == null) {
+            Notification notification = notificationPreparationService.missingPackagingNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n");
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (packaging.getWeight() == null) {
+            Notification notification = notificationPreparationService.missingPackagingWeightNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov obalu " + packaging.getName() + "\n" +
+                    "Typ obalu: " + packaging.getType() + "\n");
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (productPackaging == null) {
+            Notification notification = notificationPreparationService.missingProductPackagingRelationshipNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov obalu: " + packaging.getName() + "\n" +
+                    "Typ obalu: " + packaging.getType() + "\n");
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -109,9 +220,26 @@ public class WeighingController {
         int totalNumberOfProducts = weighing.getQuantity();
 
         if (productWeight == null) {
-            productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(), totalNumberOfProducts, numberOfProductsInPackaging, packagingWeight, paletteWeight);
-            if(productWeight < 0) {
-                // TODO send email negative weight
+            productWeight = weighingService.calculateWeightOfOneProduct(weighingDTO.getWeight(), totalNumberOfProducts,
+                    numberOfProductsInPackaging, packagingWeight, paletteWeight);
+            if (productWeight < 0) {
+                Notification notification = notificationPreparationService.incorrectWeighingNotification();
+                notification.setDescription(notification.getDescription() +
+                        "Referencia: " + reference + "\n" +
+                        "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                        "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                        "Názov obalu: " + packaging.getName() + "\n" +
+                        "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
+                        "Názov palety: " + palette.getName() + "\n" +
+                        "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
+                        "Vypočítaná hmotnosť: " + productWeight + "\n" +
+                        "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
+                        "Tolerancia: " + productPackagingTolerance + "\n");
+
+
+                notificationRepository.save(notification);
+                emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                        notification.getDescription());
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
@@ -119,12 +247,30 @@ public class WeighingController {
             productRepository.save(product);
         }
 
-        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(), packagingWeight, paletteWeight);
+        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(),
+                packagingWeight, paletteWeight);
         float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
         boolean correctWeighing = differenceInWeight < productWeight * productPackagingTolerance;
 
         if (!correctWeighing) {
-            // TODO send email and add notification
+            Notification notification = notificationPreparationService.incorrectWeighingNotification();
+            notification.setDescription(
+                    notification.getDescription() +
+                            "Referencia: " + reference + "\n" +
+                            "Množstvo: " + weighingDTO.getQuantity() + "\n" +
+                            "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                            "Názov obalu: " + packaging.getName() + "\n" +
+                            "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
+                            "Názov palety: " + palette.getName() + "\n" +
+                            "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
+                            "Vypočítaná hmotnosť: " + calculatedWeight + "\n" +
+                            "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
+                            "Tolerancia: " + productPackagingTolerance + "\n");
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         weighing.setCalculatedWeight(calculatedWeight);
