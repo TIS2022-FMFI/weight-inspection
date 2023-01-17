@@ -119,6 +119,10 @@ public class PackagingController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
+		if(0 < packaging.get().getProductPackaging().size()) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+
 		Packaging deletedPackaging = packaging.get();
 		deletedPackaging.setId(packagingId);
 		packagingRepository.delete(deletedPackaging);

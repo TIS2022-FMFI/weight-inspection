@@ -112,6 +112,10 @@ public class PaletteController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        if(0 < palette.get().getProduct().size()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         Palette deletedPalette = palette.get();
         deletedPalette.setId(paletteId);
         paletteRepository.delete(deletedPalette);
@@ -140,12 +144,9 @@ public class PaletteController {
         Optional<Palette> palette = paletteRepository.findById(paletteId);
         if (!palette.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
+
         ListResponse<Product> products = new ListResponse<>(palette.get().getProduct());
         return new ResponseEntity<>(products, HttpStatus.OK);
-
     }
-
-
 }
