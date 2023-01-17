@@ -100,6 +100,7 @@ public class PaletteController {
         }
 
         palette.setId(paletteId);
+        palette.setProduct(replacedPalette.get().getProduct());
         paletteRepository.save(palette);
         return new ResponseEntity<>(palette, HttpStatus.NO_CONTENT);
     }

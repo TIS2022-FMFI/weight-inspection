@@ -107,6 +107,7 @@ public class PackagingController {
 		}
 
 		packaging.setId(packagingId);
+		packaging.setProductPackaging(replacedPackaging.get().getProductPackaging());
 		packagingRepository.save(packaging);
 		return new ResponseEntity<>(packaging, HttpStatus.NO_CONTENT);
 	}
