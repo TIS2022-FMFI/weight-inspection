@@ -121,6 +121,10 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
+		if(0 < product.get().getPalette().size() || 0 < product.get().getProductPackaging().size()) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+
 		Product deletedProduct = product.get();
 		deletedProduct.setId(productId);
 		productRepository.delete(deletedProduct);
