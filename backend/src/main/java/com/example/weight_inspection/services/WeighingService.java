@@ -17,9 +17,12 @@ public class WeighingService implements WeighingServiceInterface {
 
     @Override
     public float calculateExpectedWeight(int numberOfProducts, float weightOfOneProduct,
+                                         int quantityOfProductsInPackaging,
                                          float packagingWeight, float paletteWeight) {
         float weightOfProducts = numberOfProducts * weightOfOneProduct;
-        return weightOfProducts + packagingWeight + paletteWeight;
+        int numberOfPackages = (int) Math.ceil((float)numberOfProducts / quantityOfProductsInPackaging);
+        float totalWeightOfPackagingAndPalette = (numberOfPackages * packagingWeight) + paletteWeight;
+        return weightOfProducts + totalWeightOfPackagingAndPalette;
 
     }
 }

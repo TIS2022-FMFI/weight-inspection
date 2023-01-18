@@ -229,11 +229,11 @@ public class WeighingController {
                         "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                         "IDP: " + weighingDTO.getIDP() + "\n\n" +
                         "Názov obalu: " + packaging.getName() + "\n" +
-                        "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
+                        "Hmotnosť obalu: " + packaging.getWeight() + " kg\n\n" +
                         "Názov palety: " + palette.getName() + "\n" +
-                        "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
-                        "Vypočítaná hmotnosť: " + productWeight + "\n" +
-                        "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
+                        "Hmotnosť palety: " + palette.getWeight() + " kg\n\n" +
+                        "Vypočítaná hmotnosť: " + productWeight + " kg\n" +
+                        "Nameraná hmotnosť: " + weighingDTO.getWeight() + " kg\n" +
                         "Tolerancia: " + productPackagingTolerance + "\n");
 
 
@@ -247,8 +247,8 @@ public class WeighingController {
             productRepository.save(product);
         }
 
-        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, product.getWeight(),
-                packagingWeight, paletteWeight);
+        float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, productWeight,
+                numberOfProductsInPackaging, packagingWeight, paletteWeight);
         float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
         boolean correctWeighing = differenceInWeight < productWeight * productPackagingTolerance;
 
@@ -260,11 +260,11 @@ public class WeighingController {
                             "Množstvo: " + weighingDTO.getQuantity() + "\n" +
                             "IDP: " + weighingDTO.getIDP() + "\n\n" +
                             "Názov obalu: " + packaging.getName() + "\n" +
-                            "Hmotnosť obalu: " + packaging.getWeight() + "\n\n" +
+                            "Hmotnosť obalu: " + packaging.getWeight() + " kg\n\n" +
                             "Názov palety: " + palette.getName() + "\n" +
-                            "Hmotnosť palety: " + palette.getWeight() + "\n\n" +
-                            "Vypočítaná hmotnosť: " + calculatedWeight + "\n" +
-                            "Nameraná hmotnosť: " + weighingDTO.getWeight() + "\n" +
+                            "Hmotnosť palety: " + palette.getWeight() + " kg\n\n" +
+                            "Vypočítaná hmotnosť: " + calculatedWeight + " kg\n" +
+                            "Nameraná hmotnosť: " + weighingDTO.getWeight() + " kg\n" +
                             "Tolerancia: " + productPackagingTolerance + "\n");
 
             notificationRepository.save(notification);
