@@ -43,7 +43,8 @@ public class EmailSenderService {
     ByteArrayDataSource createExportCSVFile(Weighing[] weighings) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream);
-        CSVWriter writer = new CSVWriter(streamWriter);
+        streamWriter.write('\ufeff');
+        CSVWriter writer = new CSVWriter(streamWriter, ';');
         writer.writeNext(new String[] {
                 "Id",
                 "IDP",
