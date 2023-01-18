@@ -28,13 +28,12 @@ public class Palette {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique=true)
     @NotNull
     private String name;
 
-
     private Float weight;
 
-    @NotNull
     private String type;
 
     @ManyToMany(mappedBy = "palette", cascade = CascadeType.ALL)

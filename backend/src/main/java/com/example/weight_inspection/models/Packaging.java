@@ -23,13 +23,12 @@ public class Packaging {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique=true)
     @NotNull
     private String name;
 
-
     private Float weight;
 
-    @NotNull
     private String type;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

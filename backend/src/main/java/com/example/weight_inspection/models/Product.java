@@ -24,9 +24,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique=true)
     @NotNull
     private String reference;
-
 
     private Float weight;
 
