@@ -52,7 +52,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </GridPane.margin>
                 </Button>
-                <Label alignment="CENTER" text="TABUĽKA PRODUCTOV K OBALU: " textAlignment="CENTER" GridPane.halignment="RIGHT" />
+                <Label alignment="CENTER" text="TABUĽKA PRIPOJENÝCH PRODUKTOV K OBALU: " textAlignment="CENTER" GridPane.halignment="RIGHT" />
                 <Label fx:id="idLabel" alignment="CENTER" text="Label" GridPane.columnIndex="1" />
             </children>
         </GridPane>
