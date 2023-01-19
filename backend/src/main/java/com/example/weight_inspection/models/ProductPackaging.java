@@ -23,10 +23,8 @@ public class ProductPackaging {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     private float tolerance;
 
-    @NotNull
     private int quantity;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
