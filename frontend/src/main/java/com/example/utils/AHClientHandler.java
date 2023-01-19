@@ -25,6 +25,7 @@ import org.asynchttpclient.Param;
 import org.asynchttpclient.Response;
 import com.google.gson.reflect.TypeToken;
 
+import io.netty.buffer.search.AhoCorasicSearchProcessorFactory;
 import io.netty.channel.unix.Socket;
 
 import java.lang.reflect.Type;
@@ -44,6 +45,10 @@ public class AHClientHandler {
         this.gson = new Gson();
     }
 
+    public static void remake() {
+        AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+    }
+
     public static AHClientHandler getAHClientHandler() {
         if (AHClientHandler == null) {
             AHClientHandler = new AHClientHandler("http://localhost:8080/api");
@@ -60,6 +65,7 @@ public class AHClientHandler {
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
                 .addQueryParam("page_size", String.valueOf(pageSize))
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .addQueryParams(params);
         ListenableFuture<Response> whenResponse = request.execute();
         try {
@@ -101,6 +107,7 @@ public class AHClientHandler {
         BoundRequestBuilder request = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject);
         ListenableFuture<Response> whenResponse = request.execute();
         try {
@@ -145,6 +152,7 @@ public class AHClientHandler {
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
                 .addQueryParam("page_size", String.valueOf(pageSize))
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
@@ -181,6 +189,7 @@ public class AHClientHandler {
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -220,9 +229,11 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
+        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject)
                 .execute()
                 .toCompletableFuture()
@@ -245,6 +256,7 @@ public class AHClientHandler {
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                        System.out.println(response.getResponseBody());
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -263,6 +275,7 @@ public class AHClientHandler {
     public <T> void deleteRequest(String url, TableController controller) {
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareDelete(baseUrl + url)
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .execute()
                 .toCompletableFuture()
                 .exceptionally(t -> {
@@ -275,7 +288,15 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
+                    if (response.getStatusCode() == 500) {
+                        Platform.runLater(() -> {
+                            Alert errorAlert = new Alert(AlertType.ERROR);
+                            errorAlert.setHeaderText("Error while comunicating with server");
+                            errorAlert.setContentText(
+                                    "Pravdepodobne sa snazite vymazat produkt, ktory je pripojeny k existujucemu obalu, alebo palete.");
+                            errorAlert.showAndWait();
+                        });
+                    } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -291,48 +312,54 @@ public class AHClientHandler {
                 });
     }
 
-    // Might become usefull in the future, but will need some work(in the error
-    // handling) to get to a working state
+    public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
+        ListenableFuture<Response> whenResponse = AHClient
+                .prepareGet(baseUrl + url)
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
+                .addQueryParams(params)
+                .execute();
+        try {
+            Response response = whenResponse.get();
+            if (response.getStatusCode() == 401) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Asi ste vyuzily nespravne meno alebo heslo");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                AdminState.setUserName("");
+                AdminState.setPassword("");
+                return null;
+            }
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Tato notifikacia zmizne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            T newObject = new Gson().fromJson(response.getResponseBody(), type);
+            return newObject;
 
-    // public <T> T getRequestSync(String url, List<Param> params, Class<T> type) {
-    // ListenableFuture<Response> whenResponse = AHClient
-    // .prepareGet(baseUrl + url)
-    // .addQueryParams(params)
-    // .execute();
-    // try {
-    // Response response = whenResponse.get();
-    // if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
-    // Alert errorAlert = new Alert(AlertType.ERROR);
-    // errorAlert.setHeaderText("Nastala chyba");
-    // errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia
-    // zmyzne cez 3 sekundy.");
-    // Button cancelButton = (Button)
-    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
-    // errorAlert.show();
-    // try {
-    // TimeUnit.SECONDS.sleep(3);
-    // } catch (Exception e2) {
-    // }
-    // cancelButton.fire();
-    // return null;
-    // }
-    // T newObject = new Gson().fromJson(response.getResponseBody(), type);
-    // return newObject;
-
-    // } catch (Exception e) {
-    // Alert errorAlert = new Alert(AlertType.ERROR);
-    // errorAlert.setHeaderText("Can't connect to the server");
-    // errorAlert.setContentText("Check your internet connection");
-    // Button cancelButton = (Button)
-    // errorAlert.getDialogPane().lookupButton(ButtonType.CANCEL);
-    // errorAlert.show();
-
-    // try {
-    // TimeUnit.SECONDS.sleep(3);
-    // } catch (Exception e2) {
-    // }
-    // cancelButton.fire();
-    // return null;
-    // }
-    // }
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Nastala chyba");
+            errorAlert.setContentText("Tato notifikacia zmizne cez 3 sekundy.");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(e2 -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return null;
+        }
+    }
 }

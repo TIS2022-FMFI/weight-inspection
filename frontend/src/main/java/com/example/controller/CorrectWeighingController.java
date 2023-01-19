@@ -7,7 +7,7 @@ import com.example.utils.WorkerState;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class correctWeighingController extends ScannerController implements Swappable {
+public class CorrectWeighingController extends ScannerController implements Swappable {
 
     @FXML
     public Label weight;

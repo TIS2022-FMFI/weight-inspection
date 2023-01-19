@@ -2,20 +2,17 @@ package com.example.controller;
 
 import com.example.model.Weighing;
 import com.example.scene.SceneName;
+import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
-import com.example.utils.TextFieldFilters;
 
+import com.example.utils.AdminState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -62,10 +59,10 @@ public class WeighingTableController extends TableController implements Swappabl
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         weighedOnColumn.setCellValueFactory(new PropertyValueFactory<>("weighedOn"));
-        isCorrectColumn.setCellValueFactory(new PropertyValueFactory<>("isCorrect"));
+        isCorrectColumn.setCellValueFactory(new PropertyValueFactory<>("correct"));
         packagingNameColumn.setCellValueFactory(new PropertyValueFactory<>("packagingName"));
         paletteNameColumn.setCellValueFactory(new PropertyValueFactory<>("paletteName"));
-        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
+        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("productReference"));
 
         tableView.setItems(weighings);
     }
@@ -96,6 +93,17 @@ public class WeighingTableController extends TableController implements Swappabl
         }
         AHClientHandler.getAHClientHandler().getPage("/weighing", currentPage, pageSize, weighings, Weighing.class,
                 this);
+    }
+
+    @FXML
+    public void back() {
+        weighings.clear();
+        SceneNavigator.setScene(SceneName.ADMIN_MAIN_MENU);
+    }
+
+    @FXML
+    public void logOut() {
+        AdminState.logOut();
     }
 
     @Override

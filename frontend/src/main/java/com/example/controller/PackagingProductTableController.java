@@ -78,10 +78,12 @@ public class PackagingProductTableController extends TableController implements 
 
     private void editableCols() {
         numberOfPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        numberOfPiecesColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setQuantity(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
+        numberOfPiecesColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
+                .setQuantity(Integer.valueOf(TextFieldFilters.formatTextToInt(e.getNewValue()))));
 
         toleranceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        toleranceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTolerance(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
+        toleranceColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
+                .setTolerance(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }
@@ -174,7 +176,8 @@ public class PackagingProductTableController extends TableController implements 
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/packaging/" + packagingId + "/product", currentPage, pageSize, products, Product.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/packaging/" + packagingId + "/product", currentPage, pageSize,
+                products, Product.class, this);
     }
 
     @FXML
@@ -189,7 +192,7 @@ public class PackagingProductTableController extends TableController implements 
             int conn_id = Integer.valueOf(TextFieldFilters.formatTextToInt(result.get()));
             Product newProduct = new Product();
             newProduct.setId(conn_id);
-            newProduct.postForPackaging(this, packagingId);
+            newProduct.putForPackaging(this, packagingId);
             pagination.setCurrentPageIndex(0);
         }
     }
@@ -200,6 +203,11 @@ public class PackagingProductTableController extends TableController implements 
         idLabel.setText("");
         products.clear();
         SceneNavigator.setScene(SceneName.PACKAGES);
+    }
+
+    @FXML
+    public void logOut() {
+        AdminState.logOut();
     }
 
     @Override
@@ -214,5 +222,6 @@ public class PackagingProductTableController extends TableController implements 
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

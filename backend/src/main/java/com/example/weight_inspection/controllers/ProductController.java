@@ -121,6 +121,10 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
+		if(0 < product.get().getPalette().size() || 0 < product.get().getProductPackaging().size()) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+
 		Product deletedProduct = product.get();
 		deletedProduct.setId(productId);
 		productRepository.delete(deletedProduct);
@@ -205,34 +209,32 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		Optional<ProductPackaging> optionalReplacedProductPackaging = productPackagingRepository.findById(packagingId);
+		Optional<Product> optionalProduct = productRepository.findById(productId);
+		Optional<Packaging> optionalPackaging = packagingRepository.findById(packagingId);
 
-		if(!optionalReplacedProductPackaging.isPresent()) {
-			Optional<Product> product = productRepository.findById(productId);
-			Optional<Packaging> packaging = packagingRepository.findById(packagingId);
+		if (!optionalProduct.isPresent() || !optionalPackaging.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
-			if (!product.isPresent() || !packaging.isPresent()) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
+		Product product = optionalProduct.get();
+		Packaging packaging = optionalPackaging.get();
+		ProductPackaging replacedProductPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
 
-			Product newProduct = product.get();
-			Packaging newPackaging = packaging.get();
-
+		if(replacedProductPackaging == null) {
 			productPackaging.setId(null);
-			productPackaging.setPackaging(newPackaging);
-			productPackaging.setProduct(newProduct);
+			productPackaging.setPackaging(packaging);
+			productPackaging.setProduct(product);
 			productPackagingRepository.save(productPackaging);
 
-			newProduct.getProductPackaging().add(productPackaging);
-			productRepository.save(newProduct);
+			product.getProductPackaging().add(productPackaging);
+			productRepository.save(product);
 
-			newPackaging.getProductPackaging().add(productPackaging);
-			packagingRepository.save(newPackaging);
+			packaging.getProductPackaging().add(productPackaging);
+			packagingRepository.save(packaging);
 
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 
-		ProductPackaging replacedProductPackaging = optionalReplacedProductPackaging.get();
 		replacedProductPackaging.setTolerance(productPackaging.getTolerance());
 		replacedProductPackaging.setQuantity(productPackaging.getQuantity());
 		productPackagingRepository.save(replacedProductPackaging);
