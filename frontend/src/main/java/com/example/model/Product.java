@@ -12,8 +12,11 @@ public class Product {
     private Float tolerance = 1f;
     private Integer quantity = 0;
 
-    public int getId() {
-        return id;
+    public String getId() {
+        if (id == null) {
+            return "";
+        }
+        return id.toString();
     }
 
     public void setId(Integer product_id) {
@@ -40,6 +43,9 @@ public class Product {
     }
 
     public String getTolerance() {
+        if (tolerance == null) {
+            return "";
+        }
         return tolerance.toString();
     }
 
@@ -48,6 +54,9 @@ public class Product {
     }
 
     public String getQuantity() {
+        if (quantity == null) {
+            return "";
+        }
         return quantity.toString();
     }
 
@@ -72,26 +81,31 @@ public class Product {
     }
 
     public void deleteForPalette(PaletteProductTableController controller, int paletteId) {
-        AHClientHandler.getAHClientHandler().deleteRequest("/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), controller);
+        AHClientHandler.getAHClientHandler()
+                .deleteRequest("/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), controller);
     }
 
     public void postForPalette(PaletteProductTableController controller, Integer paletteId) {
-        AHClientHandler.getAHClientHandler().postRequest("/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), null, controller);
+        AHClientHandler.getAHClientHandler().postRequest(
+                "/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), null, controller);
     }
 
     public void putForPackaging(PackagingProductTableController controller, int packagingId) {
         setReference(null);
         setWeight(null);
-        AHClientHandler.getAHClientHandler().putRequest("/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
+        AHClientHandler.getAHClientHandler().putRequest(
+                "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
     }
 
     public void deleteForPackaging(PackagingProductTableController controller, int packagingId) {
-        AHClientHandler.getAHClientHandler().deleteRequest("/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), controller);
+        AHClientHandler.getAHClientHandler().deleteRequest(
+                "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), controller);
     }
 
     public void postForPackaging(PackagingProductTableController controller, Integer packagingId) {
         setReference(null);
         setWeight(null);
-        AHClientHandler.getAHClientHandler().postRequest("/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
+        AHClientHandler.getAHClientHandler().postRequest(
+                "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
     }
 }

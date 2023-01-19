@@ -9,8 +9,11 @@ public class Palette {
     private String name = "";
     private Float weight = 0f;
 
-    public int getId() {
-        return id;
+    public String getId() {
+        if (id == null) {
+            return "";
+        }
+        return id.toString();
     }
 
     public void setId(Integer palette_id) {
@@ -18,6 +21,9 @@ public class Palette {
     }
 
     public String getType() {
+        if (type == null) {
+            return "";
+        }
         return type;
     }
 
@@ -26,6 +32,9 @@ public class Palette {
     }
 
     public String getName() {
+        if (name == null) {
+            return "";
+        }
         return name;
     }
 
@@ -34,8 +43,7 @@ public class Palette {
     }
 
     public String getWeight() {
-        if (weight == null)
-        {
+        if (weight == null) {
             return "";
         }
         return weight.toString();
@@ -46,6 +54,9 @@ public class Palette {
     }
 
     public String getPicturePath() {
+        if (id == null) {
+            return "";
+        }
         return "/static/palette/" + String.valueOf(id);
     }
 

@@ -151,23 +151,23 @@ public class PalettePickController extends ScannerController implements Swappabl
                     down();
                     return;
                 case "1OPTION":
-                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex).getId());
+                    WorkerState.getWorkerState().setPaletteId(Integer.valueOf(palettes.get(currentIndex).getId()));
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "2OPTION":
-                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 1).getId());
+                    WorkerState.getWorkerState().setPaletteId(Integer.valueOf(palettes.get(currentIndex + 1).getId()));
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "3OPTION":
-                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 2).getId());
+                    WorkerState.getWorkerState().setPaletteId(Integer.valueOf(palettes.get(currentIndex + 2).getId()));
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
                 case "4OPTION":
-                    WorkerState.getWorkerState().setPaletteId(palettes.get(currentIndex + 3).getId());
+                    WorkerState.getWorkerState().setPaletteId(Integer.valueOf(palettes.get(currentIndex + 3).getId()));
                     SceneNavigator.setScene(SceneName.PACKAGING_PICK);
                     return;
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
         }
     }
 
