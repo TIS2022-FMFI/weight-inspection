@@ -10,6 +10,7 @@ import org.javatuples.Pair;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.Reader;
@@ -96,6 +97,7 @@ public class DbSeed {
                 .collect(Collectors.toSet());
     }
 
+    @Transactional
     @EventListener(ContextRefreshedEvent.class)
     public void seed() throws Exception {
         if(productRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
@@ -107,29 +109,23 @@ public class DbSeed {
 
         List<Relationship> relationships = readImportFile(this.importFilePath);
 
-        productRepository.saveAll(
-            getUniqueReference(relationships).stream().map(reference -> {
-                Product product = new Product();
-                product.setReference(reference);
-                return product;
-            }).collect(Collectors.toSet())
-        );
+        productRepository.saveAll(getUniqueReference(relationships).stream().map(reference -> {
+            Product product = new Product();
+            product.setReference(reference);
+            return product;
+        }).collect(Collectors.toList()));
 
-        paletteRepository.saveAll(
-            getUniquePaletteName(relationships).stream().map(paletteName -> {
-                Palette palette = new Palette();
-                palette.setName(paletteName);
-                return palette;
-            }).collect(Collectors.toSet())
-        );
+        paletteRepository.saveAll(getUniquePaletteName(relationships).stream().map(name -> {
+            Palette palette = new Palette();
+            palette.setName(name);
+            return palette;
+        }).collect(Collectors.toList()));
 
-        packagingRepository.saveAll(
-            getUniquePackagingName(relationships).stream().map(packagingName -> {
-                Packaging packaging = new Packaging();
-                packaging.setName(packagingName);
-                return packaging;
-            }).collect(Collectors.toSet())
-        );
+        packagingRepository.saveAll(getUniquePackagingName(relationships).stream().map(name -> {
+            Packaging packaging = new Packaging();
+            packaging.setName(name);
+            return packaging;
+        }).collect(Collectors.toList()));
 
         getProductPackagingRelationships(relationships).stream().forEach(relationship -> {
             String reference = relationship.getValue0();
@@ -150,7 +146,7 @@ public class DbSeed {
             packagingRepository.save(packaging);
         });
 
-        getProductPackagingRelationships(relationships).stream().forEach(relationship -> {
+        getProductPaletteRelationships(relationships).stream().forEach(relationship -> {
             String reference = relationship.getValue0();
             String paletteName = relationship.getValue1();
 
