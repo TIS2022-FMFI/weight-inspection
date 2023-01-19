@@ -75,13 +75,16 @@ public class PackagingTableController extends TableController implements Swappab
 
     private void editableCols() {
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        nameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
+        nameColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue()));
 
         typeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        typeColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
+        typeColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setType(e.getNewValue()));
 
         weightColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setWeight(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
+        weightColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow())
+                .setWeight(Float.valueOf(TextFieldFilters.formatTextToFloat(e.getNewValue()))));
 
         tableView.setEditable(true);
     }
@@ -112,9 +115,12 @@ public class PackagingTableController extends TableController implements Swappab
                         } else {
                             btn.setOnAction(event -> {
                                 Packaging packaging = getTableView().getItems().get(getIndex());
-                                AdminState.setConnectedPackagingId(packaging.getId());
-                                packages.clear();
-                                SceneNavigator.setScene(SceneName.PACKAGING_PRODUCT);
+                                try {
+                                    AdminState.setConnectedPackagingId(Integer.valueOf(packaging.getId()));
+                                    packages.clear();
+                                    SceneNavigator.setScene(SceneName.PACKAGING_PRODUCT);
+                                } catch (NumberFormatException e) {
+                                }
                             });
                             setGraphic(btn);
                             setText(null);
@@ -204,7 +210,8 @@ public class PackagingTableController extends TableController implements Swappab
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/packaging", currentPage, pageSize, packages, Packaging.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/packaging", currentPage, pageSize, packages, Packaging.class,
+                this);
     }
 
     @FXML
@@ -221,7 +228,9 @@ public class PackagingTableController extends TableController implements Swappab
     }
 
     @FXML
-    public void logOut() {AdminState.logOut();}
+    public void logOut() {
+        AdminState.logOut();
+    }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
@@ -230,5 +239,6 @@ public class PackagingTableController extends TableController implements Swappab
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

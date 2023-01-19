@@ -152,27 +152,30 @@ public class PackagingPickController extends ScannerController implements Swappa
                     down();
                     return;
                 case "1OPTION":
-                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex).getId());
+                    WorkerState.getWorkerState().setPackagingId(Integer.valueOf(packagings.get(currentIndex).getId()));
                     packagings = null;
                     WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "2OPTION":
-                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 1).getId());
+                    WorkerState.getWorkerState()
+                            .setPackagingId(Integer.valueOf(packagings.get(currentIndex + 1).getId()));
                     packagings = null;
                     WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "3OPTION":
-                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 2).getId());
+                    WorkerState.getWorkerState()
+                            .setPackagingId(Integer.valueOf(packagings.get(currentIndex + 2).getId()));
                     packagings = null;
                     WorkerState.getWorkerState().sendWeighing(true);
                     return;
                 case "4OPTION":
-                    WorkerState.getWorkerState().setPackagingId(packagings.get(currentIndex + 3).getId());
+                    WorkerState.getWorkerState()
+                            .setPackagingId(Integer.valueOf(packagings.get(currentIndex + 3).getId()));
                     packagings = null;
                     WorkerState.getWorkerState().sendWeighing(true);
                     return;
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException | NumberFormatException e2) {
         }
     }
 

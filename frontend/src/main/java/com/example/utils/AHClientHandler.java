@@ -288,12 +288,12 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
-                    if (response.getStatusCode() == 500) {
+                    if (response.getStatusCode() == 500 || response.getStatusCode() == 409) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
                             errorAlert.setContentText(
-                                    "Pravdepodobne sa snazite vymazat produkt, ktory je pripojeny k existujucemu obalu, alebo palete.");
+                                    "Pravdepodobne sa snazite vymazat nieco, co ma pripojenie.");
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {

@@ -14,9 +14,13 @@ import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
 import com.example.utils.WorkerState;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
 
 public class ScanPageController extends ScannerController implements Swappable {
 
@@ -57,7 +61,19 @@ public class ScanPageController extends ScannerController implements Swappable {
             return;
         }
         Product product = products.get(0);
-        WorkerState.getWorkerState().setProductId(product.getId());
+        try {
+            WorkerState.getWorkerState().setProductId(Integer.valueOf(product.getId()));
+        } catch (NumberFormatException e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Nastala chyba");
+            errorAlert.setContentText("Asi ten product nema ID, poproste administratora o pomoc");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(e2 -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+        }
         SceneNavigator.setScene(SceneName.PALETTE_PICK);
     }
 

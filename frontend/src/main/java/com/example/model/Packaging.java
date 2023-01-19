@@ -10,8 +10,11 @@ public class Packaging {
     private Float weight = 0f;
     private Integer quantity = 0;
 
-    public int getId() {
-        return id;
+    public String getId() {
+        if (id == null) {
+            return "";
+        }
+        return id.toString();
     }
 
     public void setId(Integer packaging_id) {
@@ -19,6 +22,9 @@ public class Packaging {
     }
 
     public String getType() {
+        if (type == null) {
+            return "";
+        }
         return type;
     }
 
@@ -27,6 +33,9 @@ public class Packaging {
     }
 
     public String getName() {
+        if (name == null) {
+            return "";
+        }
         return name;
     }
 
@@ -35,8 +44,7 @@ public class Packaging {
     }
 
     public String getWeight() {
-        if (weight == null)
-        {
+        if (weight == null) {
             return "";
         }
         return weight.toString();
@@ -46,11 +54,21 @@ public class Packaging {
         this.weight = weight;
     }
 
-    public String getQuantity() {return quantity.toString();}
+    public String getQuantity() {
+        if (quantity == null) {
+            return "";
+        }
+        return quantity.toString();
+    }
 
-    public void setQuantity(Integer quantity) {this.quantity = quantity;}
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
     public String getPicturePath() {
+        if (id == null) {
+            return "";
+        }
         return "/static/packaging/" + String.valueOf(id);
     }
 
