@@ -61,6 +61,19 @@ public class NotificationPreparationService {
 
         return notification;
     }
+    public Notification missingPaletteTypeNotification() {
+        Notification notification = new Notification();
+        String subject = "Typ palety nebol natavený";
+        notification.setType(subject);
+        String text = "Dobrý deň.\n\n" +
+                "Je potrebné nastaviť typ pre túto paletu.\n\n" +
+                "Podrobné informácie z daného váženia:\n\n";
+        notification.setDescription(text);
+        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+
+        return notification;
+    }
+
     public Notification missingPackagingNotification() {
         Notification notification = new Notification();
         String subject = "Je potrebné pridať nový obal";
@@ -86,6 +99,18 @@ public class NotificationPreparationService {
         return notification;
 
     }
+    public Notification missingPackagingTypeNotification() {
+        Notification notification = new Notification();
+        String subject = "Typ obalu nebol natavený";
+        notification.setType(subject);
+        String text = "Dobrý deň.\n\n" +
+                "Je potrebné nastaviť typ pre tento obal.\n\n" +
+                "Podrobné informácie z daného váženia:\n\n";
+        notification.setDescription(text);
+        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+
+        return notification;
+    }
 
     public Notification missingProductPackagingRelationshipNotification() {
         Notification notification = new Notification();
@@ -93,6 +118,32 @@ public class NotificationPreparationService {
         notification.setType(subject);
         String text = "Dobrý deň.\n\n" +
                 "Zamestnanec na sklade žiada o pridanie nového obalu k produktu.\n\n" +
+                "Podrobné informácie z daného váženia:\n\n";
+        notification.setDescription(text);
+        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+
+        return notification;
+
+    }
+    public Notification missingProductPackagingToleranceNotification() {
+        Notification notification = new Notification();
+        String subject = "Nie je nastavená tolerancia pre vzťah produkt-obal";
+        notification.setType(subject);
+        String text = "Dobrý deň.\n\n" +
+                "Je potrebné  nastaviť toleraciu.\n\n" +
+                "Podrobné informácie z daného váženia:\n\n";
+        notification.setDescription(text);
+        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+
+        return notification;
+
+    }
+    public Notification missingProductPackagingQuantityNotification() {
+        Notification notification = new Notification();
+        String subject = "Nie je nastavený počet kusov v obale pre vzťah produkt-obal";
+        notification.setType(subject);
+        String text = "Dobrý deň.\n\n" +
+                "Je potrebné nastaviť počet kusov v obale pre daný obal.\n\n" +
                 "Podrobné informácie z daného váženia:\n\n";
         notification.setDescription(text);
         notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));

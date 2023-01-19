@@ -23,9 +23,9 @@ public class ProductPackaging {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private float tolerance;
+    private Float tolerance;
 
-    private int quantity;
+    private Integer quantity;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIdentityInfo(
