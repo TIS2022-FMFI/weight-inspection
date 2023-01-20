@@ -12,18 +12,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.Reader;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class DbSeed {
-    private final Path importFilePath;
     private final ProductRepository productRepository;
 
     private final PackagingRepository packagingRepository;
@@ -32,8 +28,7 @@ public class DbSeed {
 
     private final ProductPackagingRepository productPackagingRepository;
 
-    public DbSeed(ProductRepository productRepository, PackagingRepository packagingRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository) throws URISyntaxException {
-        this.importFilePath = Paths.get(this.getClass().getClassLoader().getResource("dbSeed.csv").toURI());
+    public DbSeed(ProductRepository productRepository, PackagingRepository packagingRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository) {
         this.productRepository = productRepository;
         this.packagingRepository = packagingRepository;
         this.paletteRepository = paletteRepository;
@@ -49,8 +44,8 @@ public class DbSeed {
         private String packagingName;
     }
 
-    public List<Relationship> readImportFile(Path filePath) throws Exception {
-        try (Reader reader = Files.newBufferedReader(filePath)) {
+    public List<Relationship> readImportFile() throws Exception {
+        try (Reader reader = Files.newBufferedReader(Paths.get("dbSeed.csv"))) {
             try (CSVReader csvReader = new CSVReader(reader)) {
                 return csvReader.readAll().stream()
                         .map(item -> {
@@ -100,6 +95,7 @@ public class DbSeed {
     @Transactional
     @EventListener(ContextRefreshedEvent.class)
     public void seed() throws Exception {
+        List<Relationship> relationships = readImportFile();
         if(productRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             paletteRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             packagingRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
@@ -107,7 +103,6 @@ public class DbSeed {
         )
             return;
 
-        List<Relationship> relationships = readImportFile(this.importFilePath);
 
         productRepository.saveAll(getUniqueReference(relationships).stream().map(reference -> {
             Product product = new Product();
