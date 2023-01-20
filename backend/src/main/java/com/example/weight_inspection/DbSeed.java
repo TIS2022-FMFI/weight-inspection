@@ -95,7 +95,6 @@ public class DbSeed {
     @Transactional
     @EventListener(ContextRefreshedEvent.class)
     public void seed() throws Exception {
-        List<Relationship> relationships = readImportFile();
         if(productRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             paletteRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             packagingRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
@@ -103,6 +102,7 @@ public class DbSeed {
         )
             return;
 
+        List<Relationship> relationships = readImportFile();
 
         productRepository.saveAll(getUniqueReference(relationships).stream().map(reference -> {
             Product product = new Product();
