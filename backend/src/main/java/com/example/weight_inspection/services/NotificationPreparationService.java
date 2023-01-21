@@ -130,7 +130,7 @@ public class NotificationPreparationService {
         String subject = "Nie je nastavená tolerancia pre vzťah produkt-obal";
         notification.setType(subject);
         String text = "Dobrý deň.\n\n" +
-                "Je potrebné  nastaviť toleraciu.\n\n" +
+                "Je potrebné  nastaviť predvolenú toleranciu alebo toleraciu pre vzťah produkt-obal.\n\n" +
                 "Podrobné informácie z daného váženia:\n\n";
         notification.setDescription(text);
         notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
