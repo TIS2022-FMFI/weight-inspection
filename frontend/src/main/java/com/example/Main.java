@@ -2,6 +2,8 @@ package com.example;
 
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
+import com.example.utils.AdminState;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -14,6 +16,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Reading config
+        AdminState.setServer("http://localhost:8080/api");
+
         HashMap<SceneName, String> scenes = new HashMap<>();
         scenes.put(SceneName.PALETTES, "/paletteTable.fxml");
         scenes.put(SceneName.PACKAGES, "/packagingTable.fxml");

@@ -12,8 +12,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import io.netty.buffer.search.AhoCorasicSearchProcessorFactory;
 import io.netty.channel.unix.Socket;
 
+import java.io.File;
 import java.lang.reflect.Type;
 
 import static org.asynchttpclient.Dsl.*;
@@ -46,12 +51,12 @@ public class AHClientHandler {
     }
 
     public static void remake() {
-        AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+        AHClientHandler = new AHClientHandler(AdminState.getServer());
     }
 
     public static AHClientHandler getAHClientHandler() {
         if (AHClientHandler == null) {
-            AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+            AHClientHandler = new AHClientHandler(AdminState.getServer());
         }
         return AHClientHandler;
     }
@@ -360,6 +365,31 @@ public class AHClientHandler {
             errorAlert.show();
             delay.play();
             return null;
+        }
+    }
+
+    public void postImage(String url, File image) {
+        BoundRequestBuilder request = AHClient
+                .preparePost(baseUrl + url)
+                .setHeader("Content-Type", "application/json")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
+                .setBody(image);
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            return;
+
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            return;
         }
     }
 }

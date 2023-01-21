@@ -19,9 +19,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -45,6 +48,8 @@ public class PaletteTableController extends TableController implements Swappable
     @FXML
     private TableColumn<Palette, String> photoColumn;
     @FXML
+    private TableColumn<Palette, String> newPhotoColumn;
+    @FXML
     private TableColumn<Palette, String> actionColumn1;
     @FXML
     private TableColumn<Palette, String> actionColumn2;
@@ -65,6 +70,7 @@ public class PaletteTableController extends TableController implements Swappable
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         photoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        newPhotoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
@@ -195,6 +201,66 @@ public class PaletteTableController extends TableController implements Swappable
         };
 
         actionColumn3.setCellFactory(deleteFactory);
+        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> photoFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+            @Override
+            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
+                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+                    final ImageView imv = new ImageView();
+                    Image image;
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            Palette palette = getTableView().getItems().get(getIndex());
+                            image = new Image(AdminState.getServer() + palette.getPicturePath(), true);
+                            imv.setImage(image);
+                            imv.setPreserveRatio(true);
+                            imv.setFitHeight(80);
+                            setGraphic(imv);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        photoColumn.setCellFactory(photoFactory);
+        Callback<TableColumn<Palette, String>, TableCell<Palette, String>> newPhotoFactory = new Callback<TableColumn<Palette, String>, TableCell<Palette, String>>() {
+            @Override
+            public TableCell<Palette, String> call(final TableColumn<Palette, String> param) {
+                final TableCell<Palette, String> cell = new TableCell<Palette, String>() {
+                    final Button btn = new Button("NOVY OBRAZOK");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Palette palette = getTableView().getItems().get(getIndex());
+                                File image = AdminState.pickImage();
+                                if (image == null) {
+                                    return;
+                                }
+                                AHClientHandler.getAHClientHandler().postImage(palette.getPicturePath(), image);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        newPhotoColumn.setCellFactory(newPhotoFactory);
     }
 
     @FXML

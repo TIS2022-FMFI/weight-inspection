@@ -95,4 +95,8 @@ public class SceneNavigator {
             primaryStage.show();
         }
     }
+
+    public static Stage getStage() {
+        return primaryStage;
+    }
 }
