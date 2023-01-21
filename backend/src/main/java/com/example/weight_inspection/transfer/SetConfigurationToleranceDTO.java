@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -13,5 +15,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class SetConfigurationToleranceDTO {
     @NotNull
+    @Min(0)
+    @Max(1)
     private Float tolerance;
 }
