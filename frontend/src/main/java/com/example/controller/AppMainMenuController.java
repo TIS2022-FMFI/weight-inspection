@@ -5,6 +5,7 @@ import com.example.scene.SceneNavigator;
 import com.example.utils.AdminState;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +14,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AppMainMenuController extends TableController implements Swappable {
+
+    @FXML
+    public Label nameLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -47,6 +51,7 @@ public class AppMainMenuController extends TableController implements Swappable 
 
     @Override
     public void onLoad(SceneName previousSceneName) {
+        nameLabel.setText(AdminState.getUserName());
     }
 
     @Override

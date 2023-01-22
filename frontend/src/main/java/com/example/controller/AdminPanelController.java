@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AdminPanelController extends HBox {
+public class AdminPanelController extends HBox implements Initializable {
     @FXML
     public Label nameLabel;
 
@@ -35,8 +35,9 @@ public class AdminPanelController extends HBox {
         SceneNavigator.setScene(SceneName.NOTIFICATIONS);
     }
 
-    public void onLoad() {
-        // nameLabel.setText();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        nameLabel.textProperty().bind(AdminState.getUserNameLabel());
     }
 
 }

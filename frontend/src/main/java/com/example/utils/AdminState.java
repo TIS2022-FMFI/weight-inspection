@@ -10,6 +10,8 @@ import java.nio.file.StandardCopyOption;
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -21,6 +23,7 @@ public class AdminState {
     private static String password;
     private static String server;
     private static String webPage;
+    private static StringProperty userNameLabel = new SimpleStringProperty();
 
     private static Integer connectedPaletteId;
     private static Integer connectedPackagingId;
@@ -74,6 +77,7 @@ public class AdminState {
     }
 
     public static void setUserName(String userName) {
+        AdminState.userNameLabel.setValue(userName);
         AdminState.userName = userName;
     }
 
@@ -123,5 +127,9 @@ public class AdminState {
 
     public static void setWebPage(String webPage) {
         AdminState.webPage = webPage;
+    }
+
+    public static StringProperty getUserNameLabel() {
+        return userNameLabel;
     }
 }
