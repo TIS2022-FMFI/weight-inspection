@@ -5,7 +5,6 @@ import com.example.weight_inspection.repositories.WeighingRepository;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
-import javax.sql.DataSource;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 public class EmailSenderService {
@@ -40,7 +39,7 @@ public class EmailSenderService {
         mailSender.send(message);
     }
 
-    ByteArrayDataSource createExportCSVFile(Weighing[] weighings) throws IOException {
+    ByteArrayDataSource createExportCSVFile(List<Weighing> weighings) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream);
         streamWriter.write('\ufeff');
@@ -76,7 +75,7 @@ public class EmailSenderService {
     }
 
     @Async
-    public void  sendEmailWithExports(String[] recipients, String subject, String body) {
+    public void  sendEmailWithExports(String[] recipients, String subject, String body, boolean isAutomaticExport) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -84,13 +83,24 @@ public class EmailSenderService {
             helper.setTo(recipients);
             helper.setSubject(subject);
             helper.setText(body);
-            Weighing[] weighings = weighingRepository.findNotExportedWeighings();
+            List<Weighing> weighings;
+            if(isAutomaticExport) {
+                weighings = Arrays.asList(weighingRepository.findNotExportedWeighings());
+            }
+            else {
+                weighings = new ArrayList<>();
+                weighingRepository.findAll().forEach(weighing -> {
+                    weighings.add(weighing);
+                });
+            }
             helper.addAttachment("Exporty.csv", createExportCSVFile(weighings));
             mailSender.send(message);
-            Arrays.stream(weighings).forEach(weighing -> {
-                weighing.setExported(true);
-                weighingRepository.save(weighing);
-            });
+            if(isAutomaticExport) {
+                weighings.forEach(weighing -> {
+                    weighing.setExported(true);
+                    weighingRepository.save(weighing);
+                });
+            }
         }
         catch (MessagingException | IOException e) {
             e.printStackTrace();
