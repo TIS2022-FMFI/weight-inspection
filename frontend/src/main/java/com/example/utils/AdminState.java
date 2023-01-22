@@ -20,6 +20,7 @@ public class AdminState {
     private static String userName;
     private static String password;
     private static String server;
+    private static String webPage;
 
     private static Integer connectedPaletteId;
     private static Integer connectedPackagingId;
@@ -114,5 +115,13 @@ public class AdminState {
 
     public static void setServer(String server) {
         AdminState.server = server;
+    }
+
+    public static String getWebPage() {
+        return webPage;
+    }
+
+    public static void setWebPage(String webPage) {
+        AdminState.webPage = webPage;
     }
 }

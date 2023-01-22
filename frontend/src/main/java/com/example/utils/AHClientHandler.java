@@ -126,7 +126,6 @@ public class AHClientHandler {
 
     public <T, T2> T2 postRequestSync(String url, T object, Class<T2> type) {
         String jsonObject = gson.toJson(object);
-        System.out.println(jsonObject);
         BoundRequestBuilder request = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -135,8 +134,6 @@ public class AHClientHandler {
         ListenableFuture<Response> whenResponse = request.execute();
         try {
             Response response = whenResponse.get();
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getResponseBody());
             if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
@@ -161,10 +158,7 @@ public class AHClientHandler {
                 delay.play();
                 return null;
             }
-            System.out.println("I am fine");
             T2 item = new Gson().fromJson(response.getResponseBody(), type);
-            System.out.println(item);
-            System.out.println("I am fine2");
             return item;
 
         } catch (Exception e) {
@@ -264,7 +258,6 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
-        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -291,7 +284,6 @@ public class AHClientHandler {
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
-                        System.out.println(response.getResponseBody());
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -399,8 +391,6 @@ public class AHClientHandler {
     }
 
     public void postImage(String url, File image) {
-        System.out.println(url);
-        System.out.println(image.getName());
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             String auth = AdminState.getUserName() + ":" + AdminState.getPassword();
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
@@ -413,7 +403,6 @@ public class AHClientHandler {
                     .setEntity(data)
                     .build();
             ResponseHandler<String> responseHandler = response -> {
-                System.out.println(response);
                 int status = response.getStatusLine().getStatusCode();
                 if (status >= 200 && status < 300) {
                     image.delete();
@@ -432,7 +421,6 @@ public class AHClientHandler {
                     return null;
                 }
             };
-            System.out.println(httpclient.execute(request, responseHandler));
         } catch (IOException e) {
             Alert errorAlert = new Alert(AlertType.ERROR);
             errorAlert.setHeaderText("Can't connect to server");
@@ -444,6 +432,35 @@ public class AHClientHandler {
             errorAlert.show();
             delay.play();
             image.delete();
+        }
+    }
+
+    public void postExport() {
+        BoundRequestBuilder request = AHClient
+                .preparePost(baseUrl + "/email/export")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()));
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            if (response.getStatusCode() == 200) {
+                Alert errorAlert = new Alert(AlertType.CONFIRMATION);
+                errorAlert.setHeaderText("OK");
+                errorAlert.setContentText("Export bol poslany na vas email.");
+                errorAlert.showAndWait();
+                return;
+            }
+            if (response.getStatusCode() > 299 || response.getStatusCode() < 200) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Mozno nemate priradenu emailovu adresu.");
+                errorAlert.showAndWait();
+                return;
+            }
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            errorAlert.showAndWait();
         }
     }
 }
