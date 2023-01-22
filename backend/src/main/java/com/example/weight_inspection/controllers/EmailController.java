@@ -1,7 +1,9 @@
 package com.example.weight_inspection.controllers;
 
 import com.example.weight_inspection.models.Email;
+import com.example.weight_inspection.repositories.AdminRepository;
 import com.example.weight_inspection.repositories.EmailRepository;
+import com.example.weight_inspection.services.EmailSenderService;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,10 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -21,9 +25,15 @@ import java.util.Optional;
 public class EmailController {
     private final EmailRepository emailRepository;
 
+    private final EmailSenderService emailSenderService;
+    private final AdminRepository adminRepository;
+
     @Autowired
-    public EmailController(EmailRepository emailRepository) {
+    public EmailController(EmailRepository emailRepository, EmailSenderService emailSenderService,
+                           AdminRepository adminRepository) {
         this.emailRepository = emailRepository;
+        this.emailSenderService = emailSenderService;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping
@@ -93,5 +103,17 @@ public class EmailController {
         delEmail.setId(emailId);
         emailRepository.delete(delEmail);
         return new ResponseEntity<>(delEmail, HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("export")
+    public ResponseEntity<String> exportWeighings() {
+        String recipient = adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getEmail().getEmail();
+        if(recipient.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        String subject = "Manuálny export vážení z aplikácie \"Váženie\"";
+        String text = "Dobrý deň.\n\n V prílohe nájdete "   + subject;
+        emailSenderService.sendEmailWithExports(new String[] { recipient }, subject, text, false);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
