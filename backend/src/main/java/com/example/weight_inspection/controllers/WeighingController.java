@@ -81,6 +81,7 @@ public class WeighingController {
                             GetWeighingDTO getWeighingDTO = modelMapper.map(item, GetWeighingDTO.class);
                             getWeighingDTO.setPaletteName(item.getPalette().getName());
                             getWeighingDTO.setPackagingName(item.getPackaging().getName());
+                            getWeighingDTO.setProductReference(item.getProduct().getReference());
                             return getWeighingDTO;
                         })
                         .collect(Collectors.toList())
