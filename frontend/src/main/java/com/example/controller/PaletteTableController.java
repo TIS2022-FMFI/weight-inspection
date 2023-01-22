@@ -245,11 +245,12 @@ public class PaletteTableController extends TableController implements Swappable
                         } else {
                             btn.setOnAction(event -> {
                                 Palette palette = getTableView().getItems().get(getIndex());
-                                File image = AdminState.pickImage();
+                                File image = AdminState.pickImage(palette.getUrlName());
                                 if (image == null) {
                                     return;
                                 }
-                                AHClientHandler.getAHClientHandler().postImage(palette.getPicturePath(), image);
+                                AHClientHandler.getAHClientHandler().postImage("/image", image);
+                                updateTable();
                             });
                             setGraphic(btn);
                             setText(null);

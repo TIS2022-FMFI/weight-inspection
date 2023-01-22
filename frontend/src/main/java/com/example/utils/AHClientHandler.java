@@ -22,6 +22,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;
@@ -33,6 +43,7 @@ import io.netty.buffer.search.AhoCorasicSearchProcessorFactory;
 import io.netty.channel.unix.Socket;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import static org.asynchttpclient.Dsl.*;
@@ -123,6 +134,18 @@ public class AHClientHandler {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
                 errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
+            if (response.getStatusCode() > 299 || response.getStatusCode() < 200) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Nieco sa stalo na serveri");
                 PauseTransition delay = new PauseTransition(Duration.seconds(3));
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
@@ -369,17 +392,31 @@ public class AHClientHandler {
     }
 
     public void postImage(String url, File image) {
-        BoundRequestBuilder request = AHClient
-                .preparePost(baseUrl + url)
-                .setHeader("Content-Type", "application/json")
-                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
-                .setBody(image);
-        ListenableFuture<Response> whenResponse = request.execute();
-        try {
-            Response response = whenResponse.get();
-            return;
-
-        } catch (Exception e) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            HttpEntity data = MultipartEntityBuilder.create().setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                    .addBinaryBody("image", image, ContentType.IMAGE_PNG, image.getName()).build();
+            HttpUriRequest request = RequestBuilder.post(baseUrl + url).setEntity(data).build();
+            ResponseHandler<String> responseHandler = response -> {
+                int status = response.getStatusLine().getStatusCode();
+                if (status >= 200 && status < 300) {
+                    image.delete();
+                    return null;
+                } else {
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("Can't connect to server");
+                    errorAlert.setContentText("Check if you have internet connection");
+                    PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                    delay.setOnFinished(event -> {
+                        errorAlert.hide();
+                    });
+                    errorAlert.show();
+                    delay.play();
+                    image.delete();
+                    return null;
+                }
+            };
+            System.out.println(httpclient.execute(request, responseHandler));
+        } catch (IOException e) {
             Alert errorAlert = new Alert(AlertType.ERROR);
             errorAlert.setHeaderText("Can't connect to server");
             errorAlert.setContentText("Check if you have internet connection");
@@ -389,7 +426,7 @@ public class AHClientHandler {
             });
             errorAlert.show();
             delay.play();
-            return;
+            image.delete();
         }
     }
 }

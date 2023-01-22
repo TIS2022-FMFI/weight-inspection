@@ -60,6 +60,13 @@ public class Palette {
         return "/image/palette-" + String.valueOf(id) + ".png";
     }
 
+    public String getUrlName() {
+        if (id == null) {
+            return "";
+        }
+        return "palette-" + String.valueOf(id) + ".png";
+    }
+
     public void post(TableController controller) {
         if (id == null) {
             AHClientHandler.getAHClientHandler().postRequest("/palette", this, controller);
