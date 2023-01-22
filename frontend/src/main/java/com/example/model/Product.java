@@ -9,7 +9,7 @@ public class Product {
     private Integer id;
     private String reference = "";
     private Float weight = 0f;
-    private Float tolerance = 1f;
+    private Float tolerance = 0.5f;
     private Integer quantity = 0;
 
     public String getId() {

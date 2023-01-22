@@ -22,7 +22,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -30,6 +35,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.asynchttpclient.AsyncHttpClient;
@@ -45,6 +51,7 @@ import io.netty.channel.unix.Socket;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 import static org.asynchttpclient.Dsl.*;
 
@@ -392,11 +399,21 @@ public class AHClientHandler {
     }
 
     public void postImage(String url, File image) {
+        System.out.println(url);
+        System.out.println(image.getName());
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            String auth = AdminState.getUserName() + ":" + AdminState.getPassword();
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+            String authHeader = "Basic " + new String(encodedAuth);
             HttpEntity data = MultipartEntityBuilder.create().setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .addBinaryBody("image", image, ContentType.IMAGE_PNG, image.getName()).build();
-            HttpUriRequest request = RequestBuilder.post(baseUrl + url).setEntity(data).build();
+                    .addBinaryBody("image", image, ContentType.IMAGE_PNG, image.getName())
+                    .build();
+            HttpUriRequest request = RequestBuilder.post(baseUrl + url)
+                    .setHeader(HttpHeaders.AUTHORIZATION, authHeader)
+                    .setEntity(data)
+                    .build();
             ResponseHandler<String> responseHandler = response -> {
+                System.out.println(response);
                 int status = response.getStatusLine().getStatusCode();
                 if (status >= 200 && status < 300) {
                     image.delete();
