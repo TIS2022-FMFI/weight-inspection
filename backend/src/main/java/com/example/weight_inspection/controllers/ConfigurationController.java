@@ -28,7 +28,7 @@ public class ConfigurationController {
     }
 
     @GetMapping("tolerance")
-    public ResponseEntity<Float> getTolerance(@PathVariable Long emailId) {
+    public ResponseEntity<Float> getTolerance() {
 
         Configuration toleranceConfiguration = configurationRepository.findByName(configurationService.getDefaultToleranceName());
         if (toleranceConfiguration == null) {
