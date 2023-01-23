@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +61,7 @@ public class AHClientHandler {
     private static AHClientHandler AHClientHandler;
     private AsyncHttpClient AHClient;
     private Gson gson;
+    private UUID lastUuid;
     private String baseUrl;
 
     private AHClientHandler(String baseUrl) {
@@ -180,6 +182,8 @@ public class AHClientHandler {
 
     public <T> void getPage(String url, int page, int pageSize, ObservableList<T> returnList, Class<T> type,
             TableController controller) {
+        UUID myUuid = UUID.randomUUID();
+        this.lastUuid = myUuid;
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareGet(baseUrl + url)
                 .addQueryParam("page", String.valueOf(page))
@@ -198,6 +202,9 @@ public class AHClientHandler {
                 })
                 .thenApply(
                         response -> {
+                            if (myUuid != this.lastUuid) {
+                                return null;
+                            }
                             try {
                                 Type pageType = TypeToken.getParameterized(Page.class, type).getType();
                                 Page<T> newPage = new Gson().fromJson(response.getResponseBody(),
@@ -217,6 +224,8 @@ public class AHClientHandler {
     }
 
     public <T> void postRequest(String url, T object, TableController controller) {
+        UUID myUuid = UUID.randomUUID();
+        this.lastUuid = myUuid;
         String jsonObject = gson.toJson(object);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePost(baseUrl + url)
@@ -235,6 +244,9 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
+                    if (myUuid != this.lastUuid) {
+                        return null;
+                    }
                     if (response.getStatusCode() == 404) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
@@ -260,6 +272,8 @@ public class AHClientHandler {
     }
 
     public <T> void putRequest(String url, T object, TableController controller) {
+        UUID myUuid = UUID.randomUUID();
+        this.lastUuid = myUuid;
         String jsonObject = gson.toJson(object);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
@@ -278,6 +292,9 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
+                    if (myUuid != this.lastUuid) {
+                        return null;
+                    }
                     if (response.getStatusCode() == 404) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
@@ -303,6 +320,8 @@ public class AHClientHandler {
     }
 
     public <T> void deleteRequest(String url, TableController controller) {
+        UUID myUuid = UUID.randomUUID();
+        this.lastUuid = myUuid;
         CompletableFuture<Response> whenResponse = AHClient
                 .prepareDelete(baseUrl + url)
                 .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
@@ -318,6 +337,9 @@ public class AHClientHandler {
                     return null;
                 })
                 .thenApply(response -> {
+                    if (myUuid != this.lastUuid) {
+                        return null;
+                    }
                     if (response.getStatusCode() == 500 || response.getStatusCode() == 409) {
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
