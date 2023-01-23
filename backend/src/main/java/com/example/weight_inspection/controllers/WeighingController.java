@@ -258,6 +258,10 @@ public class WeighingController {
                     notification.getDescription());
         }
 
+        if(palette == null || palette.getType().isEmpty() || packaging == null || packaging.getType().isEmpty() || packaging.getWeight() == null ||
+                product == null || productPackaging == null || productPackaging.getQuantity() == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         Float tolerance = productPackaging.getTolerance();
         if(tolerance == null) {
@@ -279,11 +283,6 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-        }
-
-        if(palette == null || palette.getType().isEmpty() || packaging == null || packaging.getType().isEmpty() || packaging.getWeight() == null ||
-                product == null || productPackaging == null || productPackaging.getQuantity() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         Float paletteWeight = palette.getWeight();
