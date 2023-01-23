@@ -197,24 +197,23 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@PutMapping("{productId}/packaging/{packagingId}")
+	@PutMapping("{productReference}/packaging/{packagingId}")
 	public ResponseEntity<Product> replacePackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
 														 BindingResult bindingResult,
-														 @PathVariable Long productId,
+														 @PathVariable String productReference,
 														 @PathVariable Long packagingId) {
 
 		if (bindingResult.hasErrors() || productPackaging == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		Optional<Product> optionalProduct = productRepository.findById(productId);
+		Product product = productRepository.findByReferenceOrderByIdDesc(productReference);
 		Optional<Packaging> optionalPackaging = packagingRepository.findById(packagingId);
 
-		if (!optionalProduct.isPresent() || !optionalPackaging.isPresent()) {
+		if (product == null || !optionalPackaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-
-		Product product = optionalProduct.get();
+		
 		Packaging packaging = optionalPackaging.get();
 		ProductPackaging replacedProductPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
 
