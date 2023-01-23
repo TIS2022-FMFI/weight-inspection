@@ -18,5 +18,5 @@ public class GetProductOfPackagingDTO {
 
     private float tolerance;
 
-    private int quantity;
+    private Integer quantity;
 }

@@ -7,10 +7,9 @@ import javax.validation.Valid;
 
 import com.example.weight_inspection.models.Packaging;
 import com.example.weight_inspection.models.ProductPackaging;
-import com.example.weight_inspection.repositories.PackagingRepository;
-import com.example.weight_inspection.repositories.ProductPackagingRepository;
+import com.example.weight_inspection.repositories.*;
+import com.example.weight_inspection.services.ConfigurationService;
 import com.example.weight_inspection.transfer.GetPackagingOfProductDTO;
-import com.example.weight_inspection.transfer.GetProductOfPackagingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,15 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.weight_inspection.models.Palette;
 import com.example.weight_inspection.models.Product;
 import com.example.weight_inspection.transfer.ListResponse;
-import com.example.weight_inspection.repositories.PaletteRepository;
-import com.example.weight_inspection.repositories.ProductRepository;
 
 @RestController
 @RequestMapping(path = "api/product")
@@ -36,13 +32,18 @@ public class ProductController {
     private final PaletteRepository paletteRepository;
 	private final ProductPackagingRepository productPackagingRepository;
 	private final PackagingRepository packagingRepository;
+	private final ConfigurationRepository configurationRepository;
+	private final ConfigurationService configurationService;
 
 	@Autowired
-	public ProductController(ProductRepository productRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository, PackagingRepository packagingRepository) {
+	public ProductController(ProductRepository productRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository, PackagingRepository packagingRepository,
+							 ConfigurationRepository configurationRepository, ConfigurationService configurationService) {
 		this.productRepository = productRepository;
 		this.paletteRepository = paletteRepository;
 		this.productPackagingRepository = productPackagingRepository;
 		this.packagingRepository = packagingRepository;
+		this.configurationRepository = configurationRepository;
+		this.configurationService = configurationService;
 	}
 
 	@GetMapping
@@ -283,7 +284,12 @@ public class ProductController {
 							getPackagingOfProductDTO.setName(productPackaging.getPackaging().getName());
 							getPackagingOfProductDTO.setType(productPackaging.getPackaging().getType());
 							getPackagingOfProductDTO.setQuantity(productPackaging.getQuantity());
-							getPackagingOfProductDTO.setTolerance(productPackaging.getTolerance());
+							if(productPackaging.getTolerance() != null) {
+								getPackagingOfProductDTO.setTolerance(productPackaging.getTolerance());
+							}
+							else {
+								getPackagingOfProductDTO.setTolerance(configurationRepository.findByName(configurationService.getDefaultToleranceName()).getValue());
+							}
 							return getPackagingOfProductDTO;
 						})
 						.collect(Collectors.toList())
