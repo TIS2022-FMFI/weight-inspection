@@ -178,19 +178,6 @@ public class WeighingController {
                     notification.getDescription());
         }
 
-        if (palette != null && palette.getType() == null) {
-            Notification notification = notificationPreparationService.missingPaletteTypeNotification();
-            notification.setDescription(notification.getDescription() +
-                    "Referencia: " + reference + "\n" +
-                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
-                    "Názov palety: " + palette.getName() + "\n");
-
-
-            notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
-                    notification.getDescription());
-        }
 
         if (packaging == null) {
             Notification notification = notificationPreparationService.missingPackagingNotification();
@@ -218,17 +205,7 @@ public class WeighingController {
                     notification.getDescription());
         }
 
-        if (packaging != null && packaging.getType() == null) {
-            Notification notification = notificationPreparationService.missingPackagingTypeNotification();
-            notification.setDescription(notification.getDescription() +
-                    "Referencia: " + reference + "\n" +
-                    "Množstvo: " + weighingDTO.getQuantity() + "\n" +
-                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
-                    "Názov obalu " + packaging.getName() + "\n");
-            notificationRepository.save(notification);
-            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
-                    notification.getDescription());
-        }
+
 
         if (productPackaging == null  && packaging != null) {
             Notification notification = notificationPreparationService.missingProductPackagingRelationshipNotification();
@@ -258,7 +235,7 @@ public class WeighingController {
                     notification.getDescription());
         }
 
-        if(palette == null || palette.getType().isEmpty() || packaging == null || packaging.getType().isEmpty() || packaging.getWeight() == null ||
+        if(palette == null  || packaging == null  || packaging.getWeight() == null ||
                 product == null || productPackaging == null || productPackaging.getQuantity() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
