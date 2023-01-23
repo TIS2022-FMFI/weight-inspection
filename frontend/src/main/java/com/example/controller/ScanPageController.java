@@ -71,8 +71,8 @@ public class ScanPageController extends ScannerController implements Swappable {
             delay.setOnFinished(e2 -> {
                 errorAlert.hide();
             });
-            errorAlert.show();
             delay.play();
+            errorAlert.showAndWait();
         }
         SceneNavigator.setScene(SceneName.PALETTE_PICK);
     }

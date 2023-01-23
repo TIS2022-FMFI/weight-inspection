@@ -40,7 +40,7 @@
 }
 .table-view .table-cell {
     -fx-text-fill: black;
-    -fx-font-size: 1.3em;
+    -fx-font-size: 1em;
     -fx-alignment: center;
 }
 
@@ -123,4 +123,8 @@
 
 .text {
     -fx-font-weight: bold;
+}
+
+.pickLabel {
+    -fx-font-size: 1.6em;
 }

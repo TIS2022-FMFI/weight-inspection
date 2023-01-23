@@ -125,21 +125,22 @@ public class PaletteProductTableController extends TableController implements Sw
         if (pagination != null) {
             currentPage = pagination.getCurrentPageIndex();
         }
-        AHClientHandler.getAHClientHandler().getPage("/palette/" + paletteId + "/product", currentPage, pageSize, products, Product.class, this);
+        AHClientHandler.getAHClientHandler().getPage("/palette/" + paletteId + "/product", currentPage, pageSize,
+                products, Product.class, this);
     }
 
     @FXML
     public void createNew() {
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Text Input Dialog");
-        dialog.setHeaderText("Write an id of a product (product with that id has to exist).");
-        dialog.setContentText("Please enter id:");
+        dialog.setHeaderText("Write an refference of a product (product with that id has to exist).");
+        dialog.setContentText("Please enter refference:");
 
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            int conn_id = Integer.valueOf(TextFieldFilters.formatTextToInt(result.get()));
+            String conn_id = result.get();
             Product newProduct = new Product();
-            newProduct.setId(conn_id);
+            newProduct.setReference(conn_id);
             newProduct.postForPalette(this, paletteId);
             pagination.setCurrentPageIndex(0);
         }
@@ -154,7 +155,9 @@ public class PaletteProductTableController extends TableController implements Sw
     }
 
     @FXML
-    public void logOut() {AdminState.logOut();}
+    public void logOut() {
+        AdminState.logOut();
+    }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
@@ -168,5 +171,6 @@ public class PaletteProductTableController extends TableController implements Sw
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

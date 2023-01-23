@@ -184,14 +184,14 @@ public class PackagingProductTableController extends TableController implements 
     public void createNew() {
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Text Input Dialog");
-        dialog.setHeaderText("Write an id of a product (product with that id has to exist).");
-        dialog.setContentText("Please enter id:");
+        dialog.setHeaderText("Write an refference of a product (product with that id has to exist).");
+        dialog.setContentText("Please enter reference:");
 
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            int conn_id = Integer.valueOf(TextFieldFilters.formatTextToInt(result.get()));
+            String conn_id = result.get();
             Product newProduct = new Product();
-            newProduct.setId(conn_id);
+            newProduct.setReference(conn_id);
             newProduct.putForPackaging(this, packagingId);
             pagination.setCurrentPageIndex(0);
         }
