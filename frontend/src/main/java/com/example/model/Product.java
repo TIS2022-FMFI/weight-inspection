@@ -8,7 +8,7 @@ import com.example.utils.AHClientHandler;
 public class Product {
     private Integer id;
     private String reference = "";
-    private Float weight = 0f;
+    private Float weight;
     private Float tolerance = 0.5f;
     private Integer quantity = 0;
 
@@ -87,14 +87,14 @@ public class Product {
 
     public void postForPalette(PaletteProductTableController controller, Integer paletteId) {
         AHClientHandler.getAHClientHandler().postRequest(
-                "/product/" + String.valueOf(id) + "/palette/" + String.valueOf(paletteId), null, controller);
+                "/product/" + this.reference + "/palette/" + String.valueOf(paletteId), null, controller);
     }
 
     public void putForPackaging(PackagingProductTableController controller, int packagingId) {
-        setReference(null);
+        setId(null);
         setWeight(null);
         AHClientHandler.getAHClientHandler().putRequest(
-                "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
+                "/product/" + this.reference + "/packaging/" + String.valueOf(packagingId), this, controller);
     }
 
     public void deleteForPackaging(PackagingProductTableController controller, int packagingId) {
@@ -102,10 +102,4 @@ public class Product {
                 "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), controller);
     }
 
-    public void postForPackaging(PackagingProductTableController controller, Integer packagingId) {
-        setReference(null);
-        setWeight(null);
-        AHClientHandler.getAHClientHandler().postRequest(
-                "/product/" + String.valueOf(id) + "/packaging/" + String.valueOf(packagingId), this, controller);
-    }
 }
