@@ -283,6 +283,7 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         Float paletteWeight = palette.getWeight();
