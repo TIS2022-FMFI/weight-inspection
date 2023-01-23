@@ -101,8 +101,8 @@ public class AHClientHandler {
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
                 });
-                errorAlert.show();
                 delay.play();
+                errorAlert.showAndWait();
                 return null;
             }
             Type pageType = TypeToken.getParameterized(Page.class, type).getType();
@@ -118,8 +118,8 @@ public class AHClientHandler {
             delay.setOnFinished(event -> {
                 errorAlert.hide();
             });
-            errorAlert.show();
             delay.play();
+            errorAlert.showAndWait();
             return null;
         }
     }
@@ -132,9 +132,12 @@ public class AHClientHandler {
                 .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()))
                 .setBody(jsonObject);
         ListenableFuture<Response> whenResponse = request.execute();
+        System.out.println(jsonObject);
         try {
             Response response = whenResponse.get();
-            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getResponseBody());
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409 || true) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
                 errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
@@ -142,8 +145,8 @@ public class AHClientHandler {
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
                 });
-                errorAlert.show();
                 delay.play();
+                errorAlert.showAndWait();
                 return null;
             }
             if (response.getStatusCode() > 299 || response.getStatusCode() < 200) {
@@ -154,8 +157,8 @@ public class AHClientHandler {
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
                 });
-                errorAlert.show();
                 delay.play();
+                errorAlert.showAndWait();
                 return null;
             }
             T2 item = new Gson().fromJson(response.getResponseBody(), type);
@@ -169,8 +172,8 @@ public class AHClientHandler {
             delay.setOnFinished(event -> {
                 errorAlert.hide();
             });
-            errorAlert.show();
             delay.play();
+            errorAlert.showAndWait();
             return null;
         }
     }
@@ -355,8 +358,8 @@ public class AHClientHandler {
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
                 });
-                errorAlert.show();
                 delay.play();
+                errorAlert.showAndWait();
                 AdminState.setUserName("");
                 AdminState.setPassword("");
                 return null;
@@ -369,8 +372,8 @@ public class AHClientHandler {
                 delay.setOnFinished(e -> {
                     errorAlert.hide();
                 });
-                errorAlert.show();
                 delay.play();
+                errorAlert.showAndWait();
                 return null;
             }
             T newObject = new Gson().fromJson(response.getResponseBody(), type);
@@ -384,8 +387,8 @@ public class AHClientHandler {
             delay.setOnFinished(e2 -> {
                 errorAlert.hide();
             });
-            errorAlert.show();
             delay.play();
+            errorAlert.showAndWait();
             return null;
         }
     }
@@ -415,8 +418,8 @@ public class AHClientHandler {
                     delay.setOnFinished(event -> {
                         errorAlert.hide();
                     });
-                    errorAlert.show();
                     delay.play();
+                    errorAlert.showAndWait();
                     image.delete();
                     return null;
                 }
@@ -430,8 +433,8 @@ public class AHClientHandler {
             delay.setOnFinished(event -> {
                 errorAlert.hide();
             });
-            errorAlert.show();
             delay.play();
+            errorAlert.showAndWait();
             image.delete();
         }
     }
