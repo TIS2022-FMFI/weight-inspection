@@ -2,11 +2,11 @@ package com.example.weight_inspection.controllers;
 
 import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
+import com.example.weight_inspection.services.ConfigurationService;
 import com.example.weight_inspection.services.EmailSenderService;
 import com.example.weight_inspection.services.NotificationPreparationService;
 import com.example.weight_inspection.services.WeighingService;
 import com.example.weight_inspection.transfer.AddWeighingDTO;
-import com.example.weight_inspection.transfer.GetAdminDTO;
 import com.example.weight_inspection.transfer.GetWeighingDTO;
 import com.example.weight_inspection.transfer.ListResponse;
 import org.modelmapper.ModelMapper;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -42,6 +41,9 @@ public class WeighingController {
     private final EmailSenderService emailSenderService;
     private final EmailRepository emailRepository;
     private final NotificationPreparationService notificationPreparationService;
+    private final ConfigurationRepository configurationRepository;
+
+    private final ConfigurationService configurationService;
 
     @Autowired
     public WeighingController(WeighingRepository weighingRepository,
@@ -49,7 +51,8 @@ public class WeighingController {
                               ProductPackagingRepository productPackagingRepository,
                               PackagingRepository packagingRepository,
                               ProductRepository productRepository,
-                              PaletteRepository paletteRepository, NotificationRepository notificationRepository, EmailSenderService emailSenderService, EmailRepository emailRepository, NotificationPreparationService notificationPreparationService) {
+                              PaletteRepository paletteRepository, NotificationRepository notificationRepository, EmailSenderService emailSenderService, EmailRepository emailRepository, NotificationPreparationService notificationPreparationService,
+                              ConfigurationRepository configurationRepository, ConfigurationService configurationService) {
         this.weighingRepository = weighingRepository;
         this.weighingService = weighingService;
         this.productPackagingRepository = productPackagingRepository;
@@ -60,8 +63,10 @@ public class WeighingController {
         this.emailSenderService = emailSenderService;
         this.emailRepository = emailRepository;
         this.notificationPreparationService = notificationPreparationService;
+        this.configurationService = configurationService;
         this.modelMapper = new ModelMapper();
 
+        this.configurationRepository = configurationRepository;
     }
 
     @GetMapping
@@ -258,11 +263,33 @@ public class WeighingController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        Float tolerance = productPackaging.getTolerance();
+        if(tolerance == null) {
+            Configuration toleranceConfiguration = configurationRepository.findByName(configurationService.getDefaultToleranceName());
+            if(toleranceConfiguration != null) {
+                tolerance = toleranceConfiguration.getValue();
+            }
+        }
+
+        if (tolerance == null) {
+            Notification notification = notificationPreparationService.missingProductPackagingToleranceNotification();
+            notification.setDescription(notification.getDescription() +
+                    "Referencia: " + reference + "\n" +
+                    "Celkové množstvo: " + weighingDTO.getQuantity() + "\n" +
+                    "IDP: " + weighingDTO.getIDP() + "\n\n" +
+                    "Názov obalu: " + packaging.getName() + "\n" +
+                    "Typ obalu: " + packaging.getType() + "\n");
+
+            notificationRepository.save(notification);
+            emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
+                    notification.getDescription());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         Float paletteWeight = palette.getWeight();
         Float packagingWeight = packaging.getWeight();
         Float productWeight = product.getWeight();
         int numberOfProductsInPackaging = productPackaging.getQuantity();
-        float productPackagingTolerance = productPackaging.getTolerance();
         int totalNumberOfProducts = weighing.getQuantity();
 
         if (productWeight == null) {
@@ -280,7 +307,7 @@ public class WeighingController {
                         "Hmotnosť palety: " + palette.getWeight() + " kg\n\n" +
                         "Vypočítaná hmotnosť: " + productWeight + " kg\n" +
                         "Nameraná hmotnosť: " + weighingDTO.getWeight() + " kg\n" +
-                        "Tolerancia: " + productPackagingTolerance + "\n");
+                        "Tolerancia: " + tolerance + "\n");
 
 
                 notificationRepository.save(notification);
@@ -296,7 +323,7 @@ public class WeighingController {
         float calculatedWeight = weighingService.calculateExpectedWeight(totalNumberOfProducts, productWeight,
                 numberOfProductsInPackaging, packagingWeight, paletteWeight);
         float differenceInWeight = Math.abs(weighingDTO.getWeight() - calculatedWeight);
-        boolean correctWeighing = differenceInWeight < productWeight * productPackagingTolerance;
+        boolean correctWeighing = differenceInWeight < productWeight * tolerance;
 
         if (!correctWeighing) {
             Notification notification = notificationPreparationService.incorrectWeighingNotification();
@@ -311,7 +338,7 @@ public class WeighingController {
                             "Hmotnosť palety: " + palette.getWeight() + " kg\n\n" +
                             "Vypočítaná hmotnosť: " + calculatedWeight + " kg\n" +
                             "Nameraná hmotnosť: " + weighingDTO.getWeight() + " kg\n" +
-                            "Tolerancia: " + productPackagingTolerance + "\n");
+                            "Tolerancia: " + tolerance + "\n");
 
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
