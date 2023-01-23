@@ -26,7 +26,7 @@ public class SchedulingService {
             String subject = "Export z aplikácie \"Váženie\" za poslednú hodinu.";
             String text = "Dobrý deň.\n\n V prílohe nájdete "   + subject;
 
-            emailSenderService.sendEmailWithExports(emails, subject, text);
+            emailSenderService.sendEmailWithExports(emails, subject, text, true);
         }
 
 

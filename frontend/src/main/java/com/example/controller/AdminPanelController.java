@@ -37,7 +37,7 @@ public class AdminPanelController extends HBox implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nameLabel.setText(AdminState.getUserName());
+        nameLabel.textProperty().bind(AdminState.getUserNameLabel());
     }
 
 }

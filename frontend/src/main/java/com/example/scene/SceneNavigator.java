@@ -70,8 +70,6 @@ public class SceneNavigator {
         double height = 800;
 
         if (currentSceneName != null) {
-            System.out.println(currentSceneName);
-            System.out.println(scenes.get(currentSceneName).getWindow().getWidth());
             width = scenes.get(currentSceneName).getWindow().getWidth();
             height = scenes.get(currentSceneName).getWindow().getHeight();
 
@@ -94,5 +92,9 @@ public class SceneNavigator {
         if (scenesLoaded && currentSceneName != null) {
             primaryStage.show();
         }
+    }
+
+    public static Stage getStage() {
+        return primaryStage;
     }
 }

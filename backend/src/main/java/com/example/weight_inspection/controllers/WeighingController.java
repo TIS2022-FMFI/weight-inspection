@@ -82,7 +82,13 @@ public class WeighingController {
         listResponse.setTotalPages(page.getTotalPages());
         listResponse.setItems(
                 page.getContent().stream()
-                        .map(item -> modelMapper.map(item, GetWeighingDTO.class))
+                        .map(item -> {
+                            GetWeighingDTO getWeighingDTO = modelMapper.map(item, GetWeighingDTO.class);
+                            getWeighingDTO.setPaletteName(item.getPalette().getName());
+                            getWeighingDTO.setPackagingName(item.getPackaging().getName());
+                            getWeighingDTO.setProductReference(item.getProduct().getReference());
+                            return getWeighingDTO;
+                        })
                         .collect(Collectors.toList())
         );
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
@@ -111,9 +117,13 @@ public class WeighingController {
         Packaging packaging = null;
         ProductPackaging productPackaging = null;
 
-        if (weighingDTO.getPaletteId() != null && weighingDTO.getPackagingId() != null) {
+        if (weighingDTO.getPaletteId() != null) {
             palette = paletteRepository.findById((long) weighingDTO.getPaletteId());
+        }
+        if(weighingDTO.getPackagingId() != null) {
             packaging = packagingRepository.findById((long) weighingDTO.getPackagingId());
+        }
+        if (product != null && packaging != null) {
             productPackaging = productPackagingRepository.findByPackagingAndProduct(packaging, product);
         }
 
@@ -127,7 +137,6 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (palette == null) {
@@ -139,11 +148,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
 
-        if (!product.getPalette().contains(palette)) {
+        if (product != null &&  palette != null && !product.getPalette().contains(palette)) {
             Notification notification = notificationPreparationService.missingProductPaletteRelationshipNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -155,11 +162,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-
         }
-        if (palette.getWeight() == null) {
+
+        if (palette != null && palette.getWeight() == null) {
             Notification notification = notificationPreparationService.missingPaletteWeightNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -171,10 +176,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (palette.getType() == null) {
+        if (palette != null && palette.getType() == null) {
             Notification notification = notificationPreparationService.missingPaletteTypeNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -186,7 +190,6 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (packaging == null) {
@@ -199,11 +202,10 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
 
-        if (packaging.getWeight() == null) {
+        if (packaging != null && packaging.getWeight() == null) {
             Notification notification = notificationPreparationService.missingPackagingWeightNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -214,9 +216,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (packaging.getType() == null) {
+
+        if (packaging != null && packaging.getType() == null) {
             Notification notification = notificationPreparationService.missingPackagingTypeNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -226,10 +228,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (productPackaging == null) {
+        if (productPackaging == null  && packaging != null) {
             Notification notification = notificationPreparationService.missingProductPackagingRelationshipNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -241,10 +242,9 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (productPackaging.getQuantity() == null) {
+        if (productPackaging != null && productPackaging.getQuantity() == null) {
             Notification notification = notificationPreparationService.missingProductPackagingQuantityNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -256,8 +256,8 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
 
         Float tolerance = productPackaging.getTolerance();
         if(tolerance == null) {
@@ -279,6 +279,10 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
+        }
+
+        if(palette == null || palette.getType().isEmpty() || packaging == null || packaging.getType().isEmpty() || packaging.getWeight() == null ||
+                product == null || productPackaging == null || productPackaging.getQuantity() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -339,7 +343,6 @@ public class WeighingController {
             notificationRepository.save(notification);
             emailSenderService.sendNotificationEmail(emailRecipients, subjectHead + notification.getType(),
                     notification.getDescription());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         weighing.setCalculatedWeight(calculatedWeight);

@@ -16,13 +16,14 @@ import com.google.gson.JsonSyntaxException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class loginController implements Initializable, Swappable {
 
     @FXML
     public TextField loginField;
-    public TextField passField;
+    public PasswordField passField;
 
     @Override
     public void onLoad(SceneName previousSceneName) {
