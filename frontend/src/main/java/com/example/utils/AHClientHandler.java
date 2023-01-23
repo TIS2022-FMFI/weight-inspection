@@ -421,6 +421,7 @@ public class AHClientHandler {
                     return null;
                 }
             };
+            httpclient.execute(request, responseHandler);
         } catch (IOException e) {
             Alert errorAlert = new Alert(AlertType.ERROR);
             errorAlert.setHeaderText("Can't connect to server");
