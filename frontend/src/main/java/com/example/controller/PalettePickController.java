@@ -9,10 +9,13 @@ import com.example.model.Palette;
 import com.example.scene.SceneName;
 import com.example.scene.SceneNavigator;
 import com.example.utils.AHClientHandler;
+import com.example.utils.AdminState;
 import com.example.utils.WorkerState;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 public class PalettePickController extends ScannerController implements Swappable {
@@ -36,13 +39,13 @@ public class PalettePickController extends ScannerController implements Swappabl
     @FXML
     private Label type3;
     @FXML
-    private Label photo0;
+    private ImageView photo0;
     @FXML
-    private Label photo1;
+    private ImageView photo1;
     @FXML
-    private Label photo2;
+    private ImageView photo2;
     @FXML
-    private Label photo3;
+    private ImageView photo3;
 
     private int currentIndex = 0;
 
@@ -61,30 +64,42 @@ public class PalettePickController extends ScannerController implements Swappabl
         if (currentIndex < palettes.size()) {
             name0.setText(palettes.get(currentIndex).getName());
             type0.setText(palettes.get(currentIndex).getType());
+            Image image = new Image(AdminState.getServer() + palettes.get(currentIndex).getPicturePath(), true);
+            photo0.setImage(image);
         } else {
             name0.setText("");
             type0.setText("");
+            photo0.setImage(null);
         }
         if (currentIndex + 1 < palettes.size()) {
             name1.setText(palettes.get(currentIndex + 1).getName());
             type1.setText(palettes.get(currentIndex + 1).getType());
+            Image image = new Image(AdminState.getServer() + palettes.get(currentIndex + 1).getPicturePath(), true);
+            photo1.setImage(image);
         } else {
             name1.setText("");
             type1.setText("");
+            photo1.setImage(null);
         }
         if (currentIndex + 2 < palettes.size()) {
             name2.setText(palettes.get(currentIndex + 2).getName());
             type2.setText(palettes.get(currentIndex + 2).getType());
+            Image image = new Image(AdminState.getServer() + palettes.get(currentIndex + 2).getPicturePath(), true);
+            photo2.setImage(image);
         } else {
             name2.setText("");
             type2.setText("");
+            photo2.setImage(null);
         }
         if (currentIndex + 3 < palettes.size()) {
             name3.setText(palettes.get(currentIndex + 3).getName());
             type3.setText(palettes.get(currentIndex + 3).getType());
+            Image image = new Image(AdminState.getServer() + palettes.get(currentIndex + 3).getPicturePath(), true);
+            photo3.setImage(image);
         } else {
             name3.setText("");
             type3.setText("");
+            photo3.setImage(null);
         }
     }
 

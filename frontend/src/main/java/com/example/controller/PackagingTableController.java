@@ -19,9 +19,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -45,6 +48,8 @@ public class PackagingTableController extends TableController implements Swappab
     @FXML
     private TableColumn<Packaging, String> photoColumn;
     @FXML
+    private TableColumn<Packaging, String> newPhotoColumn;
+    @FXML
     private TableColumn<Packaging, String> actionColumn1;
     @FXML
     private TableColumn<Packaging, String> actionColumn2;
@@ -65,6 +70,7 @@ public class PackagingTableController extends TableController implements Swappab
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         photoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+        newPhotoColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn2.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
         actionColumn3.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
@@ -195,6 +201,67 @@ public class PackagingTableController extends TableController implements Swappab
         };
 
         actionColumn3.setCellFactory(deleteFactory);
+        Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> photoFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
+            @Override
+            public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
+                final TableCell<Packaging, String> cell = new TableCell<Packaging, String>() {
+                    final ImageView imv = new ImageView();
+                    Image image;
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            Packaging packaging = getTableView().getItems().get(getIndex());
+                            image = new Image(AdminState.getServer() + packaging.getPicturePath(), true);
+                            imv.setImage(image);
+                            imv.setPreserveRatio(true);
+                            imv.setFitHeight(80);
+                            setGraphic(imv);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        photoColumn.setCellFactory(photoFactory);
+        Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>> newPhotoFactory = new Callback<TableColumn<Packaging, String>, TableCell<Packaging, String>>() {
+            @Override
+            public TableCell<Packaging, String> call(final TableColumn<Packaging, String> param) {
+                final TableCell<Packaging, String> cell = new TableCell<Packaging, String>() {
+                    final Button btn = new Button("NOVY OBRAZOK");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                Packaging packaging = getTableView().getItems().get(getIndex());
+                                File image = AdminState.pickImage(packaging.getUrlName());
+                                if (image == null) {
+                                    return;
+                                }
+                                AHClientHandler.getAHClientHandler().postImage("/image", image);
+                                updateTable();
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        newPhotoColumn.setCellFactory(newPhotoFactory);
     }
 
     @FXML

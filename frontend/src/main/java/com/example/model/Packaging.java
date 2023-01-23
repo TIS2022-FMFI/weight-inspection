@@ -69,7 +69,14 @@ public class Packaging {
         if (id == null) {
             return "";
         }
-        return "/static/packaging/" + String.valueOf(id);
+        return "/image/packaging-" + String.valueOf(id) + ".png";
+    }
+
+    public String getUrlName() {
+        if (id == null) {
+            return "";
+        }
+        return "packaging-" + String.valueOf(id) + ".png";
     }
 
     public void post(TableController controller) {

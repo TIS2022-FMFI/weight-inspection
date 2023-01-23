@@ -153,7 +153,6 @@ public class EmailTableController extends TableController implements Swappable {
                             setText(null);
                         } else {
                             chkbx.setOnAction(event -> {
-                                System.out.println("hi");
                                 Email email = getTableView().getItems().get(getIndex());
                                 email.setSendExports(chkbx.isSelected());
                             });

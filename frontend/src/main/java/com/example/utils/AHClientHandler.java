@@ -12,12 +12,32 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;
@@ -28,7 +48,10 @@ import com.google.gson.reflect.TypeToken;
 import io.netty.buffer.search.AhoCorasicSearchProcessorFactory;
 import io.netty.channel.unix.Socket;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 import static org.asynchttpclient.Dsl.*;
 
@@ -46,12 +69,12 @@ public class AHClientHandler {
     }
 
     public static void remake() {
-        AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+        AHClientHandler = new AHClientHandler(AdminState.getServer());
     }
 
     public static AHClientHandler getAHClientHandler() {
         if (AHClientHandler == null) {
-            AHClientHandler = new AHClientHandler("http://localhost:8080/api");
+            AHClientHandler = new AHClientHandler(AdminState.getServer());
         }
         return AHClientHandler;
     }
@@ -103,7 +126,6 @@ public class AHClientHandler {
 
     public <T, T2> T2 postRequestSync(String url, T object, Class<T2> type) {
         String jsonObject = gson.toJson(object);
-        System.out.println(jsonObject);
         BoundRequestBuilder request = AHClient
                 .preparePost(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -112,8 +134,6 @@ public class AHClientHandler {
         ListenableFuture<Response> whenResponse = request.execute();
         try {
             Response response = whenResponse.get();
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getResponseBody());
             if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
@@ -126,10 +146,19 @@ public class AHClientHandler {
                 delay.play();
                 return null;
             }
-            System.out.println("I am fine");
+            if (response.getStatusCode() > 299 || response.getStatusCode() < 200) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Nieco sa stalo na serveri");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(e -> {
+                    errorAlert.hide();
+                });
+                errorAlert.show();
+                delay.play();
+                return null;
+            }
             T2 item = new Gson().fromJson(response.getResponseBody(), type);
-            System.out.println(item);
-            System.out.println("I am fine2");
             return item;
 
         } catch (Exception e) {
@@ -229,7 +258,6 @@ public class AHClientHandler {
 
     public <T> void putRequest(String url, T object, TableController controller) {
         String jsonObject = gson.toJson(object);
-        System.out.println(jsonObject);
         CompletableFuture<Response> whenResponse = AHClient
                 .preparePut(baseUrl + url)
                 .setHeader("Content-Type", "application/json")
@@ -256,7 +284,6 @@ public class AHClientHandler {
                             errorAlert.showAndWait();
                         });
                     } else if (response.getStatusCode() < 200 || response.getStatusCode() > 299) {
-                        System.out.println(response.getResponseBody());
                         Platform.runLater(() -> {
                             Alert errorAlert = new Alert(AlertType.ERROR);
                             errorAlert.setHeaderText("Error while comunicating with server");
@@ -360,6 +387,80 @@ public class AHClientHandler {
             errorAlert.show();
             delay.play();
             return null;
+        }
+    }
+
+    public void postImage(String url, File image) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            String auth = AdminState.getUserName() + ":" + AdminState.getPassword();
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+            String authHeader = "Basic " + new String(encodedAuth);
+            HttpEntity data = MultipartEntityBuilder.create().setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                    .addBinaryBody("image", image, ContentType.IMAGE_PNG, image.getName())
+                    .build();
+            HttpUriRequest request = RequestBuilder.post(baseUrl + url)
+                    .setHeader(HttpHeaders.AUTHORIZATION, authHeader)
+                    .setEntity(data)
+                    .build();
+            ResponseHandler<String> responseHandler = response -> {
+                int status = response.getStatusLine().getStatusCode();
+                if (status >= 200 && status < 300) {
+                    image.delete();
+                    return null;
+                } else {
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setHeaderText("Can't connect to server");
+                    errorAlert.setContentText("Check if you have internet connection");
+                    PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                    delay.setOnFinished(event -> {
+                        errorAlert.hide();
+                    });
+                    errorAlert.show();
+                    delay.play();
+                    image.delete();
+                    return null;
+                }
+            };
+        } catch (IOException e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                errorAlert.hide();
+            });
+            errorAlert.show();
+            delay.play();
+            image.delete();
+        }
+    }
+
+    public void postExport() {
+        BoundRequestBuilder request = AHClient
+                .preparePost(baseUrl + "/email/export")
+                .setRealm(org.asynchttpclient.Dsl.basicAuthRealm(AdminState.getUserName(), AdminState.getPassword()));
+        ListenableFuture<Response> whenResponse = request.execute();
+        try {
+            Response response = whenResponse.get();
+            if (response.getStatusCode() == 200) {
+                Alert errorAlert = new Alert(AlertType.CONFIRMATION);
+                errorAlert.setHeaderText("OK");
+                errorAlert.setContentText("Export bol poslany na vas email.");
+                errorAlert.showAndWait();
+                return;
+            }
+            if (response.getStatusCode() > 299 || response.getStatusCode() < 200) {
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setHeaderText("Nastala chyba");
+                errorAlert.setContentText("Mozno nemate priradenu emailovu adresu.");
+                errorAlert.showAndWait();
+                return;
+            }
+        } catch (Exception e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Can't connect to server");
+            errorAlert.setContentText("Check if you have internet connection");
+            errorAlert.showAndWait();
         }
     }
 }
