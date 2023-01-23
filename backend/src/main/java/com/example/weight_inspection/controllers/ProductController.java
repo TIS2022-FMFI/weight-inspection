@@ -131,19 +131,18 @@ public class ProductController {
 		return new ResponseEntity<>(deletedProduct, HttpStatus.NO_CONTENT);
 	}
 
-	@PostMapping("{productId}/palette/{paletteId}")
-	public ResponseEntity<Product> addPaletteToProduct(@PathVariable Long productId, @PathVariable Long paletteId) {
+	@PostMapping("{productReference}/palette/{paletteId}")
+	public ResponseEntity<Product> addPaletteToProduct(@PathVariable String productReference, @PathVariable Long paletteId) {
 
-		Optional<Product> product = productRepository.findById(productId);
+		Product product = productRepository.findByReferenceOrderByIdDesc(productReference);
 		Optional<Palette> palette = paletteRepository.findById(paletteId);
 
-		if (!product.isPresent() || !palette.isPresent()) {
+		if (product == null || !palette.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Product newProduct = product.get();
-		newProduct.getPalette().add(palette.get());
-		productRepository.save(newProduct);
+		product.getPalette().add(palette.get());
+		productRepository.save(product);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -165,33 +164,32 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@PostMapping("{productId}/packaging/{packagingId}")
+	@PostMapping("{productReference}/packaging/{packagingId}")
 	public ResponseEntity<Product> addPackagingToProduct(@RequestBody @Valid ProductPackaging productPackaging,
 														  BindingResult bindingResult,
-														  @PathVariable Long productId,
+														  @PathVariable String productReference,
 														  @PathVariable Long packagingId) {
 
 		if (bindingResult.hasErrors() || productPackaging == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		Optional<Product> product = productRepository.findById(productId);
+		Product product = productRepository.findByReferenceOrderByIdDesc(productReference);
 		Optional<Packaging> packaging = packagingRepository.findById(packagingId);
 
-		if(!product.isPresent() || !packaging.isPresent()) {
+		if(product == null || !packaging.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Product newProduct = product.get();
 		Packaging newPackaging = packaging.get();
 
 		productPackaging.setId(null);
 		productPackaging.setPackaging(newPackaging);
-		productPackaging.setProduct(newProduct);
+		productPackaging.setProduct(product);
 		productPackagingRepository.save(productPackaging);
 
-		newProduct.getProductPackaging().add(productPackaging);
-		productRepository.save(newProduct);
+		product.getProductPackaging().add(productPackaging);
+		productRepository.save(product);
 
 		newPackaging.getProductPackaging().add(productPackaging);
 		packagingRepository.save(newPackaging);
