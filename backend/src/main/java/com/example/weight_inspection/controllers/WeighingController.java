@@ -145,7 +145,7 @@ public class WeighingController {
                     notification.getDescription());
         }
 
-        if (product != null && !product.getPalette().contains(palette)) {
+        if (product != null &&  palette != null && !product.getPalette().contains(palette)) {
             Notification notification = notificationPreparationService.missingProductPaletteRelationshipNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
@@ -225,7 +225,7 @@ public class WeighingController {
                     notification.getDescription());
         }
 
-        if (productPackaging == null) {
+        if (productPackaging == null  && packaging != null) {
             Notification notification = notificationPreparationService.missingProductPackagingRelationshipNotification();
             notification.setDescription(notification.getDescription() +
                     "Referencia: " + reference + "\n" +
