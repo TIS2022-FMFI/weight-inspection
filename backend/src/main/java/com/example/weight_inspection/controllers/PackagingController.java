@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.example.weight_inspection.models.ProductPackaging;
+import com.example.weight_inspection.repositories.ConfigurationRepository;
 import com.example.weight_inspection.repositories.ProductPackagingRepository;
 import com.example.weight_inspection.repositories.ProductRepository;
+import com.example.weight_inspection.services.ConfigurationService;
 import com.example.weight_inspection.transfer.GetProductOfPackagingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,13 +41,18 @@ public class PackagingController {
 
 	private final ProductRepository productRepository;
 	private final ProductPackagingRepository productPackagingRepository;
+	private final ConfigurationRepository configurationRepository;
+	private final ConfigurationService configurationService;
 
 	@Autowired
 	public PackagingController(PackagingRepository packagingRepository, ProductRepository productRepository,
-			ProductPackagingRepository productPackagingRepository) {
+							   ProductPackagingRepository productPackagingRepository,
+							   ConfigurationRepository configurationRepository, ConfigurationService configurationService) {
 		this.packagingRepository = packagingRepository;
 		this.productRepository = productRepository;
 		this.productPackagingRepository = productPackagingRepository;
+		this.configurationRepository = configurationRepository;
+		this.configurationService = configurationService;
 	}
 
 	@GetMapping
@@ -152,7 +159,12 @@ public class PackagingController {
 							getProductOfPackagingDTO.setReference(productPackaging.getProduct().getReference());
 							getProductOfPackagingDTO.setWeight(productPackaging.getProduct().getWeight());
 							getProductOfPackagingDTO.setQuantity(productPackaging.getQuantity());
-							getProductOfPackagingDTO.setTolerance(productPackaging.getTolerance());
+							if(productPackaging.getTolerance() != null) {
+								getProductOfPackagingDTO.setTolerance(productPackaging.getTolerance());
+							}
+							else {
+								getProductOfPackagingDTO.setTolerance(configurationRepository.findByName(configurationService.getDefaultToleranceName()).getValue());
+							}
 							return getProductOfPackagingDTO;
 						})
 						.collect(Collectors.toList()));

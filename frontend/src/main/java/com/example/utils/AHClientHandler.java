@@ -137,7 +137,7 @@ public class AHClientHandler {
             Response response = whenResponse.get();
             System.out.println(response.getStatusCode());
             System.out.println(response.getResponseBody());
-            if (response.getStatusCode() == 404 || response.getStatusCode() == 409 || true) {
+            if (response.getStatusCode() == 404 || response.getStatusCode() == 409) {
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setHeaderText("Nastala chyba");
                 errorAlert.setContentText("Administrator bol notifikovany. Tato notifikacia zmyzne cez 3 sekundy.");
