@@ -133,8 +133,8 @@ public class PaletteProductTableController extends TableController implements Sw
     public void createNew() {
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Text Input Dialog");
-        dialog.setHeaderText("Write an refference of a product (product with that id has to exist).");
-        dialog.setContentText("Please enter refference:");
+        dialog.setHeaderText("Write an reference of a product (product with that reference has to exist).");
+        dialog.setContentText("Please enter reference:");
 
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
