@@ -86,35 +86,33 @@ public class EmailSenderService {
     @Async
     public void  sendEmailWithExports(String[] recipients, String subject, String body, boolean isAutomaticExport) {
         MimeMessage message = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(sender);
-            helper.setTo(recipients);
-            helper.setSubject(subject);
-            helper.setText(body);
-            List<Weighing> weighings;
-            if(isAutomaticExport) {
-                weighings = Arrays.asList(weighingRepository.findNotExportedWeighings());
-            }
-            else {
-                weighings = new ArrayList<>();
-                weighingRepository.findAll().forEach(weighing -> {
-                    weighings.add(weighing);
-                });
-            }
-            helper.addAttachment("Exporty.csv", createExportCSVFile(weighings));
-            mailSender.send(message);
-            if(isAutomaticExport) {
-                weighings.forEach(weighing -> {
-                    weighing.setExported(true);
-                    weighingRepository.save(weighing);
-                });
+        for (String recipient : recipients) {
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(sender);
+                helper.setTo(recipient);
+                helper.setSubject(subject);
+                helper.setText(body);
+                List<Weighing> weighings;
+                if (isAutomaticExport) {
+                    weighings = Arrays.asList(weighingRepository.findNotExportedWeighings());
+                } else {
+                    weighings = new ArrayList<>();
+                    weighingRepository.findAll().forEach(weighing -> {
+                        weighings.add(weighing);
+                    });
+                }
+                helper.addAttachment("Exporty.csv", createExportCSVFile(weighings));
+                mailSender.send(message);
+                if (isAutomaticExport) {
+                    weighings.forEach(weighing -> {
+                        weighing.setExported(true);
+                        weighingRepository.save(weighing);
+                    });
+                }
+            } catch (MessagingException | IOException e) {
+                e.printStackTrace();
             }
         }
-        catch (MessagingException | IOException e) {
-            e.printStackTrace();
-        }
-
-
     }
 }
