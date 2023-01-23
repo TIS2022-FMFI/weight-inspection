@@ -33,10 +33,19 @@ public class EmailSenderService {
     public void sendNotificationEmail(String[] recipients, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
-        message.setTo(recipients);
-        message.setSubject(subject);
-        message.setText(body);
-        mailSender.send(message);
+        for (String recipient : recipients) {
+            try {
+                message.setTo(recipient);
+                message.setSubject(subject);
+                message.setText(body);
+                mailSender.send(message);
+
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     ByteArrayDataSource createExportCSVFile(List<Weighing> weighings) throws IOException {

@@ -61,18 +61,6 @@ public class NotificationPreparationService {
 
         return notification;
     }
-    public Notification missingPaletteTypeNotification() {
-        Notification notification = new Notification();
-        String subject = "Typ palety nebol natavený";
-        notification.setType(subject);
-        String text = "Dobrý deň.\n\n" +
-                "Je potrebné nastaviť typ pre túto paletu.\n\n" +
-                "Podrobné informácie z daného váženia:\n\n";
-        notification.setDescription(text);
-        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
-
-        return notification;
-    }
 
     public Notification missingPackagingNotification() {
         Notification notification = new Notification();
@@ -99,18 +87,6 @@ public class NotificationPreparationService {
         return notification;
 
     }
-    public Notification missingPackagingTypeNotification() {
-        Notification notification = new Notification();
-        String subject = "Typ obalu nebol natavený";
-        notification.setType(subject);
-        String text = "Dobrý deň.\n\n" +
-                "Je potrebné nastaviť typ pre tento obal.\n\n" +
-                "Podrobné informácie z daného váženia:\n\n";
-        notification.setDescription(text);
-        notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));
-
-        return notification;
-    }
 
     public Notification missingProductPackagingRelationshipNotification() {
         Notification notification = new Notification();
@@ -130,7 +106,7 @@ public class NotificationPreparationService {
         String subject = "Nie je nastavená tolerancia pre vzťah produkt-obal";
         notification.setType(subject);
         String text = "Dobrý deň.\n\n" +
-                "Je potrebné  nastaviť toleraciu.\n\n" +
+                "Je potrebné  nastaviť predvolenú toleranciu alebo toleraciu pre vzťah produkt-obal.\n\n" +
                 "Podrobné informácie z daného váženia:\n\n";
         notification.setDescription(text);
         notification.setCreatedOn(new Timestamp(System.currentTimeMillis()));

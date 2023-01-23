@@ -2,6 +2,7 @@ package com.example.weight_inspection;
 
 import com.example.weight_inspection.models.*;
 import com.example.weight_inspection.repositories.*;
+import com.example.weight_inspection.services.ConfigurationService;
 import com.opencsv.CSVReader;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,12 +28,18 @@ public class DbSeed {
     private final PaletteRepository paletteRepository;
 
     private final ProductPackagingRepository productPackagingRepository;
+    private final ConfigurationRepository configurationRepository;
 
-    public DbSeed(ProductRepository productRepository, PackagingRepository packagingRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository) {
+    private final ConfigurationService configurationService;
+
+    public DbSeed(ProductRepository productRepository, PackagingRepository packagingRepository, PaletteRepository paletteRepository, ProductPackagingRepository productPackagingRepository,
+                  ConfigurationRepository configurationRepository, ConfigurationService configurationService) {
         this.productRepository = productRepository;
         this.packagingRepository = packagingRepository;
         this.paletteRepository = paletteRepository;
         this.productPackagingRepository = productPackagingRepository;
+        this.configurationRepository = configurationRepository;
+        this.configurationService = configurationService;
     }
 
     @NoArgsConstructor
@@ -95,6 +102,13 @@ public class DbSeed {
     @Transactional
     @EventListener(ContextRefreshedEvent.class)
     public void seed() throws Exception {
+        if(configurationRepository.findAll().spliterator().getExactSizeIfKnown() == 0) {
+            Configuration configuration = new Configuration();
+            configuration.setName(configurationService.getDefaultToleranceName());
+            configuration.setValue(0.8f);
+            configurationRepository.save(configuration);
+        }
+
         if(productRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             paletteRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
             packagingRepository.findAll().spliterator().getExactSizeIfKnown() != 0 ||
