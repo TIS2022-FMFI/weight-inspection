@@ -31,6 +31,7 @@
                 <TableColumn fx:id="typeColumn" prefWidth="75.0" sortable="false" text="TYP PALETY" />
                 <TableColumn fx:id="weightColumn" prefWidth="75.0" sortable="false" text="HMOTNOSŤ PALETY" />
                 <TableColumn fx:id="photoColumn" prefWidth="75.0" sortable="false" text="FOTOGRAFIA" />
+            <TableColumn fx:id="newPhotoColumn" prefWidth="75.0" text="NOVE FOTO" />
                 <TableColumn fx:id="actionColumn1" prefWidth="75.0" sortable="false" text="ACTION1" />
                 <TableColumn fx:id="actionColumn2" prefWidth="75.0" sortable="false" text="ACTION2" />
                 <TableColumn fx:id="actionColumn3" prefWidth="75.0" sortable="false" text="ACTION3" />

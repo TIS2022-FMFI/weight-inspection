@@ -106,6 +106,11 @@ public class WeighingTableController extends TableController implements Swappabl
         AdminState.logOut();
     }
 
+    @FXML
+    public void export() {
+        AHClientHandler.getAHClientHandler().postExport();
+    }
+
     @Override
     public void onLoad(SceneName previousSceneName) {
         updateTable();

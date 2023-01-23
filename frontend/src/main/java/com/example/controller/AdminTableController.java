@@ -71,27 +71,28 @@ public class AdminTableController extends TableController implements Swappable {
         emailIdColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         emailIdColumn.setOnEditCommit(e -> {
             String newId = TextFieldFilters.formatTextToInt(e.getNewValue());
-            if (newId.isEmpty())
-            {
+            if (newId.isEmpty()) {
                 e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(null);
-            }
-            else
-            {
+            } else {
                 e.getTableView().getItems().get(e.getTablePosition().getRow()).setEmailId(Integer.valueOf(newId));
             }
         });
 
         firstNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        firstNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setFirstName(e.getNewValue()));
+        firstNameColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setFirstName(e.getNewValue()));
 
         lastNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        lastNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setLastName(e.getNewValue()));
+        lastNameColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setLastName(e.getNewValue()));
 
         userNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        userNameColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setUsername(e.getNewValue()));
+        userNameColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setUsername(e.getNewValue()));
 
         passWordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        passWordColumn.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPassword(e.getNewValue()));
+        passWordColumn.setOnEditCommit(
+                e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPassword(e.getNewValue()));
 
         tableView.setEditable(true);
     }
@@ -201,7 +202,9 @@ public class AdminTableController extends TableController implements Swappable {
     }
 
     @FXML
-    public void logOut() {AdminState.logOut();}
+    public void logOut() {
+        AdminState.logOut();
+    }
 
     @Override
     public void onLoad(SceneName previousSceneName) {
@@ -209,5 +212,6 @@ public class AdminTableController extends TableController implements Swappable {
     }
 
     @Override
-    public void onUnload() {}
+    public void onUnload() {
+    }
 }

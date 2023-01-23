@@ -93,7 +93,7 @@ public class WorkerState {
         Weighing weighing = AHClientHandler.getAHClientHandler().postRequestSync("/weighing", this,
                 Weighing.class);
         setWeighing(weighing);
-        if (!withSummary) {
+        if (weighing == null || !withSummary) {
             setIdp(null);
             setPackagingId(null);
             setPaletteId(null);

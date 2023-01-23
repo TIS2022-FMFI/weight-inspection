@@ -57,7 +57,14 @@ public class Palette {
         if (id == null) {
             return "";
         }
-        return "/static/palette/" + String.valueOf(id);
+        return "/image/palette-" + String.valueOf(id) + ".png";
+    }
+
+    public String getUrlName() {
+        if (id == null) {
+            return "";
+        }
+        return "palette-" + String.valueOf(id) + ".png";
     }
 
     public void post(TableController controller) {
