@@ -49,17 +49,21 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0.0, 0.0);
     -fx-text-fill: #fdfdfd;
     -fx-font-family: "Times New Roman";
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
 }
 
 /* Remove spacing */
 .pagination {
-    -fx-page-information-visible: false;
     -fx-alignment: center;
 }
 
 .pagination>.pagination-control>.control-box {
     -fx-spacing: 0;
     -fx-alignment: center;
+}
+.pagination>.pagination-control>.page-information {
+    -fx-font-size: 1.8em;
 }
 
 .pagination>.pagination-control>.control-box>.number-button,
@@ -69,8 +73,8 @@
     -fx-alignment: center;
     -fx-background-insets: 0, 1;
     -fx-background-color: lightgray, #FAFAFA;
-    -fx-min-width: 20;
-    -fx-min-height: 25;
+    -fx-min-width: 30;
+    -fx-min-height: 35;
 }
 
 .pagination>.pagination-control>.control-box>.number-button:hover,
@@ -88,6 +92,7 @@
     -fx-alignment: center;
     -fx-background-color: linear-gradient(to bottom, #e30313, #730109);
     -fx-text-fill: #fdfdfd;
+    -fx-font-size: 1.4em;
 }
 
 .combo-box .list-cell {
